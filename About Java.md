@@ -20,13 +20,16 @@
 
 
 # About Java
-- Java is one of the most popular programming languages in the world, and for good reasons:
-  - **Platform Independence**: Java programs can run on any device that has a Java Virtual Machine (JVM). This feature is called "Write Once, Run Anywhere" (WORA).
-  - **Object-Oriented**: Java is an object-oriented programming (OOP) language, which means it uses objects and classes to organize code. This makes it easier to manage and scale applications.
-  - **Rich API**: Java provides a vast library of pre-built classes and methods, making it easier to perform common tasks without needing to write everything from scratch.
-  - **Strong Community Support**: Java has a large and active community of developers, which means you'll find plenty of resources, tutorials, and help when learning.
-  - **Security**: Java has built-in security features, making it a good choice for developing applications where security is a priority, such as banking and e-commerce platforms.
-  - **Versatility**: Java is used in a wide range of applications, from web development and mobile apps (especially Android) to large-scale enterprise systems and even embedded devices.
+- Java is one of the most popular programming languages in the world. Lets see how good is java.
+
+- Lets first install java and check its version by running command `java -version`.
+
+![alt text](image.png)
+
+- If you see currently we are using **Java 21 LTS** (Long Term Support). Lets create world famous code **Hello World!**.
+- So we create a file and with name **Hello World.java** . So any java file will have an extension of **.java**.
+
+
 
 
 
