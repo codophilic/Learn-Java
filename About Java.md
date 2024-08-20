@@ -219,6 +219,10 @@ public class Example {
 - **If the Bytecode Verifier Finds an Error**:
   - The bytecode verifier checks the bytecode for any issues that could compromise security or system stability (e.g., illegal code or attempts to access restricted areas of memory). If the verifier finds an error, the JVM will throw a `VerifyError`. The program will not execute because the JVM cannot trust the integrity of the bytecode.
 
+>[!IMPORTANT]
+> - In Java, the main point here is that the JVM depends on the operating system – so if you are running Mac OS X you will have a different JVM than if you are running Windows or some other operating system.
+> - This fact can be verified by trying to download the JVM for your particular machine – when trying to download it, you will given a list of JVM’s corresponding to different operating systems, and you will obviously pick whichever JVM is targeted for the operating system that you are running. 
+> - **Every system has its own JVM which gets installed automatically when the jdk software is installed. ... An important point to be noted is that while JAVA is platform-independent language, the JVM is platform-dependent. Different JVM is designed for different OS and byte code is able to run on different OS.**
 
 ## Data Types
 
