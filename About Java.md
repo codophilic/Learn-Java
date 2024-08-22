@@ -24,33 +24,33 @@
 
 - Lets first install java and check its version by running command `java -version`.
 
-![alt text](Images/aboutjava/image.png)
+![alt text](Images/aboutjava/images/aboutjava/image.png)
 
 - If you see currently we are using **Java 21 LTS** (Long Term Support). Lets print world famous line **Hello World!**. Okay but where to print it? in Linux we have CLI or Command line interface whereas in windows we have powershell, for java we have **JShell**.
 - To open the JShell in your windows terminal , type `jshell`
 
-![alt text](Images/aboutjava/image-1.png)
+![alt text](Images/aboutjava/images/aboutjava/image-1.png)
 
 - Lets print Hello world!!
 
-![alt text](Images/aboutjava/image-2.png)
+![alt text](Images/aboutjava/images/aboutjava/image-2.png)
 
 - Lets say you wanna add numbers or multiply that we can do it directly in Jshell
 
-![alt text](Images/aboutjava/image-3.png)
+![alt text](Images/aboutjava/images/aboutjava/image-3.png)
 
 - Lets say you wanna create some variables and store value you can do this way
 
-![alt text](Images/aboutjava/image-4.png)
+![alt text](Images/aboutjava/images/aboutjava/image-4.png)
 
 - Lets do some operations 
 
-![alt text](Images/aboutjava/image-5.png)
+![alt text](Images/aboutjava/images/aboutjava/image-5.png)
 
 - Here we created 3 variables which has some pre-defined value (10,20 & 30) and did some mathematical operation on a new variable and printed that out. JShell maintains the state of variables, methods, and classes across the session. This means that once you define a variable or a method in JShell, it remembers and can use these definitions throughout the session.
 - Once you close the terminal ( which acts like my session ) all the variables or methods created are gone.
 
-![alt text](Images/aboutjava/image-6.png)
+![alt text](Images/aboutjava/images/aboutjava/image-6.png)
 
 - `/vars` list out all the variables created in the Jshell session.
 
@@ -80,7 +80,7 @@
 - Here i will be using Visual Studio Code IDE.
 - So we create a file and with name **HelloWorld.java** . So any java file will have an extension of **.java**. Lets write the same **Hello World!!** code here.
 
-![alt text](Images/aboutjava/image-7.png)
+![alt text](Images/aboutjava/images/aboutjava/image-7.png)
 
 - Unfortunately, the IDE is giving our some error. Lets ignore this may be IDE issue. Lets run the same file in Jshell
 
@@ -151,7 +151,7 @@ public class Example {
 - Wow, it automatically got compiled and got executed as well, but where is the `.class` file? actually it is created into another folder `C:\Program Files\Java\jdk-21\bin\java.exe" -XX:+ShowCodeDetailsInExceptionMessages -cp C:\Users\Harsh\AppData\Roaming\Code\User\workspaceStorage\4b2481d76e2f322457b2eaa1bad66aec\redhat.java\jdt_ws\LearnJava_ca9cff3\bin HelloWorld `.
 - When you are using an editor or an IDE (Integrated Development Environment) like VSCode, Sublime or NetBeans to develop Java applications, the editor/IDE invokes the java compiler **(javac.exe)** to compile the source files **(.java)** and calls the Java launcher **(java.exe)** to run the compiled files **(.class)**. The following picture illustrates this process:
 
-![alt text](Images/aboutjava/image-8.png)
+![alt text](Images/aboutjava/images/aboutjava/image-8.png)
 
 - **javac** is the Java compiler. It takes your human-readable Java source code (`.java` files) and translates it into bytecode (`.class` files). This bytecode is platform-independent and can be executed on any system with a Java Virtual Machine (JVM).
 - The java command invokes the JRE (Java Runtime Environment) to run a program. For example, to run the program "Hello World!", you can type `java HelloWorld`.
@@ -167,11 +167,11 @@ public class Example {
 
 ## How does your code works? (JVM,JRE,JDK and JIT)
 
-![alt text](Images/aboutjava/image-9.png)
+![alt text](Images/aboutjava/images/aboutjava/image-9.png)
 
 - **JDK**: Java Development Kit (JDK) is the core component of the Java Environment and provides the tools that include executables, and binaries required to Compile, Debug, and Execute a Java Program. JDK is a platform-specific software and hence we have separate installers for Windows, Mac, and Unix systems. Thats why when we download JDK it ask which type of OS you are using 
 
-![alt text](Images/aboutjava/image-10.png)
+![alt text](Images/aboutjava/images/aboutjava/image-10.png)
 
   - JDK includes:
     - JRE
@@ -192,7 +192,7 @@ public class Example {
 ### Code Execution Flow.
 
 
-![alt text](Images/aboutjava/image-11.png)
+![alt text](Images/aboutjava/images/aboutjava/image-11.png)
 
 - Writing the code in NetBeans IDE or any other IDE. In this image above you can see we have our code file as **abc.java**
 - Once you have written the code you save itand click Run. This invokes the Java Compiler. The compiler checks the code for syntax errors and any other compile time errors and if no error is found the compiler converts the java code into an intermediate code( **abc.class** file) known as bytecode. 
@@ -202,7 +202,7 @@ public class Example {
 - Since java is both compiled and interpretted language, now the interpreter inside the JVM converts each line of the bytecode into executable machine code and passed it to the OS/Hardware i.e. the CPU to execute.
 - In the above steps we didn’t mention the working of JIT compiler.
 
-![alt text](Images/aboutjava/image-12.png)
+![alt text](Images/aboutjava/images/aboutjava/image-12.png)
 
 **CASE I**: Without JIT
   - In case 1 you can see that we are at the intepretation phase. Lets assume we have 5 lines which are supposed to be interpretted to their corresponding machine code lines. So as you can see in the Case 1 there is no JIT involved. thus the interpreter converts each line into its corresponding machine code line. However if you notice the last 2 lines are the same (consider it a redundant line inserted by mistake). Clearly that line is redundant and does not have any effect on the actual output but yet since the interpreter works line by line it still creates 5 lines of machine code for 5 lines of the bytecode.
@@ -229,14 +229,14 @@ public class Example {
 - Data types can be defined as its a kind of data that can be stored and manipulated within a program. They specify what kind of value a variable can hold and what operations can be performed on that variable.
 - When we declare a variable in Java, the data is stored in memory in a binary format (as bits). In Java, data types define how variables values are kept in memory. Each variable has a data type that determines the type of value it will store and size require in the memory.
 
-![alt text](Images/aboutjava/image-13.png)
+![alt text](Images/aboutjava/images/aboutjava/image-13.png)
 
 
-![alt text](Images/aboutjava/image-14.png)
+![alt text](Images/aboutjava/images/aboutjava/image-14.png)
 
 - Primitive data types in Java are the most basic kinds of data types that are built into the language. These data types are "primitive" because they represent simple, foundational values and do not have any methods associated with them.
 
-![alt text](Images/aboutjava/image-15.png)
+![alt text](Images/aboutjava/images/aboutjava/image-15.png)
 
 - Non primitive data type also called as reference data type. Imagine a treasure map. The map itself is not the treasure, but it tells you where to find the treasure. That's essentially what a non-primitive or reference object is in programming. Non-primitive data types (or reference objects) are like treasure maps. They hold a reference or address that points to where the actual data is stored.
 
@@ -303,7 +303,7 @@ str2: World
 - Lets try to understand more about primitive data types by performing some code. Lets say we have just declare a variable and try to print it.
 - We will get an error
 
-![alt text](Images/aboutjava/image-16.png)
+![alt text](Images/aboutjava/images/aboutjava/image-16.png)
 
 - Your Java code will won't work without initializing the values because Java requires all variables to be initialized before they can be used. 
 - That is why **Java is a statically typed language**, which means that the data type of each variable must be declared and initialized before it can be used. If a variable is not initialized, it will have a default value that may not be appropriate for the intended use case, leading to unexpected behavior or errors.
@@ -329,7 +329,7 @@ Output:
 
 - Lets say we wanted to define a proper decimal or a floating point number. Here we simply define a float variable and also initialized that variable with floating value and still we got an error.
 
-![alt text](Images/aboutjava/image-17.png)
+![alt text](Images/aboutjava/images/aboutjava/image-17.png)
 
 - In Java, the default type for floating-point numbers is double, not float.  Java assumes any floating-point literal with a decimal point is a double by default because double provides more precision and is widely used in scientific calculations and most general-purpose applications. To make under java that is the value is floating number you must explicitly specify a float literal with an `f` or `F` suffix to tell the compiler that you intend to use a float.
 
@@ -825,7 +825,7 @@ Output:
 
 ## Arrays
 
-![alt text](image-18.png)
+![alt text](Images/aboutjava/image-18.png)
 
 - Lets say you wanted to store 100 values in your program, so would you create 100 different variables? or your need a collection sort of property in java which can collect all these 100 values., thats where you got array in java.
 - An array is a data structure in Java that stores a fixed-size sequence of elements of the same data type. The elements in an array are stored in contiguous memory locations which can be accessed via an index, with the first element being at index 0.
@@ -884,7 +884,7 @@ Output:
 - A multidimensional array is an array of arrays.
 - Multidimensional arrays are useful when you want to store data as a tabular form, like a table with rows and columns.
 
-![alt text](image-19.png)
+![alt text](Images/aboutjava/image-19.png)
 
 ```
          /**
@@ -941,7 +941,7 @@ Output:
 
 - In multi-dimensional array, we need to defined a fix values for the number of inner arrays to be declared. In jagged arrays you don't need to specify that.
 
-![alt text](image-20.png)
+![alt text](Images/aboutjava/image-20.png)
 
 - Jagged array is array of arrays such that member arrays can be of different sizes, i.e., we can create a 2-D array but with a variable number of columns in each row. These type of arrays are also known as Jagged arrays.
 
@@ -983,6 +983,8 @@ Output:
 1 7 6 8 9
 5
 ```
+
+
 
 ### Drawbacks of arrays
 
