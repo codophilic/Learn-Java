@@ -823,18 +823,206 @@ Output:
 4
 ```
 
+## Arrays
 
+![alt text](image-18.png)
 
+- Lets say you wanted to store 100 values in your program, so would you create 100 different variables? or your need a collection sort of property in java which can collect all these 100 values., thats where you got array in java.
+- An array is a data structure in Java that stores a fixed-size sequence of elements of the same data type. The elements in an array are stored in contiguous memory locations which can be accessed via an index, with the first element being at index 0.
 
+```
+public class Arrays{
+    public static void main(String[] args) {
+        
+        /**
+         * Arrays
+         */
+        int declaringDefaultValues[] = {1,2,3,4}; // Initializes an array with values
 
+        int fixedSizeArray[] = new int[3];
+        fixedSizeArray[0]=10;
+        fixedSizeArray[1]=20;
+        fixedSizeArray[2]=30;
 
+        System.out.println(fixedSizeArray);
 
+        int firstElement = fixedSizeArray[0]; // Accesses the first element
 
+        System.out.println(firstElement);
 
+        fixedSizeArray[2] = 10; // Updates the third element to 10
 
+        System.out.println(fixedSizeArray[2]);
 
+        /**
+         * Printing all values in an array
+         */
 
+         for(int i=0;i<3;i++){
+            System.out.println(fixedSizeArray[i]);
+         }
 
+    }
+}
+
+Output:
+[I@372f7a8d
+10
+10
+10
+20
+10
+```
+
+### Why Are Arrays Required?
+- Efficiency: Arrays provide a way to store multiple values of the same type efficiently.
+- Indexed Access: Arrays allow easy and fast access to elements using their index, which is particularly useful in scenarios where random access to elements is needed.
+- Fixed Size: Arrays have a fixed size, which helps in managing memory effectively if the number of elements is known beforehand.
+
+### Multi-dimensional arrays
+
+- A multidimensional array is an array of arrays.
+- Multidimensional arrays are useful when you want to store data as a tabular form, like a table with rows and columns.
+
+![alt text](image-19.png)
+
+```
+         /**
+          * 2D Array initialized with default value 0
+          */
+          int[][] defaultMatrix= new int[3][3];
+
+         /**
+          * 2D Array initialized with values
+          */
+          int[][] matrix = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+
+        /**
+         * Since its a 2D array we require 2 iterators, one iteration on rows and second iteration on columns
+         */
+        System.out.println("2D Matrix");
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                System.out.print(matrix[i][j]+" ");
+            }
+            System.out.println();
+        }
+
+Output:
+2D Matrix
+1 2 3
+4 5 6
+7 8 9
+```
+
+### Enhanced for Loop (for-each Loop)
+
+- The enhanced for loop simplifies iteration over arrays without needing to manage index variables manually.
+
+```
+        /**
+         * Enhanced for loop
+         */
+        for(int i: fixedSizeArray){
+            System.out.println(i);
+        }
+
+Output:
+10
+20
+10
+```
+
+### Jagged Arrays
+
+- In multi-dimensional array, we need to defined a fix values for the number of inner arrays to be declared. In jagged arrays you don't need to specify that.
+
+![alt text](image-20.png)
+
+- Jagged array is array of arrays such that member arrays can be of different sizes, i.e., we can create a 2-D array but with a variable number of columns in each row. These type of arrays are also known as Jagged arrays.
+
+```
+        /**
+         * Jagged Arrays
+         */
+        int arr[][] = { {0, 1, 2},
+            {6, 4},
+            {1, 7, 6, 8, 9},
+            {5} 
+          };
+
+          int[][] jaggedArray = new int[3][];
+        jaggedArray[0] = new int[2]; // First row has 2 elements
+        jaggedArray[1] = new int[3]; // Second row has 3 elements
+        jaggedArray[2] = new int[1]; // Third row has 1 element
+
+        for(int i[]: jaggedArray){
+            for(int j:i){
+                System.err.print(j+" ");
+            }
+            System.out.println();
+        }
+
+        for(int i[]: arr){
+            for(int j:i){
+                System.err.print(j+" ");
+            }
+            System.out.println();
+        }
+
+Output:
+0 0
+0 0 0
+0
+0 1 2
+6 4
+1 7 6 8 9
+5
+```
+
+### Drawbacks of arrays
+
+- **Fixed Size**:
+    - Static Nature: Once an array is created, its size cannot be changed. This means you must know the number of elements in advance, which can be limiting.
+    - Memory Waste: If you allocate an array with more elements than needed, you waste memory. Conversely, if you underestimate the size, you can't add more elements without creating a new, larger array.
+- **Homogeneous Data**:
+    - Single Data Type: Arrays can only store elements of the same data type. If you need to store different types of data together, an array is not the right choice. (Until we have an array which has Object as its type)
+
+```
+        /**
+         * Object Type Array
+         */
+        Object[] obj=new Object[3];
+        obj[0]=1;
+        obj[1]="Value";
+        obj[2]=1.2;
+
+        for(Object o : obj){
+            System.out.println(o);
+        }
+
+Output:
+1
+Value
+1.2
+```
+
+- **Lack of Flexibility**:
+    - No Built-in Methods: Unlike some more advanced data structures (like lists in Java's ArrayList), arrays don't have built-in methods for common operations such as adding or removing elements. These operations must be implemented manually.
+    - No Auto-resizing: When working with arrays, you have to manually manage the resizing by creating a new array and copying elements over if you need to increase the size.
+- **Performance Overhead for Resizing**:
+    - Expensive Resizing: If you need to resize an array, you must create a new array and copy all elements from the old array to the new one. This is an O(n) operation, where n is the number of elements, which can be costly for large arrays.
+- **No Built-in Support for Advanced Operations**:
+    - Searching: Arrays require custom implementation for searching algorithms (e.g., binary search for sorted arrays).
+    - Sorting: Sorting an array requires extra processing, usually with O(n log n) complexity using algorithms like QuickSort or MergeSort.
+- **Array Index Out of Bounds**:
+    - Runtime Error: Accessing an index outside the valid range (0 to length-1) causes a java.lang.ArrayIndexOutOfBoundsException, which can lead to runtime errors if not handled properly.
+- **Memory Fragmentation (for Jagged Arrays)**:
+    - Fragmented Memory: For jagged arrays, where inner arrays have different lengths, the memory layout can become fragmented, leading to inefficient memory usage.
 
 
 

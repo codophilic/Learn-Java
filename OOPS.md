@@ -11,7 +11,7 @@
 - To use the class, you create or instantiate an object. The object is a specific instance of the class, with its own customized properties using the properties of class (like a red Ferrari with a 3902 cc engine) and access to the methods defined in the class.
 - When you instantiate an object, you can set its properties to match what you need, and then use its methods to perform actions. This approach helps in organizing code, making it more modular, reusable, and easier to manage.
 
-![alt text](image.png)
+![alt text](Images/oops/image.png)
 
 ```
 package OOPS;
@@ -308,7 +308,7 @@ Addition of 5.5 and 4.5 is 10.0
 - Virtual memory uses both hardware and software to enable a computer to compensate for physical memory shortages, temporarily transferring data from random access memory (RAM) to disk storage. Mapping chunks of memory to disk files enables a computer to treat secondary memory as though it were main memory.
 -  It frees up space in RAM (Physicall memory) by swapping data (that has not been used recently) to disk storage.
 
-![alt text](image-1.png)
+![alt text](Images/oops/image-1.png)
 
 - These virtual memory sections are used in a program for storing the variables and instances of structures and classes. However, physical memory isn’t allocated to an object at declaration; only a reference is created. **The memory is allocated to the object only after it is created using the new keyword. This process of allocating dedicated virtual memory spaces to the programs and services is referred to as Memory Allocation**.
 - Every time a new variable or object is declared, Java uses an automatic memory management system that allocates or deallocates memory to objects or variables. Java memory management divides into two major parts:
@@ -324,9 +324,9 @@ Addition of 5.5 and 4.5 is 10.0
 
 - In terms of data structure, stack is refered as Last-In-First-Out order. The stack is a linear data structure that is used to store the collection of objects.
 
-![alt text](image-2.png)
+![alt text](Images/oops/image-2.png)
 
-![alt text](image-3.png)
+![alt text](Images/oops/image-3.png)
 
 - **Stack memory** is the temporary memory where variable values are stored when their methods are invoked. After the method is finished, the memory containing those values is cleared to make room for new methods. Any values in this block are only accessible by the current method and will not exist once it ends. When the method ends, that block will be erased. The next method invoked will use that empty block.
 
@@ -345,7 +345,7 @@ Addition of 5.5 and 4.5 is 10.0
 
 - String Pool in java is a pool of Strings stored in Java Heap Memory. We know that String is a special class in java and we can create String objects using a new operator as well as providing values in double-quotes.
 
-![alt text](image-5.png)
+![alt text](Images/oops/image-5.png)
 
 - When we use double quotes to create a String, it first looks for String with the same value in the String pool, if found it just returns the reference else it creates a new String in the pool and then returns the reference. However using new operator, we force String class to create a new String object in heap space.
 
@@ -373,7 +373,7 @@ public class Memory {
 }
 ```
 
-![alt text](image-4.png)
+![alt text](Images/oops/image-4.png)
 
 
 - As soon as we run the program, it loads all the Runtime classes into the Heap space. When the `main()` method is found at line 1, Java Runtime creates stack memory to be used by the `main()` method thread, `public static void main(String[] args) { ... }`
