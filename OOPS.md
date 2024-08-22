@@ -165,6 +165,141 @@ class Car{
     - Lifetime: Exist as long as the object (instance of the class) exists. They are created when the object is created using the new keyword and destroyed when the object is destroyed.
     - Initialization: Automatically initialized to default values if not explicitly initialized (e.g., 0 for integers, null for objects).
 
+## Method Overloading
+
+- Lets say we have a class calculator , for which we need add two numbers and returns the value. Uptil now we have used **void** which means that the method won't return anything , now the method will compute and return a integer value.
+
+```
+package OOPS;
+
+
+class Calculator{
+
+    public int add(int n1,int n2){
+
+        /**
+         * Method add returns the sum of n1+n2
+         */
+        return n1+n2;
+    }
+    
+}
+
+public class MethodOverloading {
+    
+    public static void main(String[] args) {
+        
+        Calculator twoNums=new Calculator();
+        /**
+         * Passing 4 and 5 required arguments for method "add"
+         */
+        System.out.println("Addition of 5 and 4 is "+twoNums.add(4, 5));
+    }
+}
+
+Output:
+Addition of 5 and 4 is 9
+```
+
+- Now lets say there is a requirement like , sometimes you may get 3 numbers or you may get 2 numbers, now you could create another method inside the class. The method could be **add1** since there exists already an **add** method. Here we have taken example of 2 - 3 variables addition, tomorrow there could be n number of variables addition , how do that ? java says, hey programmer since you have different number of arguments inside your add method , you can still create a method with same name i.e **add**.
+
+```
+package OOPS;
+
+
+class Calculator{
+
+    public int add(int n1,int n2){
+
+        /**
+         * Method add returns the sum of n1+n2
+         */
+        return n1+n2;
+    }
+
+    /**
+     * Method Overloading by parameters
+     */
+    public int add(int n1, int n2, int n3){
+        return n1+n2+n3;
+    }
+    
+}
+
+public class MethodOverloading {
+    
+    public static void main(String[] args) {
+        
+        Calculator twoNums=new Calculator();
+        /**
+         * Passing 4 and 5 required arguments for method "add"
+         */
+        System.out.println("Addition of 5 and 4 is "+twoNums.add(4, 5));
+        System.out.println("Addition of 5,4 and 6 is "+twoNums.add(5, 4,6));
+    }
+}
+
+Output:
+Addition of 5 and 4 is 9
+Addition of 5,4 and 6 is 15
+```
+
+- Lets say we wanna add two floating point numbers.
+
+```
+package OOPS;
+
+
+class Calculator{
+
+    public int add(int n1,int n2){
+
+        /**
+         * Method add returns the sum of n1+n2
+         */
+        return n1+n2;
+    }
+
+    /**
+     * Method Overloading by parameters
+     */
+    public int add(int n1, int n2, int n3){
+        return n1+n2+n3;
+    }
+
+    /**
+     * Method Overloading by type
+     */
+    public double add(double n1,double n2){
+        return n1+n2;
+    }
+}
+
+public class MethodOverloading {
+    
+    public static void main(String[] args) {
+        
+        Calculator twoNums=new Calculator();
+        /**
+         * Passing 4 and 5 required arguments for method "add"
+         */
+        System.out.println("Addition of 5 and 4 is "+twoNums.add(4, 5));
+        System.out.println("Addition of 5,4 and 6 is "+twoNums.add(5, 4,6));
+        System.out.println("Addition of 5.5 and 4.5 is "+twoNums.add(4.5, 5.5));
+
+    }
+}
+
+
+Output:
+Addition of 5 and 4 is 9
+Addition of 5,4 and 6 is 15
+Addition of 5.5 and 4.5 is 10.0
+```
+
+>[!NOTE]
+> - Overloading property is only associated with method and not with variables and classes
+
 ## Memory Management or Memory Allocation
 
 #### What is Virtual Memory?
@@ -416,137 +551,3 @@ class Car {
 ```
 
 - After the constructor finishes executing, the new keyword returns a reference to the newly created object. This reference is typically stored in a variable so that you can interact with the object.
-
-## Method Overloading
-
-- Lets say we have a class calculator , for which we need add two numbers and returns the value. Uptil now we have used **void** which means that the method won't return anything , now the method will compute and return a integer value.
-
-```
-package OOPS;
-
-
-class Calculator{
-
-    public int add(int n1,int n2){
-
-        /**
-         * Method add returns the sum of n1+n2
-         */
-        return n1+n2;
-    }
-    
-}
-
-public class MethodOverloading {
-    
-    public static void main(String[] args) {
-        
-        Calculator twoNums=new Calculator();
-        /**
-         * Passing 4 and 5 required arguments for method "add"
-         */
-        System.out.println("Addition of 5 and 4 is "+twoNums.add(4, 5));
-    }
-}
-
-Output:
-Addition of 5 and 4 is 9
-```
-
-- Now lets say there is a requirement like , sometimes you may get 3 numbers or you may get 2 numbers, now you could create another method inside the class. The method could be **add1** since there exists already an **add** method. Here we have taken example of 2 - 3 variables addition, tomorrow there could be n number of variables addition , how do that ? java says, hey programmer since you have different number of arguments inside your add method , you can still create a method with same name i.e **add**.
-
-```
-package OOPS;
-
-
-class Calculator{
-
-    public int add(int n1,int n2){
-
-        /**
-         * Method add returns the sum of n1+n2
-         */
-        return n1+n2;
-    }
-
-    /**
-     * Method Overloading by parameters
-     */
-    public int add(int n1, int n2, int n3){
-        return n1+n2+n3;
-    }
-    
-}
-
-public class MethodOverloading {
-    
-    public static void main(String[] args) {
-        
-        Calculator twoNums=new Calculator();
-        /**
-         * Passing 4 and 5 required arguments for method "add"
-         */
-        System.out.println("Addition of 5 and 4 is "+twoNums.add(4, 5));
-        System.out.println("Addition of 5,4 and 6 is "+twoNums.add(5, 4,6));
-    }
-}
-
-Output:
-Addition of 5 and 4 is 9
-Addition of 5,4 and 6 is 15
-```
-
-- Lets say we wanna add two floating point numbers.
-
-```
-package OOPS;
-
-
-class Calculator{
-
-    public int add(int n1,int n2){
-
-        /**
-         * Method add returns the sum of n1+n2
-         */
-        return n1+n2;
-    }
-
-    /**
-     * Method Overloading by parameters
-     */
-    public int add(int n1, int n2, int n3){
-        return n1+n2+n3;
-    }
-
-    /**
-     * Method Overloading by type
-     */
-    public double add(double n1,double n2){
-        return n1+n2;
-    }
-}
-
-public class MethodOverloading {
-    
-    public static void main(String[] args) {
-        
-        Calculator twoNums=new Calculator();
-        /**
-         * Passing 4 and 5 required arguments for method "add"
-         */
-        System.out.println("Addition of 5 and 4 is "+twoNums.add(4, 5));
-        System.out.println("Addition of 5,4 and 6 is "+twoNums.add(5, 4,6));
-        System.out.println("Addition of 5.5 and 4.5 is "+twoNums.add(4.5, 5.5));
-
-    }
-}
-
-
-Output:
-Addition of 5 and 4 is 9
-Addition of 5,4 and 6 is 15
-Addition of 5.5 and 4.5 is 10.0
-```
-
-
