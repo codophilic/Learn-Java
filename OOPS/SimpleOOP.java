@@ -1,5 +1,3 @@
-package OOPS;
-
 class Car{
 
     int speed; // Instance variable

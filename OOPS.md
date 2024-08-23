@@ -301,6 +301,250 @@ sb.append(" World");
 System.out.println(sb.toString()); // Output: Hello World
 ```
 
+## Static
+
+- Lets create a student class and reference object of it.
+
+```
+class Student{
+    String schoolname;
+    int id;
+    int marks;
+
+    public void details(){
+        System.out.println("School name: "+schoolname+" ,ID: "+id+" ,marks: "+marks);
+    }
+}
+
+public class AboutStatic {
+    public static void main(String[] args) {
+        
+        Student s1=new Student();
+        s1.schoolname="IIT";
+        s1.id=1;
+        s1.marks=95;
+
+        Student s2=new Student();
+        s2.schoolname="BITS";
+        s2.id=2;
+        s2.marks=95;
+
+        s1.details();
+        s2.details();
+    }
+}
+
+Output:
+School name: IIT ,ID: 1 ,marks: 95
+School name: BITS ,ID: 2 ,marks: 95
+```
+
+- Lets add **static** keyword against the `schoolname` variable and then lets try to execute the same code.
+
+```
+class Student{
+    static String schoolname;
+    int id;
+    int marks;
+
+    public void details(){
+        System.out.println("School name: "+schoolname+" ,ID: "+id+" ,marks: "+marks);
+    }
+}
+
+public class AboutStatic {
+    public static void main(String[] args) {
+        
+        Student s1=new Student();
+        s1.schoolname="IIT";
+        s1.id=1;
+        s1.marks=95;
+
+        Student s2=new Student();
+        s2.schoolname="BITS";
+        s2.id=2;
+        s2.marks=96;
+
+        s1.details();
+        s2.details();
+    }
+}
+
+
+Output:
+School name: BITS ,ID: 1 ,marks: 95
+School name: BITS ,ID: 2 ,marks: 96
+```
+
+- Why so we got `BITS` for reference object 1?, this is because a static variable is a variable that belongs to the class rather than to any specific instance (object) of the class. It is shared among all instances of the class. Only one copy of a static variable is created and shared across all objects of that class.
+- Static variables are useful when you want to share a common piece of data across all instances of a class. For example, a variable that counts the number of instances of a class created.
+- What if the **static** key word is applied on method? , lets apply static keyword on the `details()` method.
+
+```
+class Student{
+    static String schoolname;
+    int id;
+    int marks;
+
+    public static void details(){
+        System.out.println("School name: "+schoolname+" ,ID: "+id+" ,marks: "+marks);
+    }
+}
+
+public class AboutStatic {
+    public static void main(String[] args) {
+        
+        Student s1=new Student();
+        s1.schoolname="IIT";
+        s1.id=1;
+        s1.marks=95;
+
+        Student s2=new Student();
+        s2.schoolname="BITS";
+        s2.id=2;
+        s2.marks=96;
+
+        s1.details();
+        s2.details();
+
+        
+    }
+}
+```
+
+![alt text](image-8.png)
+
+- We got an error **`Cannot make a static reference to the non-static field id, Cannot make a static reference to the non-static field marks`**. So basically there is 1 value for the variable **schoolname** since it is a static variable, but there are 2 values of **id** and **marks** (`s1.id=1,s2.id=2` and `s1.marks=95,s2.marks=96`) , these are non-static variables. Now since there are two different values, how will the static method will get to know which one to be called and printed?
+- Thats why we can use **a static variable inside a static method but we cannot use a non-static variable inside a static method**.
+- Lets do a work around, now if a static method is confused which values to be printed out what if we pass the reference object to clear out the confusion?
+
+```
+class Student{
+    static String schoolname;
+    int id;
+    int marks;
+
+    public static void details(Student obj){
+        System.out.println("School name: "+schoolname+" ,ID: "+obj.id+" ,marks: "+obj.marks);
+    }
+}
+
+public class AboutStatic {
+    public static void main(String[] args) {
+        
+        Student s1=new Student();
+        s1.schoolname="IIT";
+        s1.id=1;
+        s1.marks=95;
+
+        Student s2=new Student();
+        s2.schoolname="BITS";
+        s2.id=2;
+        s2.marks=95;
+
+        s1.details(s2);
+        s2.details(s1);
+
+        
+    }
+}
+
+Output:
+School name: BITS ,ID: 2 ,marks: 95
+School name: BITS ,ID: 1 ,marks: 95
+```
+
+- So **by passing out the reference object we can use non-static variable can be access in static method**
+
+
+### Why Should We Call Static Members via Class Name and Not Object Name?
+
+- We see below warnings which says 
+
+![alt text](image-9.png)
+
+- **Clarity and Intent**: Calling static methods or accessing static variables via the class name makes it clear that these members belong to the class, not to any specific instance. It clarifies that the method or variable is not dependent on the state of any particular object.
+- **Avoid Confusion**: If you call a static method using an object, it can give the false impression that the method is tied to the instance's state, which it is not. Using the class name prevents this confusion.
+- **Language Specification**: Java language specification allows calling static methods through objects, but it's not recommended as it goes against the intended use of static members.
+
+```
+class Student{
+    static String schoolname;
+    int id;
+    int marks;
+
+    public static void details(Student obj){
+        System.out.println("School name: "+schoolname+" ,ID: "+obj.id+" ,marks: "+obj.marks);
+    }
+}
+
+public class AboutStatic {
+    public static void main(String[] args) {
+        
+        Student s1=new Student();
+        Student.schoolname="IIT";
+        s1.id=1;
+        s1.marks=95;
+
+        Student s2=new Student();
+        Student.schoolname="BITS";
+        s2.id=2;
+        s2.marks=95;
+
+        Student.details(s2);
+        Student.details(s1);
+
+        
+    }
+}
+```
+
+### Static variables inside a method?
+
+
+
+
+### Static on Class
+
+- In Java, top-level classes (classes that are not nested within another class) cannot be declared as static. **This is because the static keyword implies that something belongs to the class itself rather than an instance of the class**. A top-level class itself is not contained within another class, so the concept of **static** does not apply in this context.
+
+```
+static class TopLevelClass { // Compilation error -> Illegal modifier for the class Student; only public, abstract & final are permitted
+    // ...
+}
+```
+
+- Though static cannot be applied on top-level class but it can be applied on nested classes.
+
+```
+class OuterClass {
+    int i; // Instance variable
+    static int j; // Static variable or Class variables 
+    // Static nested class or Static member inner classes
+    static class StaticNestedClass {
+        void display() {
+            System.out.println("Inside static nested class "+OuterClass.j);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // No need to create an instance of the outer class
+        OuterClass.StaticNestedClass nestedObject = new OuterClass.StaticNestedClass();
+        nestedObject.display(); // Output: Inside static nested class
+    }
+}
+
+Output:
+Inside static nested class 0
+```
+
+#### Key Points about Static Nested Classes:
+- A static nested class can access the static members (variables and methods) of the outer class.
+- A static nested class cannot directly access the non-static members of the outer class. It must use an instance of the outer class to do so.
+- Instances of a static nested class are not tied to instances of the outer class.
+
 ## Memory Management or Memory Allocation
 
 #### What is Virtual Memory?
@@ -556,6 +800,15 @@ class Car {
 
 - After the constructor finishes executing, the new keyword returns a reference to the newly created object. This reference is typically stored in a variable so that you can interact with the object.
 
+
+### Memory Management for Static fields
+
+- Memory for non-static variable is created at the time of create an object of class but memory for static variable is created only one in the program at the time of loading of class.
+
+#### Memory Areas in Java Before Java 8
+
+- https://www.linkedin.com/pulse/memory-management-java-softyoi-llp-wxrsf/
+
 ## Array Objects
 
 - In Java, an Array of Objects refers to an array that can store references to objects of a particular class. Just like arrays of primitive types (e.g., int[], char[]), an array of objects can store multiple elements, but each element is a reference to an instance of a class.
@@ -600,10 +853,6 @@ Meet , 97 , 2
 - An array of objects in Java allows you to store multiple objects of a particular class in a single data structure.
 - You must create each object individually before storing it in the array.
 - Once stored, you can access and manipulate these objects using their index in the array.
-
-## Static
-
-- 
 
 
 ## Method Overloading
