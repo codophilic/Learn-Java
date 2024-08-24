@@ -1,7 +1,7 @@
 # About OOPS (Object-Oriented Programming System)
 
-- So when a car was introduce, a blueprint of a car was prepared, like what could be requirements to built a car? , this included color, Engine , cyclinder and etc..
-- So imagine refering this blue print, there is a Ferrari car, so what could be its properties?  color - red, Engine - 3902 cc, No. of cyclinder - 4 and so on.. what could be his behaviour? so the behaviors - Start engine, Accelerate, Brake, Turn, Park.
+- So when a car was introduce, a blueprint of a car was prepared, like what could be requirements to built a car? , this included color, Engine , cylinder and etc..
+- So imagine referring this blue print, there is a Ferrari car, so what could be its properties?  color - red, Engine - 3902 cc, No. of cylinder - 4 and so on.. what could be his behaviour? so the behaviors - Start engine, Accelerate, Brake, Turn, Park.
 - **Class**: Is the blueprint to built a car.
 - **Object**: Is Ferrari
 - **Data**: Is Ferrari properties
@@ -86,7 +86,7 @@ Engine Started..., speed - 230, cyclinder - 4
 Engine Started..., speed - 200, cyclinder - 3
 ```
 
-- The JVM creates these objects, so there could possibities like there can be multiple types of cars like TATA, Tesla, etc.. how to identify each? thats where every object has a unique identifier.
+- The JVM creates these objects, so there could possibilities like there can be multiple types of cars like TATA, Tesla, etc.. how to identify each? thats where every object has a unique identifier.
 
 ```
 package OOPS;
@@ -165,6 +165,10 @@ class Car{
     - Lifetime: Exist as long as the object (instance of the class) exists. They are created when the object is created using the new keyword and destroyed when the object is destroyed.
     - Initialization: Automatically initialized to default values if not explicitly initialized (e.g., 0 for integers, null for objects).
 
+>[!IMPORTANT]
+> - Java does not support the concept of "nested" methods (a method within another method). All methods in Java are defined at the class level. Therefore, you cannot declare a method inside another method.
+> - Java does support nested classes.
+
 ## What is String?
 
 - In Java, a String is a sequence of characters and is one of the most commonly used classes in the Java programming language. The String class is part of the `java.lang` package and is used to create and manipulate strings (text).
@@ -219,6 +223,8 @@ Output:
 - It is the same. Java uses a special memory area called the **String Pool** to store string literals or value. When a string literal is created, the JVM checks the string pool to see if an identical string already exists. If it does, the new reference points to the existing string. If not, a new string is created in the pool.
 
 ![alt text](image-6.png)
+
+- If we explicitly specify `String str=new String("Explicitly create a new Object")` then still it will search in String pool it if literal is not available then only its creates a new object of string.
 
 ### Common String methods
 
@@ -277,9 +283,9 @@ str = str + " World";  // A new string "Hello World" is created, "str" now refer
 
 ##### String Buffer
 
-- **Mutable**: Unlike String, **StringBuffer*** allows modification of the string content without creating new objects.
-- **Thread-Safe**: **StringBuffer*** is synchronized, meaning it is safe to use in a multi-threaded environment where multiple threads might access and modify the string simultaneously.
-- **Usage**: Use **StringBuffer*** when you need to perform many modifications on a string in a multi-threaded environment.
+- **Mutable**: Unlike String, **StringBuffer** allows modification of the string content without creating new objects.
+- **Thread-Safe**: **StringBuffer** is synchronized, meaning it is safe to use in a multi-threaded environment where multiple threads might access and modify the string simultaneously.
+- **Usage**: Use **StringBuffer** when you need to perform many modifications on a string in a multi-threaded environment.
 - **Performance**: It is slower than **StringBuilder** due to the overhead of synchronization but faster than String for string modifications.
 
 ```
