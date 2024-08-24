@@ -763,6 +763,93 @@ Not Equal
 Undefined
 Equal
 ```
+>[!IMPORTANT]
+> - In the 14+ java version there is a major update in switch statements.
+
+```
+        /**
+         * Week days scheduler
+         */
+        String currentWeekday="Monday";
+        switch (currentWeekday) {
+            case "Monday": System.out.println("I Would wake up at 6 am");
+                break;
+            case "Tuesday": System.out.println("I Would wake up at 6 am");
+                break;        
+            default:
+                System.out.println("I Would wake up at 6 am");
+        };
+
+        /**
+         * Alternative way to write the above switch case using ->
+         */
+        switch(currentWeekday){
+            case "Monday" -> System.out.println("I Would wake up at 6 am");
+            case "Tuesday" -> System.out.println("I Would wake up at 6 am");
+            default -> System.out.println("I Would wake up at 6 am");        
+        }
+
+Output:
+I Would wake up at 6 am
+I Would wake up at 6 am
+```
+
+- In Java, the arrow delimiter `(->)` is used in the case construction of a switch in place of the colon delimiter. No break statement is required which inturn reduces coding errors.
+- Lets say you wanted to return value from your switch case statement.
+
+```
+        /**
+         * Alternative way to write the above switch case using -> and also returing
+         */
+        String timeans=switch(currentWeekday){
+            case "Monday" -> "I Would wake up at 6 am";
+            case "Tuesday" -> "I Would wake up at 6 am";
+            default -> "I Would wake up at 6 am";        
+        };
+        System.out.println(timeans);
+
+Output:
+I Would wake up at 6 am
+```
+
+- Using **yield**, the **yield** keyword lets us exit a switch expression by returning a value that becomes the value of the switch expression.
+
+```
+        /**
+         * Using yield
+         */
+        /**
+         * Alternative way to write the above switch case using yield
+         */
+        String ans = switch(currentWeekday){
+            case "Monday": yield "I Would wake up at 6 am";
+            case "Tuesday": yield "I Would wake up at 6 am";
+            default: yield "I Would wake up at 6 am";        
+        };
+        System.out.println(ans);
+
+        /**
+         * Alternative way to write the above switch case using yield
+         */
+        String ans1 = switch(currentWeekday){
+            case "Monday"-> {
+                yield "I Would wake up at 6 am";
+            }
+            case "Tuesday" -> {
+                yield "I Would wake up at 6 am";
+            }
+            
+            default -> {
+                yield  "I Would wake up at 6 am";
+            }   
+        };
+        System.out.println(ans1);
+
+Output:
+I Would wake up at 6 am
+I Would wake up at 6 am
+```
+
 
 ## Iterations
 

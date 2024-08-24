@@ -40,5 +40,67 @@ public class SwitchStatements{
              
         }
 
+        /**
+         * Week days scheduler
+         */
+        String currentWeekday="Monday";
+        switch (currentWeekday) {
+            case "Monday": System.out.println("I Would wake up at 6 am");
+                break;
+            case "Tuesday": System.out.println("I Would wake up at 6 am");
+                break;        
+            default:
+                System.out.println("I Would wake up at 6 am");
+        };
+
+        /**
+         * Alternative way to write the above switch case using ->
+         */
+        switch(currentWeekday){
+            case "Monday" -> System.out.println("I Would wake up at 6 am");
+            case "Tuesday" -> System.out.println("I Would wake up at 6 am");
+            default -> System.out.println("I Would wake up at 6 am");        
+        }
+
+        /**
+         * Alternative way to write the above switch case using -> and also returing
+         */
+        String timeans=switch(currentWeekday){
+            case "Monday" -> "I Would wake up at 6 am";
+            case "Tuesday" -> "I Would wake up at 6 am";
+            default -> "I Would wake up at 6 am";        
+        };
+        System.out.println(timeans);
+
+        /**
+         * Using yield
+         */
+        /**
+         * Alternative way to write the above switch case using yield
+         */
+        String ans = switch(currentWeekday){
+            case "Monday": yield "I Would wake up at 6 am";
+            case "Tuesday": yield "I Would wake up at 6 am";
+            default: yield "I Would wake up at 6 am";        
+        };
+        System.out.println(ans);
+
+        /**
+         * Alternative way to write the above switch case using yield
+         */
+        String ans1 = switch(currentWeekday){
+            case "Monday"-> {
+                yield "I Would wake up at 6 am";
+            }
+            case "Tuesday" -> {
+                yield "I Would wake up at 6 am";
+            }
+            
+            default -> {
+                yield  "I Would wake up at 6 am";
+            }   
+        };
+        System.out.println(ans1);
+
     }
 }
