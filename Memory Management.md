@@ -1,4 +1,4 @@
-## Memory Management or Memory Allocation
+## Deep dive in Memory Management or Memory Allocation
 
 #### What is Virtual Memory?
 
@@ -28,7 +28,7 @@
 
 - **Stack memory** is the temporary memory where variable values are stored when their methods are invoked. After the method is finished, the memory containing those values is cleared to make room for new methods. Any values in this block are only accessible by the current method and will not exist once it ends. When the method ends, that block will be erased. The next method invoked will use that empty block.
 
-#### Heap Memory or dynamic memory?
+#### Heap Memory or dynamic memory
 
 >[!IMPORTANT]
 > - **The heap in the JVM and the heap in data structures are different concepts, even though they share the same name.**

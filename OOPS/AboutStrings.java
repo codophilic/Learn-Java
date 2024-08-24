@@ -16,7 +16,7 @@ public class AboutStrings {
         System.out.println(n2+" "+n+" "+n1);
 
         /**
-         * Points the same reference object in the string pool of heap memory
+         * Points the same object in the string pool of heap memory
          */
         String s1="welcome";
         String s2="welcome";

@@ -25,8 +25,27 @@ class OuterClass {
     }
 }
 
+class A{
+    static int num;
+    static{
+        num=7;
+        System.out.println("Assigned Number 7");
+    }
+
+    public void display(){
+        System.out.println("In A");
+    }
+}
+
 public class AboutStatic {
-    public static void main(String[] args) {
+
+    static{
+        System.out.println("Statement got executed when the class is loaded");
+    }
+    static{
+        System.out.println("Second Statement");
+    }
+    public static void main(String[] args) throws ClassNotFoundException {
         
 
         Student s1=new Student();
@@ -44,6 +63,13 @@ public class AboutStatic {
 
         OuterClass.StaticNestedClass nestedObj = new OuterClass.StaticNestedClass();
         nestedObj.display();
+
+        System.out.println("Inside Main Method");
+
+        A a=new A();
+        a.display();
+
+        Class.forName("A");
                 
     }
 }

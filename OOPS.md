@@ -169,6 +169,95 @@ class Car{
 > - Java does not support the concept of "nested" methods (a method within another method). All methods in Java are defined at the class level. Therefore, you cannot declare a method inside another method.
 > - Java does support nested classes.
 
+## Basics of Memory Management
+
+### What is Garbage Collector?
+
+- As a programmer you will write lots of classes and your code might ended up creating many objects in the memory, so someone should be responsible for it to clean and vacant those memory occupied by objects, thats where comes your garbage collector.
+- Garbage collection is an automatic process that the programming language runtime (like the Java Virtual Machine for Java) uses to identify and delete objects that are no longer needed by the program.
+- Objects are instances of data that a program creates to perform its tasks. As the program runs, it may create many objects. Some objects are only needed for a short time. Once they are no longer used, they become "**garbage**". The garbage collector's job is to find these unused objects and free up the memory they occupy, making that memory available for new objects.
+
+### Stack  
+
+- In terms of data structure, stack is refered as Last-In-First-Out order. The stack is a linear data structure that is used to store the collection of objects.
+
+![alt text](Images/memorymanagement/image-2.png)
+
+![alt text](Images/memorymanagement/image-3.png)
+
+- **Stack memory** is the temporary memory where variable values are stored when their methods are invoked. After the method is finished, the memory containing those values is cleared to make room for new methods. Any values in this block are only accessible by the current method and will not exist once it ends. When the method ends, that block will be erased. The next method invoked will use that empty block.
+- **In a program if there are multiple methods, then every methods will have its own stack**
+
+### Heap
+
+>[!IMPORTANT]
+> - **The heap in the JVM and the heap in data structures are different concepts, even though they share the same name.**
+
+-  In the JVM, the heap is a portion of memory used for dynamic memory allocation. It's where objects and their associated instance variables are stored. Whenever you create an object using the `new` keyword, the memory for that object is allocated from the heap.
+- Consider the below example
+
+```
+
+class Calculator{
+
+    int instanceVar; // Instance variable
+    public int add(int n1,int n2){
+        return n1+n2; // Local Variables
+    }
+}
+
+public class BasicMemoryManagement{
+    public static void main(String[] args) {
+
+        int localVar=10;
+        Calculator calc=new Calculator();
+        int sum=calc.add(5, 4);
+        System.out.println(sum);
+        calc.instanceVar=6;
+        System.out.println(calc.instanceVar);
+
+        Calculator calc1=new Calculator();
+        calc1.instanceVar=16;
+        System.out.println(calc1.instanceVar);
+    }
+}
+
+Output:
+9
+6
+16
+```
+
+- Now when the program will get executed , main method will have a stack. Inside the stack all its local variables will be there
+
+![alt text](image-1.png)
+
+- `new Calculator()` creates an object inside the heap memory , the address of that object gets stored in the main method stack for **calc** variable. So **calc is a reference variable and not object because it as reference of Calculator Object not the object itself**
+
+![alt text](image-3.png)
+
+- What happens to the instance variable? `int instanceVar` , now instance variable are not part of stack, it gets created within the heap under the same object address.
+
+![alt text](image-4.png)
+
+- Now **calc** calls **add** method , so now a new stack for add method will be created, this add method will have all its local variables.
+
+![alt text](image-2.png)
+
+- What will the values of **n1** and **n2**? it will be 5 and 4 because that it was it been pass when **calc** calls **add** method. After executing add it will return 7 as its output to the variable sum.
+
+![alt text](image-5.png)
+
+- Now we have set the **instanceVar=6** .
+
+![alt text](image-7.png)
+
+- We creating a new object reference for **calc1** and setting **instanceVar=7** for that newly object reference.
+
+![alt text](image-10.png)
+
+- If you notice, the heap size has been also increase thus heap memory is also called as **dynamic memory**.
+
 ## What is String?
 
 - In Java, a String is a sequence of characters and is one of the most commonly used classes in the Java programming language. The String class is part of the `java.lang` package and is used to create and manipulate strings (text).
@@ -199,11 +288,11 @@ Harsh Pandya
 Mr. Harsh Pandya
 ```
 
-- Lets say you have two string variables which stores the same value. What do you thing the reference object are same or different?
+- Lets say you have two string variables which stores the same value. What do you thing the reference variable values are same or different?
 
 ```
         /**
-         * Points the same reference object in the string pool of heap memory
+         * Points the same object in the string pool of heap memory
          */
         String s1="welcome";
         String s2="welcome";
@@ -311,9 +400,58 @@ System.out.println(sb.toString()); // Output: Hello World
 >[!NOTE]
 > - In-built methods which are applicable for string are also applicable for String builder as well as String buffer.
 
+## Packages
+
+- As a developer when you work on a large project , you will be writing many codes. You might ended up multiple files. Now it is a good practice to organize you files into a different folder , thus providing a readability.
+- Packages help organize your code into a structured, hierarchical way, making it easier to manage large projects.
+- Packages are simple sort of folder where all your require files are structure. Packages help avoid naming conflicts for two same while which does the same function but present in different packages or folder.
+- When you are working on large project you might require a different package for a database conections. Lets create that
+
+![alt text](image-12.png)
+
+- Lets create a project java file which will call this **DatabaseDetails.java** 
+
+![alt text](image-13.png)
+
+- If you see it is suggesting to import **DatabaseDetails** of **DatabaseFolder** package, since the class is in different folder
+- Post importing
+
+```
+import DatabaseFolder.DatabaseDetails;
+
+public class AboutPackages {
+
+    public static void main(String[] args) {
+        DatabaseDetails db=new DatabaseDetails();
+        db.connectDb();
+    }
+}
+
+
+Output:
+Connecting Database..
+```
+
+- Now the packages we have declare are **User-defined or Custom** package. `import DatabaseFolder.DatabaseDetails` states that import the class `DatabaseDetails` of the folder `DatabaseFolder`.
+- **Every class methods you use belongs to a package**. There are some in-built packages which comes with JDK.
+- Have wonder `System.out.println` belongs to ?
+
+<video controls src="20240824-0748-27.8244916.mp4" title="Title"></video>
+
+- The `System` is a class which belongs to `java.lang` folder, it means some where in the jdk there is a java folder , inside that there is a sub-folder called lang which has a class called **System**.
+- `java.lang.*` is imported by default into a Java program. When we say `java.lang.*` it means all the files present under lang folder are imported by default.
+- Similarly if we have multiple sub-folders which consist of several file, we can import them using **`*`** wildcard.
+
+### Why Are Packages Required?
+- **Organize Code**: Packages help organize your code into a structured, hierarchical way, making it easier to manage large projects.
+- **Avoid Naming Conflicts**: By grouping related classes together, packages help avoid naming conflicts. Classes in different packages can have the same name.
+- **Access Control**: Packages provide access protection; classes within a package can access each other's members without restriction, while restricting access from classes in different packages.
+- **Reusability**: Packages allow for easy reuse of classes and interfaces. Developers can create libraries of code and distribute them in the form of packages.
+
+
 ## Static
 
-- Lets create a student class and reference object of it.
+- Lets create a student class and reference variable of it.
 
 ```
 class Student{
@@ -386,8 +524,12 @@ School name: BITS ,ID: 1 ,marks: 95
 School name: BITS ,ID: 2 ,marks: 96
 ```
 
-- Why so we got `BITS` for reference object 1?, this is because a static variable is a variable that belongs to the class rather than to any specific instance (object) of the class. It is shared among all instances of the class. Only one copy of a static variable is created and shared across all objects of that class.
+- Why so we got `BITS` for reference variable s1?, this is because a static variable is a variable that belongs to the class rather than to any specific instance (object) of the class. It is shared among all instances of the class. Only one copy of a static variable is created and shared across all objects of that class.
 - Static variables are useful when you want to share a common piece of data across all instances of a class. For example, a variable that counts the number of instances of a class created.
+- The static variables are stored in **MetaSpace** 
+
+![alt text](image-11.png)
+
 - What if the **static** key word is applied on method? , lets apply static keyword on the `details()` method.
 
 ```
@@ -426,7 +568,7 @@ public class AboutStatic {
 
 - We got an error **`Cannot make a static reference to the non-static field id, Cannot make a static reference to the non-static field marks`**. So basically there is 1 value for the variable **schoolname** since it is a static variable, but there are 2 values of **id** and **marks** (`s1.id=1,s2.id=2` and `s1.marks=95,s2.marks=96`) , these are non-static variables. Now since there are two different values, how will the static method will get to know which one to be called and printed?
 - Thats why we can use **a static variable inside a static method but we cannot use a non-static variable inside a static method**.
-- Lets do a work around, now if a static method is confused which values to be printed out what if we pass the reference object to clear out the confusion?
+- Lets do a work around, now if a static method is confused which values to be printed out what if we pass the reference variable's object to clear out the confusion?
 
 ```
 class Student{
@@ -464,7 +606,7 @@ School name: BITS ,ID: 2 ,marks: 95
 School name: BITS ,ID: 1 ,marks: 95
 ```
 
-- So **by passing out the reference object we can use non-static variable can be access in static method**
+- So **by passing out the reference variable's object we can use non-static variable can be access in static method**
 
 
 ### Why Should We Call Static Members via Class Name and Not Object Name?
@@ -546,7 +688,7 @@ Inside static nested class 0
 ```
 
 >[!IMPORTANT]
-> - Static variables (also known as class variables) are associated with the class itself rather than with any particular instance of the class. They are shared across all instances of a class. Static variables are declared at the class level, outside any method.
+> - Static variables (also known as class variables) are associated with the class itself rather than with any particular instance of the class. They are shared across all instances of a class. Static variables are declared at the class level, outside any method. Declaring them inside a method would contradict their class-level nature, as methods are instance-specific (non-static methods) or just a part of the class logic (static methods).
 > - Static variables cannot be defined under any method.
 
 
@@ -554,6 +696,169 @@ Inside static nested class 0
 - A static nested class can access the static members (variables and methods) of the outer class.
 - A static nested class cannot directly access the non-static members of the outer class. It must use an instance of the outer class to do so.
 - Instances of a static nested class are not tied to instances of the outer class.
+
+### Static Block
+
+- Lets say you wanted to execute some statements or initialize values into variable whenever the class is loaded.
+
+```
+public class AboutStatic {
+
+    static{
+        System.out.println("Statement got executed when the class is loaded");
+    }
+
+    public static void main(String[] args) {
+        
+        System.out.println("Inside Main Method");
+                
+    }
+}
+
+Output:
+Statement got executed when the class is loaded
+Inside Main Method
+```
+
+- A static block (also known as a static initializer block) is a block of code that is executed when the class is loaded into memory by the Java ClassLoader. 
+- It is used to initialize static variables and perform any setup required for the class before any instances are created or any static methods are called
+
+#### Characteristics of Static Blocks
+- **Executed Once**: The static block is executed only once, when the class is loaded for the first time.
+- **Executed Before main**: Static blocks are executed before the main method, as well as before any static methods or constructors are called.
+- **Multiple Static Blocks**: You can have more than one static block in a class, and they will be executed in the order in which they appear in the class.
+
+```
+public class AboutStatic {
+
+    static{
+        System.out.println("Statement got executed when the class is loaded");
+    }
+    static{
+        System.out.println("Second Statement");
+    }
+    public static void main(String[] args) {
+
+        System.out.println("Inside Main Method");
+                
+    }
+}
+
+Output:
+Statement got executed when the class is loaded
+Second Statement
+Inside Main Method
+```
+
+#### When to Use Static Blocks?
+- **Initialization of Static Fields**: When static fields need to be initialized with values that require some logic or computation.
+- **Resource Management**: To initialize static resources, such as loading a file or setting up a database connection that will be shared across instances. When working with large project, you need to first initialize database connections , logging etc..
+- **Exception Handling**: To initialize a static variable in a static block that can handle exceptions (since static variable initialization in a field declaration cannot have a try-catch block).
+
+
+- Can we have static block in other class except for main? lets try , so we have a class **A**, and we have create a static block within class A which has a method `display()`.
+
+```
+class A{
+    static int num;
+    static{
+        num=7;
+        System.out.println("Assigned Number 7");
+    }
+
+    public void display(){
+        System.out.println("In A");
+    }
+}
+
+public class AboutStatic {
+
+    static{
+        System.out.println("Statement got executed when the class is loaded");
+    }
+    static{
+        System.out.println("Second Statement");
+    }
+    public static void main(String[] args) {
+
+        System.out.println("Inside Main Method");
+
+        A a=new A();
+        a.display();
+                
+    }
+}
+
+Output:
+Statement got executed when the class is loaded
+Second Statement
+Inside Main Method
+Assigned Number 7
+In A
+```
+
+- So before `display` method is called, the static block statements got executed. What if we don't create object of class A? will it still execute?
+
+```
+class A{
+    static int num;
+    static{
+        num=7;
+        System.out.println("Assigned Number 7");
+    }
+
+    public void display(){
+        System.out.println("In A");
+    }
+}
+
+public class AboutStatic {
+
+    static{
+        System.out.println("Statement got executed when the class is loaded");
+    }
+    static{
+        System.out.println("Second Statement");
+    }
+    public static void main(String[] args) {
+
+                
+    }
+}
+
+Output:
+Statement got executed when the class is loaded
+Second Statement
+```
+
+- So when the object of class A was created then only the static block of A got executed. This state that static block only gets executed when object creation takes place.
+- What if you don't wanna create any object and just wanted to load class A.
+
+```
+public class AboutStatic {
+
+    static{
+        System.out.println("Statement got executed when the class is loaded");
+    }
+    static{
+        System.out.println("Second Statement");
+    }
+    public static void main(String[] args) throws ClassNotFoundException {
+
+        Class.forName("A");
+                
+    }
+}
+
+Output:
+Statement got executed when the class is loaded
+Second Statement
+Assigned Number 7
+```
+
+- So `Class.forName("A")` accepts a string parameter of your class name and just loads the class inside your JVM.
+- This concludes that **static block statements gets executed when the class is loaded or a object of that class is instantiated**.
+
 
 ## Array Objects
 
@@ -600,6 +905,124 @@ Meet , 97 , 2
 - You must create each object individually before storing it in the array.
 - Once stored, you can access and manipulate these objects using their index in the array.
 
+## This 
+
+- Lets say you have a class called Assigned
+
+```
+class AssignedNumbers{
+
+    int num1;
+
+    public void assigned(int n1){
+        num1=n1;
+    }
+    public void display(){
+        System.out.println("Number value is - "+num1);
+    }
+}
+
+public class AboutThis {
+    
+    public static void main(String[] args) {
+        
+        AssignedNumbers a = new AssignedNumbers();
+        a.assigned(5);
+        a.display();
+    }
+}
+
+Output:
+Number value is - 5
+```
+
+- Lets say you wanna change the argument of `assigned` method to **num1**
+
+```
+class AssignedNumbers{
+
+    int num1;
+
+    public void assigned(int num1){
+        num1=num1;
+    }
+    public void display(){
+        System.out.println("Number value is - "+num1);
+    }
+}
+
+public class AboutThis {
+    
+    public static void main(String[] args) {
+        
+        AssignedNumbers a = new AssignedNumbers();
+        a.assigned(5);
+        a.display();
+    }
+}
+
+Output:
+Number value is - 0
+```
+
+- Why did we got 0? this is because you are assigning the value of local variable (num1) to itself. (5=5). You are not assigning your local variable value to your instance variable.
+- How to then assign to our instance variable? one way is to pass the object itself as an argument.
+
+```
+class AssignedNumbers{
+
+    int num1;
+
+    public void assigned(int num1,AssignedNumbers a){
+        a.num1=num1;
+    }
+    public void display(){
+        System.out.println("Number value is - "+num1);
+    }
+}
+
+public class AboutThis {
+    
+    public static void main(String[] args) {
+        
+        AssignedNumbers a = new AssignedNumbers();
+        a.assigned(5,a);
+        a.display();
+    }
+}
+
+Output:
+Number value is - 5
+```
+
+- Now java says, why to again pass the object to method, imagine there are several variable instance and different methods, will you pass the object repeatably ? to avoid this we have a **this** keyword.
+
+```
+class AssignedNumbers{
+
+    int num1;
+
+    public void assigned(int num1){
+        this.num1=num1;
+    }
+    public void display(){
+        System.out.println("Number value is - "+num1);
+    }
+}
+
+public class AboutThis {
+    
+    public static void main(String[] args) {
+        
+        AssignedNumbers a = new AssignedNumbers();
+        a.assigned(5);
+        a.display();
+    }
+}
+
+Output:
+Number value is - 5
+```
 
 ## Method Overloading
 
@@ -735,5 +1158,181 @@ Addition of 5.5 and 4.5 is 10.0
 
 >[!NOTE]
 > - Overloading property is only associated with method and not with variables and classes
+
+## Constructors
+
+- A constructor in Java is a special method that is automatically called when an object of a class is created. The purpose of a constructor is to initialize the newly created object. A constructor has the same name as the class and does not have a return type (not even void).
+- Lets create a constructor
+
+```
+
+class ABC{
+
+    ABC(){ //constructor
+        System.out.println("Constructor of ABC");
+    }
+}
+
+public class AboutConstructor {
+    public static void main(String[] args) {
+
+        /**
+         * Object initialized and reference is assigned to abc 
+         */
+        ABC abc=new ABC();
+    }
+}
+
+Output:
+Constructor of ABC
+```
+
+- Thus, you can see when the object is initialized method `ABC` or the constructor method `ABC` is called by default. We have not specified `abc.ABC()`.
+- Lets create some instance variable and assigned them some default values via constructor.
+
+```
+
+class ABC{
+
+    int age;
+    String name;
+
+    ABC(){ //constructor
+        System.out.println("Constructor of ABC");
+        age=10;
+        name="Harsh";
+        System.out.println("Name: "+name+", age:"+age);
+    }
+}
+
+public class AboutConstructor {
+    public static void main(String[] args) {
+
+        /**
+         * Object initialized and reference is assigned to abc 
+         */
+        ABC abc=new ABC();
+    }
+}
+
+
+Output:
+Constructor of ABC
+Name: Harsh, age:10
+```
+
+- This way constructors are used to initialize the state of an object when it is created. This means setting up the initial values for the object’s instance variables.
+- Now lets add assign value using reference variable. 
+
+```
+
+class ABC{
+
+    int age;
+    String name;
+
+    ABC(){ //constructor or No-Args Constructor
+        System.out.println("Constructor of ABC");
+        age=10;
+        name="Harsh";
+        System.out.println("Name: "+name+", age:"+age);
+    }
+
+    ABC(int age,String name){ // Constructor overloading
+        this.age=age;
+        this.name=name;
+        System.out.println("Constructor with arguments of ABC");
+        System.out.println("Name: "+name+", age:"+age);
+    }
+}
+
+public class AboutConstructor {
+    public static void main(String[] args) {
+
+        /**
+         * Object initialized and reference is assigned to abc 
+         */
+        ABC abc=new ABC();
+        ABC abc1=new ABC(24,"Meet");
+    }
+}
+
+
+Output:
+Constructor of ABC
+Name: Harsh, age:10
+Constructor with arguments of ABC
+Name: Meet, age:24
+```
+
+- You can see by assigning values via object we perform method overloading or to be more specific constructor overloading. You can have multiple constructors in a class with different parameters (this is called constructor overloading).
+- So there are two types of constructor
+
+###  Default Constructor (No-Argument Constructor)
+- **Definition**: A default constructor is a no-argument constructor that is automatically provided by the Java compiler if no other constructors are explicitly defined in the class.
+- **Purpose**: The default constructor initializes the object with default values. For example, numeric fields are initialized to 0, boolean fields to false, and object references to null.
+- **When It's Used**: If you do not define any constructor in your class, the compiler automatically provides a default constructor.
+
+### Parameterized Constructor
+- **Definition**: A parameterized constructor is one that accepts parameters (arguments). It allows you to pass values to the constructor when creating an object, providing a way to initialize the object with different values.
+- **Purpose**: To initialize objects with specific values provided at the time of creation, allowing for greater flexibility and customization.
+- **When It's Used**: When you want to initialize an object with specific values or require certain parameters to be set upon object creation.
+
+
+## Anonymous Object
+
+- What if instead of creating reference variable of an object , can we create only just a object? lets see
+
+```
+class Unknown{
+    public void show(){
+        System.out.println("In display...");
+    }
+}
+public class AboutAnonymous {
+    public static void main(String[] args) {
+        int i=0;
+        new Unknown().show(); // Anonymous Object
+    }
+}
+
+Output:
+In display...
+```
+
+- An anonymous object in Java is an object that is created without being assigned a reference variable. This means that the object is instantiated and immediately used without storing it in a variable.
+- Since it has no reference, it cannot be reused after its creation and initial use.
+
+![alt text](image-14.png)
+
+- Anonymous objects are used when an object is needed only once. For example, when you want to call a method of an object and do not need to reuse the object afterwards.
+- Because anonymous objects are not stored in variables, they can help save memory. After the object is used, it becomes eligible for garbage collection immediately, reducing the memory footprint.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
