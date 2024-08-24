@@ -36,5 +36,8 @@ public class SimpleOOP {
          */
         System.out.println("Unique Identifier for ferrari - "+System.identityHashCode(ferrari));
         System.out.println("Unique Identifier for mustang - "+System.identityHashCode(mustang));
+
+        System.out.println("Not creating reference variable of any class");
+
     }
 }

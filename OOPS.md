@@ -166,8 +166,45 @@ class Car{
     - Initialization: Automatically initialized to default values if not explicitly initialized (e.g., 0 for integers, null for objects).
 
 >[!IMPORTANT]
-> - Java does not support the concept of "nested" methods (a method within another method). All methods in Java are defined at the class level. Therefore, you cannot declare a method inside another method.
-> - Java does support nested classes.
+> - Java does not support the concept of "nested" methods (a new method statements within another method). All methods in Java are defined at the class level. Therefore, you cannot declare a method inside another method.
+> - Java does support nested classes but does support method calling from another method.
+
+
+- Consider the below code.
+
+```
+class Car{
+
+    int speed; // Instance variable
+    int numberOfCyclinder;
+
+    public void startEngine(){
+        System.out.println("Engine Started..."+", speed - "+speed+", cyclinder - "+numberOfCyclinder);
+    }
+
+    public void speedLimit(){
+        int i=200; // Local variable
+    }
+}
+
+public class SimpleOOP {
+    public static void main(String[] args) {
+        System.out.println("Not creating reference variable of any class");
+    }
+}
+
+
+Output:
+Not creating reference variable of any class
+```
+
+![alt text](image-17.png)
+
+- If you see we can see **SimpleOOP.class** file but not **Car.class** file, this is because we have not created any object of it. Such class whose object is not created are not compiled by java.
+
+>[!IMPORTANT]
+> - If class object is not created those class are not compile by java
+
 
 ## Basics of Memory Management
 
@@ -905,7 +942,7 @@ Meet , 97 , 2
 - You must create each object individually before storing it in the array.
 - Once stored, you can access and manipulate these objects using their index in the array.
 
-## This 
+## Reference Keyword 'this'
 
 - Lets say you have a class called Assigned
 
@@ -1308,12 +1345,864 @@ In display...
 - Anonymous objects are used when an object is needed only once. For example, when you want to call a method of an object and do not need to reuse the object afterwards.
 - Because anonymous objects are not stored in variables, they can help save memory. After the object is used, it becomes eligible for garbage collection immediately, reducing the memory footprint.
 
+## Inheritance
+
+- Lets say you have a Basic calculator class which only performs addition and subtraction. 
+
+```
+class BasicCalculator{
+    public int add(int n1, int n2){
+        return n1+n2;
+    }
+
+    public int subtract(int n1,int n2){
+        return n1-n2;
+    }
+}
+
+
+public class AboutInheritence{
+    public static void main(String[] args) {
+        BasicCalculator bc=new BasicCalculator();
+        System.out.println("Addition of 5 and 4 - "+bc.add(5,4));
+        System.out.println("Subtraction of 5 and 4 - "+bc.subtract(5,4));
+    }
+}
+
+Output:
+Addition of 5 and 4 - 9
+Subtraction of 5 and 4 - 1
+```
+
+- Now lets say you have built logic for multiplication as well division, now you have written those logic inside the class. 
+
+```
+class BasicCalculator{
+    public int add(int n1, int n2){
+        return n1+n2;
+    }
+
+    public int subtract(int n1,int n2){
+        return n1-n2;
+    }
+}
+
+
+class CompleteCalculator{
+    public int multiply(int n1,int n2){
+        return n1*n2;
+    }
+
+    public double division(int n1,int n2){
+        return (double)n1/n2;
+    }
+}
+
+public class AboutInheritence{
+    public static void main(String[] args) {
+        BasicCalculator bc=new BasicCalculator();
+        System.out.println("Addition of 5 and 4 - "+bc.add(5,4));
+        System.out.println("Subtraction of 5 and 4 - "+bc.subtract(5,4));
+
+        CompleteCalculator cc=new CompleteCalculator();
+        System.out.println("Multiply 5 and 4 - "+cc.multiply(5,4));
+        System.out.println("Divide 5 and 4 - "+cc.division(5,4));
+
+
+    }
+}
+
+
+Output:
+Addition of 5 and 4 - 9
+Subtraction of 5 and 4 - 1
+Multiply 5 and 4 - 20
+Divide 5 and 4 - 1.25
+```
+
+- Your class `CompleteCalculator` is still incomplete because it does not have addition and subtraction. Now to make this complete you could implement the logic of addition and subtraction by yourself or you could have inherit the properties of `BasicCalculator`.
+
+```
+class BasicCalculator{ // Parent Class or Super Class
+    public int add(int n1, int n2){
+        return n1+n2;
+    }
+
+    public int subtract(int n1,int n2){
+        return n1-n2;
+    }
+}
+
+
+class CompleteCalculator extends BasicCalculator{ // Child Class or Sub Class 
+    public int multiply(int n1,int n2){
+        return n1*n2;
+    }
+
+    public double division(int n1,int n2){
+        return (double)n1/n2;
+    }
+}
+
+public class AboutInheritence{
+    public static void main(String[] args) {
+        BasicCalculator bc=new BasicCalculator();
+        System.out.println("Addition of 5 and 4 - "+bc.add(5,4));
+        System.out.println("Subtraction of 5 and 4 - "+bc.subtract(5,4));
+
+        CompleteCalculator cc=new CompleteCalculator();
+        System.out.println("Multiply 5 and 4 - "+cc.multiply(5,4));
+        System.out.println("Divide 5 and 4 - "+cc.division(5,4));
+        System.out.println("Addition of 5 and 4 - "+cc.add(5,4));
+        System.out.println("Subtraction of 5 and 4 - "+cc.subtract(5,4));
+
+    }
+}
+
+Output:
+Addition of 5 and 4 - 9
+Subtraction of 5 and 4 - 1
+Multiply 5 and 4 - 20
+Divide 5 and 4 - 1.25
+Addition of 5 and 4 - 9
+Subtraction of 5 and 4 - 1
+```
+
+- Inheritance is a fundamental concept of Object-Oriented Programming (OOP) in Java, where one class (the child class or subclass) inherits the properties (fields) and behaviors (methods) of another class (the parent class or superclass).
+- Inheritance allows a new class to reuse the fields and methods of an existing class, thereby promoting code reusability and creating a hierarchical relationship between classes. The child class reference variable can access the parent class instance variable as well as methods.
+- Lets say there is a `reset` method which makes the calculation starting point to 0 ( BasicCalculator ) and to 1 ( CompleteCalculator ). Both method names are same in the parent class as well the child class. If we call the `reset` method using child class reference variable what gonna happen?
+
+```
+class BasicCalculator{ // Parent Class or Super Class
+    public int add(int n1, int n2){
+        return n1+n2;
+    }
+
+    public int subtract(int n1,int n2){
+        return n1-n2;
+    }
+
+    public void reset(){
+        System.out.println("Reset value to 0");
+    }
+}
+
+
+class CompleteCalculator extends BasicCalculator{ // Child Class or Sub Class 
+    public int multiply(int n1,int n2){
+        return n1*n2;
+    }
+
+    public double division(int n1,int n2){
+        return (double)n1/n2;
+    }
+
+    public void reset(){ // Preference given to child class
+        System.out.println("Reset value to 1");
+    }
+}
+
+public class AboutInheritence{
+    public static void main(String[] args) {
+        BasicCalculator bc=new BasicCalculator();
+        System.out.println("Addition of 5 and 4 - "+bc.add(5,4));
+        System.out.println("Subtraction of 5 and 4 - "+bc.subtract(5,4));
+        bc.reset();
+
+        CompleteCalculator cc=new CompleteCalculator();
+        System.out.println("Multiply 5 and 4 - "+cc.multiply(5,4));
+        System.out.println("Divide 5 and 4 - "+cc.division(5,4));
+        System.out.println("Addition of 5 and 4 - "+cc.add(5,4));
+        System.out.println("Subtraction of 5 and 4 - "+cc.subtract(5,4));
+        cc.reset();
+
+    }
+}
+
+
+Output:
+Addition of 5 and 4 - 9
+Subtraction of 5 and 4 - 1
+Reset value to 0
+Multiply 5 and 4 - 20
+Divide 5 and 4 - 1.25
+Addition of 5 and 4 - 9
+Subtraction of 5 and 4 - 1
+Reset value to 1
+```
+
+- Thus we can see when we use reference variable of child class, the method `reset` inside the **CompleteCalculator** got executed. Whenever a method is called using child class reference variable , the method is searched first into child class if not found then java reaches out parent class. This how we can also peform **Method Overriding**
+
+### Why is Inheritance Required?
+- **Code Reusability**: Inheritance allows classes to reuse the code of existing classes, reducing redundancy and making the code more maintainable. A subclass inherits all the non-private fields and methods of its superclass.
+- **Method Overriding**: Subclasses can override methods of the superclass to provide specific implementations for certain behaviors.
+
+### Types of Inheritance
+
+#### 1. Single Level Inheritance
+
+- In single inheritance, a class inherits from only one superclass. This is the simplest form of inheritance.
+- The above code examples are called as single level inheritance.
+
+#### 2. Multilevel Inheritance
+
+- In multilevel inheritance, a class is derived from a class, which is also derived from another class, forming a hierarchy.
+
+```
+class Animal {  // Superclass
+    void eat() {
+        System.out.println("Animal eats");
+    }
+}
+
+class Dog extends Animal {  // Subclass of Animal
+    void bark() {
+        System.out.println("Dog barks");
+    }
+}
+
+class Puppy extends Dog {  // Subclass of Dog
+    void weep() {
+        System.out.println("Puppy weeps");
+    }
+
+    public static void main(String[] args) {
+        Puppy myPuppy = new Puppy();
+        myPuppy.eat();   // Inherited from Animal
+        myPuppy.bark();  // Inherited from Dog
+        myPuppy.weep();  // Defined in Puppy
+    }
+}
+```
+
+#### 3. Hierarchical Inheritance
+
+- In hierarchical inheritance, multiple classes inherit from a single superclass. This means a single class is a parent class for multiple subclasses.
+
+```
+class Vehicle {  // Superclass
+    void run() {
+        System.out.println("Vehicle is running");
+    }
+}
+
+class Car extends Vehicle {  // Subclass 1
+    void display() {
+        System.out.println("Car is a Vehicle");
+    }
+}
+
+class Bike extends Vehicle {  // Subclass 2
+    void display() {
+        System.out.println("Bike is a Vehicle");
+    }
+
+    public static void main(String[] args) {
+        Car myCar = new Car();
+        myCar.run();
+        myCar.display();
+
+        Bike myBike = new Bike();
+        myBike.run();
+        myBike.display();
+    }
+}
+```
+
+#### 4. Multiple Inheritance
+
+- A subclass which extends multiple parent class is called as multiple inheritance , lets try to implement it.
+
+```
+class BasicCalculator{ // Parent Class or Super Class
+    public int add(int n1, int n2){
+        return n1+n2;
+    }
+
+    public int subtract(int n1,int n2){
+        return n1-n2;
+    }
+
+    public void reset(){
+        System.out.println("Reset value to 0");
+    }
+}
+
+
+class CompleteCalculator extends BasicCalculator{ // Child Class or Sub Class 
+    public int multiply(int n1,int n2){
+        return n1*n2;
+    }
+
+    public double division(int n1,int n2){
+        return (double)n1/n2;
+    }
+
+    public void reset(){ // Preference given to child class
+        System.out.println("Reset value to 1");
+    }
+}
+
+class AdvanceCalculator extends CompleteCalculator, BasicCalculator{
+
+    public void scifyCalculations(){
+        System.out.println("Scientific calculations");
+    }
+}
+
+public class AboutInheritence{
+    public static void main(String[] args) {
+        BasicCalculator bc=new BasicCalculator();
+        System.out.println("Addition of 5 and 4 - "+bc.add(5,4));
+        System.out.println("Subtraction of 5 and 4 - "+bc.subtract(5,4));
+        bc.reset();
+
+        CompleteCalculator cc=new CompleteCalculator();
+        System.out.println("Multiply 5 and 4 - "+cc.multiply(5,4));
+        System.out.println("Divide 5 and 4 - "+cc.division(5,4));
+        System.out.println("Addition of 5 and 4 - "+cc.add(5,4));
+        System.out.println("Subtraction of 5 and 4 - "+cc.subtract(5,4));
+        cc.reset();
+
+
+        AdvanceCalculator ac= new AdvanceCalculator();
+        ac.reset();
+    }
+}
+
+```
+
+- Here the **AdvanceCalculator** extends **CompleteCalculator** and **BasicCalculator**. We have create a reference variable of **AdvanceCalculator** and now we are calling `reset` method. Now the `reset` method is present in **CompleteCalculator** (`System.out.println("Reset value to 1");`) and **BasicCalculator** (`System.out.println("Reset value to 0");`), which one will be called? now this creates an ambiguity.
+- Thats why **multiple inheritance is not supported by java**.
+
+>[!NOTE]
+> - Multiple inheritance is not directly support in java but indirectly supported via interfaces which we will see about it later.
+
+## Super & This method
+
+- Lets say you have 2 class X & Y. Each class has their own constructor.
+
+```
+class X{
+    X(){
+        System.out.println("Default Constructor of X");
+    }
+}
+
+class Y{
+    Y(){
+        System.out.println("Default Constructor of Y");
+    }
+}
+
+public class AboutSuperAndThis {
+    public static void main(String[] args) {
+        Y y= new Y();
+        
+    }
+}
+
+Output:
+Default Constructor of Y
+```
+
+- Here we can see when we created the object of **Y** class, by default the construct method got called. Lets say Y extends X.
+- Lets run the program again and see the output.
+
+```
+class X{
+    X(){
+        System.out.println("Default Constructor of X");
+    }
+}
+
+class Y extends X{
+    Y(){
+        System.out.println("Default Constructor of Y");
+    }
+}
+
+public class AboutSuperAndThis {
+    public static void main(String[] args) {
+        Y y= new Y();
+
+    }
+}
+
+
+Output:
+Default Constructor of X
+Default Constructor of Y
+```
+
+- Thats strange right? , **when you create an object of a subclass, the constructor of the superclass is automatically called**.
+- Behind the scene the method `super()` does these thing.
+
+```
+class X{
+    X(){
+        System.out.println("Default Constructor of X");
+    }
+}
+
+class Y extends X{
+    Y(){
+        super();
+        System.out.println("Default Constructor of Y");
+    }
+}
+```
+
+- Lets say you have a method `show()` inside your class X. You wanted to call this `show()` method in your `display()` method of your class Y.
+
+```
+class X{
+    X(){
+        System.out.println("Default Constructor of X");
+    }
+
+    public void show(){
+        System.out.println("Class X show method");
+    }
+}
+
+class Y extends X{
+    Y(){
+        super();
+        System.out.println("Default Constructor of Y");
+    }
+
+    public void display(){
+        super.show();
+        System.out.println("Class Y Display method");
+    }
+}
+
+public class AboutSuperAndThis {
+    public static void main(String[] args) {
+        Y y= new Y();
+        y.display();
+    }
+}
+
+
+Output:
+Default Constructor of X
+Default Constructor of Y
+Class X show method
+Class Y Display method
+```
+
+- As the same `super` suggest , it calls methods or variable of **Super**class.
+
+### Why Super is required?
+
+- **Why super() calls parent constructor?** : In a subclass, the super keyword is used to explicitly call the constructor of its parent class. This is important to ensure that the parent class is properly initialized before the subclass adds its specific initialization. Inheritance means that a subclass inherits properties and behavior from a parent class. To ensure the integrity of this hierarchy, the parent class constructor needs to run to set up its part of the object within subclass constructor.
+- **Accessing Parent Class Methods and Fields**: If the child class has overridden a method of the parent class, you can use super to call the parent class's version of the method.
+- **Avoiding Shadowing**: If a subclass defines a field with the same name as a field in the superclass, super can be used to access the superclass's field.
+
+- Lets create parameterize constructor in X and Y class.
+
+```
+class X{
+    X(){
+        System.out.println("Default Constructor of X");
+    }
+
+    X(int i){
+        System.out.println("Parameterized constructor of X");
+    }
+    public void show(){
+        System.out.println("Class X show method");
+    }
+
+    public void test(){
+        System.out.println("Class X test method");
+    }
+}
+
+class Y extends X{
+    Y(){
+        super();
+        System.out.println("Default Constructor of Y");
+    }
+    Y(int i){
+        System.out.println("Parameterized constructor of Y");
+    }
+    public void display(){
+        super.show();
+        System.out.println("Class Y Display method");
+    }
+
+    public void test(){ // Method Overriding
+        System.out.println("Class Y test method");
+    }
+}
+
+public class AboutSuperAndThis {
+    public static void main(String[] args) {
+
+        /**
+         * Calling Y parameterized constructor
+         */
+        Y y1=new Y(5);
+
+    }
+}
+
+
+Output:
+Default Constructor of X
+Parameterized constructor of Y
+```
+
+- If you see ,X default constructor is called and Y parameterize constructor is called. How will you call X parameterizec constructor? simple just pass int value into the `super` .
+
+```
+class X{
+    X(){
+        System.out.println("Default Constructor of X");
+    }
+
+    X(int i){
+        System.out.println("Parameterized constructor of X");
+    }
+    public void show(){
+        System.out.println("Class X show method");
+    }
+
+    public void test(){
+        System.out.println("Class X test method");
+    }
+}
+
+class Y extends X{
+    Y(){
+        super();
+        System.out.println("Default Constructor of Y");
+    }
+    Y(int i){
+        super(i); // Calling parameterized constructor of X
+        System.out.println("Parameterized constructor of Y");
+    }
+    public void display(){
+        super.show();
+        System.out.println("Class Y Display method");
+    }
+
+    public void test(){ // Method Overriding
+        System.out.println("Class Y test method");
+    }
+}
+
+public class AboutSuperAndThis {
+    public static void main(String[] args) {
+
+        /**
+         * Calling Y parameterized constructor
+         */
+        Y y1=new Y(5);
+
+    }
+}
+
+
+Output:
+Parameterized constructor of X
+Parameterized constructor of Y
+```
+
+- Now lets use `this()` keyword
+
+```
+class X{
+    X(){
+        System.out.println("Default Constructor of X");
+    }
+
+    X(int i){
+        System.out.println("Parameterized constructor of X");
+    }
+    public void show(){
+        System.out.println("Class X show method");
+    }
+
+    public void test(){
+        System.out.println("Class X test method");
+    }
+}
+
+class Y extends X{
+    Y(){
+        super();
+        System.out.println("Default Constructor of Y");
+    }
+    Y(int i){
+        super(i);
+        System.out.println("Parameterized constructor of Y");
+    }
+    Y(double d){
+        this();
+        System.out.println("Parameterized double constructor of Y");
+    }
+    public void display(){
+        super.show();
+        System.out.println("Class Y Display method");
+    }
+
+    public void test(){ // Method Overriding
+        System.out.println("Class Y test method");
+    }
+}
+
+public class AboutSuperAndThis {
+    public static void main(String[] args) {
+
+        /**
+         * Calling Y parameterized double constructor
+         */
+        Y y2=new Y(5.1);
+
+    }
+}
+
+Output:
+Default Constructor of Y
+Parameterized double constructor of Y
+```
+
+- `this()` keywords call the constructor of subclass . `this` keyword in Java are used in object-oriented programming to refer to the current object (this object) respectively.
+- The `this` keyword refers to the current object — the instance of the class in which it appears.
+- It is often used to distinguish between instance variables and parameters or to call other constructors within the same class.
+- Just like `super`, `this` access current class methods and variables it must be always the **first statement** within the constructor.
+- What happens if we write both? , if both `super()` and `this()` need to be the first statement, then only one of them can actually be the first statement in any given constructor. It is not possible to have two first statements, so you cannot use both super() and this() simultaneously in a single constructor.
+
+![alt text](image-18.png)
+
+## Access Modifiers
+
+- Uptil now we have majorly used **public** , so what is this **public**?, it is an type of access assigned to methods or variables.
+- Access modifiers in Java are keywords used to set the access level (visibility) of classes, methods, and other members. They control who can access or modify the code, thereby providing a mechanism for encapsulation and security in Java applications.
+
+### Types of Access Modifiers in Java
+- Java provides four types of access modifiers:
+
+1. **public**
+    - **Access Level**: Visible everywhere. The member (class, method, or variable) can be accessed from any other class in any package.
+    - **Usage**: Used when you want to make a method, variable, or class universally accessible.
+
+2. **private**
+    - **Access Level**: Visible only within the same class. Private instance variable can be access via methods using reference variable but private methods cannot be access via reference variable.
+    - **Usage**: Used to restrict access to sensitive data or methods that should not be exposed outside the class.
+
+    
+    ![alt text](image-19.png)
+    
+    
+    - Private methods can be accessible within the same method of that class.
+
+```
+package AccessModifiers;
+
+class A{
+    private int i;
+
+    public int fetchPrivateVariable(){
+        display();
+        return i;
+    }
+
+    private void display(){
+        System.out.println("Private method");
+    }
+}
+
+public class AboutAccessModifier {
+    public static void main(String[] args) {
+        
+        A a=new A();
+        System.out.println("Accessing private variable via method - "+a.fetchPrivateVariable());
+    }
+}
+
+
+Output:
+Private method
+Accessing private variable via method - 0
+```
+
+3. **protected**
+    - **Access Level**: Visible within the same package and subclasses (even if they are in different packages).
+    - **Usage**: Typically used in inheritance scenarios where you want to give access to subclasses but keep it hidden from other classes.
+
+```
+Protected method in AboutAccessModified.java
+
+package AccessModifiers;
+
+class A{
+    private int i;
+
+    public int fetchPrivateVariable(){
+        display();
+        return i;
+    }
+
+    private void display(){
+        System.out.println("Private method");
+    }
+}
+
+class B{
+    protected int i;
+
+    protected void show(){
+        System.out.println("Protected method show of B");
+    }
+}
+
+public class AboutAccessModifier {
+    public static void main(String[] args) {
+        
+        A a=new A();
+        System.out.println("Accessing private variable via method - "+a.fetchPrivateVariable());
+
+        B b= new B();
+        b.show();
+
+    }
+}
+
+
+Output:
+Private method
+Accessing private variable via method - 0
+Protected method show of B
+
+Inherit class B into class C thus accessing protected methods or variables
+
+package AccessModifiers;
+
+class C extends B{
+
+}
+
+public class OtherClass {
+    public static void main(String[] args) {
+        C c = new C();
+        c.show();
+    }
+}
+
+
+Output:
+Protected method show of B
+```
+
+4. **Default (package-private)**
+    - **Access Level**: Visible only within the same package. This is the default access level when no access modifier is specified.
+    - **Usage**: Used when you want to restrict access to within the same package but do not want to make it protected.
+
+```
+class MyClass { // Accessible only within the same package
+    int packagePrivateNumber; // Default access modifier
+
+    void displayPackagePrivate() {
+        System.out.println("Default (package-private) method");
+    }
+}
+```
+
+#### Summary of types of access modifiers
+
+![alt text](image-20.png)
+
+
+- Can we apply these access modifiers on a **class**, uptil now we have applied this on class members like instance variable and methods. What if we apply access modifiers on a **class**.
+- **private** and **protected** cannot be applied on a class. Java will give your compilation error `Illegal modifier for the class B; only public, abstract & final are permittedJava`.
+- **public** and **default** can be applied, if **public** is not specified implicitly then **default** becomes the access modifier of a class.
+
+## Encapsulation
+
+- Let say if a stranger ask you about personal information like name, age etc.. would you share the details? now it depends like if you are taking a loan the bank manager requires your details to sanction you loan. Your personal information must not be share until and unless it is require. Your personal information data is encapsulated in your brain.
+- Similarly in terms of java, no one must have access of your instance variable of class directly, if any other program needs your instance variable they must ask or they must get the access via method.
+
+![alt text](image-15.png)
+
+- Encapsulation is the mechanism of wrapping the data (variables) and code (methods) that operates on the data into a single unit called a class. It restricts direct access to some of an object's components and prevents the accidental modification of data.
+- In simple terms, encapsulation is about bundling the data (attributes) and methods (functions) that operate on the data into a single unit (class), and controlling the access to the data to ensure the integrity of the object's state.
+- So then how to restrict your data access? , by making your instance variable private.
+
+```
+
+class Information{
+     int age;
+     String name;
+
+
+}
+
+public class Encapsulation{
+    public static void main(String[] args) {
+        Information inf=new Information();
+        inf.age=20;
+        inf.name="Harsh";
+        System.out.println(inf.name+" ,"+inf.age);
+    }
+}
+
+Output:
+Harsh ,20
+```
+
+- The above method is not encapsulated, we are still able to access instance variables. Lets make those **private**.
+
+![alt text](image-16.png)
+
+- The moment we make those variable private, the variables are not visible or accessible to other class directly. Lets create a method to make it access indirectly.
+
+```
+
+class Information{
+     private int age;
+     private String name;
+
+     public void assignAge(int age){
+        this.age=age;
+     }
+     public void assignName(String name){
+        this.name=name;
+     }
+     public int fetchAge(){
+        return age;
+     }
+     public String fetchName(){
+        return name;
+     }
+
+}
+
+public class Encapsulation{
+    public static void main(String[] args) {
+        Information inf=new Information();
+        inf.assignAge(20);
+        inf.assignName("Harsh");
+        System.out.println(inf.fetchName()+", "+inf.fetchAge());
+    }
+}
+
+Output:
+Harsh, 20
+```
 
 
 
+https://medium.com/spring-boot/encapsulation-in-java-understanding-its-importance-and-benefits-7009f03d557e
 
 
+## Method Overriding
 
+## Polymorphism
 
 
 
