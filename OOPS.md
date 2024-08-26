@@ -1193,6 +1193,8 @@ Addition of 5,4 and 6 is 15
 Addition of 5.5 and 4.5 is 10.0
 ```
 
+- Method overloading is a technique, multiple methods in the same class can have the same name but different parameters.
+
 >[!NOTE]
 > - Overloading property is only associated with method and not with variables and classes
 
@@ -1532,6 +1534,43 @@ Reset value to 1
 ```
 
 - Thus we can see when we use reference variable of child class, the method `reset` inside the **CompleteCalculator** got executed. Whenever a method is called using child class reference variable , the method is searched first into child class if not found then java reaches out parent class. This how we can also peform **Method Overriding**
+
+### Method Overriding
+
+- Method overloading is a technique, multiple methods in the same class can have the same name but different parameters.
+- Method overriding is a technique, a subclass provides its own implementation of a method that is already defined in its superclasses. This happens when the method signature (name and parameters) are the same in both the superclass and the child class.
+
+```
+// Superclass
+class Animal {
+    // Method to be overridden
+    public void makeSound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+// Subclass
+class Dog extends Animal {
+    // Overriding the makeSound method
+    @Override
+    public void makeSound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal myAnimal = new Animal(); // Animal reference and object
+        Animal myDog = new Dog(); // Animal reference but Dog object
+
+        myAnimal.makeSound(); // Output: Animal makes a sound
+        myDog.makeSound();    // Output: Dog barks
+    }
+}
+
+```
+
+- When a method in a subclass has the same name, return type, and parameters as a method in its superclass, the subclass's method is said to **override** the superclass's method.
 
 ### Why is Inheritance Required?
 - **Code Reusability**: Inheritance allows classes to reuse the code of existing classes, reducing redundancy and making the code more maintainable. A subclass inherits all the non-private fields and methods of its superclass.
@@ -1979,6 +2018,121 @@ Parameterized double constructor of Y
 
 ![alt text](image-18.png)
 
+## Polymorphism
+
+- "**poly**" meaning "**many**" and "**morph**" meaning "**forms**" or **behavior**. Thus, polymorphism means "many forms" or "many behavior".
+- Lets take a real life example, a human we have different behaviors for a situation, like in office we would have a boss/employee behavior , when human are with friends we have a different behavior, when human is at home , it would have a different behavior.
+- So here human is polymorphic. Similarly in java when we create a object or a reference variable, it will have certain behavior. When we say certain behavior it means **methods**.
+- Lets take an example of method overloading
+
+```
+class Calculator{
+
+    public int add(int n1,int n2){
+
+        /**
+         * Method add returns the sum of n1+n2
+         */
+        return n1+n2;
+    }
+
+    /**
+     * Method Overloading by parameters
+     */
+    public int add(int n1, int n2, int n3){
+        return n1+n2+n3;
+    }
+
+    /**
+     * Method Overloading by type
+     */
+    public double add(double n1,double n2){
+        return n1+n2;
+    }
+}
+
+public class MethodOverloading {
+    
+    public static void main(String[] args) {
+        
+        Calculator twoNums=new Calculator();
+        /**
+         * Passing 4 and 5 required arguments for method "add"
+         */
+        System.out.println("Addition of 5 and 4 is "+twoNums.add(4, 5));
+        System.out.println("Addition of 5,4 and 6 is "+twoNums.add(5, 4,6));
+        System.out.println("Addition of 5.5 and 4.5 is "+twoNums.add(4.5, 5.5));
+
+    }
+}
+
+Addition of 5 and 4 is 9
+Addition of 5,4 and 6 is 15
+Addition of 5.5 and 4.5 is 10.0
+```
+
+- Here when you call the `add` method, depending the number of arguments or parameters the appropriate add method will be called during compilation. So there are 3 different behaviors of `add` but we know which method will be executed based on parameter. This is called **Compile-time Polymorphism or Static Polymorphism**.
+- Lets take an example of method overriding.
+
+```
+// Superclass
+class Animal {
+    public void makeSound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+// Subclass 1
+class Dog extends Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Dog barks");
+    }
+}
+
+// Subclass 2
+class Cat extends Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Cat meows");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal myAnimal; // Reference of type Animal
+        
+        myAnimal = new Dog(); // Animal reference but Dog object
+        myAnimal.makeSound(); // Output: Dog barks
+        
+        myAnimal = new Cat(); // Animal reference but Cat object
+        myAnimal.makeSound(); // Output: Cat meows
+    }
+}
+```
+
+- Here the method `makeSound` behavior is not decided during the compilation, because it depends on the object being called which is created during run-time. Example during compilation the `new Dog()` object is not created but when the program is execute, basically in the run-time the object is created. Thus depending on the object creation during run-time we will be able to determine the behavior of `makeSound()` method. This is called **Runtime Polymorphism or Dynamic Polymorphism Or Dynamic Method Dispatch**.
+- In the above example of `Animal` class, we did not created reference variable of `Dog` class or `Cat` class we created reference variable of its parent which is `Animal` class. **You use a reference variable of a superclass to refer to an object of a subclass**. For example, you can have a reference of type `Animal` pointing to an object of type `Dog`.
+- This behavior is called **Dynamic Method Dispatch**.
+- Lets see the backend memory management for it.
+
+![alt text](image-21.png)
+
+- Also one thing if you observer , we are using the same reference variable of Animal for Cat's object creation. This makes your code **loosely coupled** , so lets say in future you will create another subclass name `Cow` which extends Animal, using the same reference variable you can create object of Cow thus making your code **loosely coupled**.
+- If you have created individual reference variable for each class it would ended up taking space in heap and also made your application **tightly coupled** means for a new subclass like `Cow` you need to create a new reference variable.
+
+### There are two types of polymorphism in Java:
+
+1. **Compile-time Polymorphism (Static Polymorphism)**: This is also known as method overloading. It occurs when multiple methods have the same name with different parameters (different type or number of parameters) within the same class.
+
+2. **Runtime Polymorphism (Dynamic Polymorphism)**: This is achieved through method overriding, where a subclass provides a specific implementation of a method that is already defined in its superclass. The method to be executed is determined at runtime based on the object's type.
+
+### Why Polymorphism required?
+
+1. **Flexibility and Extensibility**: Polymorphism allows a single reference variable to represent different underlying data types. This means you can write more flexible and reusable code. For instance, a method that takes an **Animal** object can accept any subclass of **Animal** like Dog, Cat, etc., allowing you to extend and modify your code with new subclasses without changing the existing code.
+2. **Code Reusability**: It promotes code reusability. You can write code that works on the superclass level, and this code can handle all subclasses equally, allowing you to reuse the same code for different types of objects.
+3. **Ease of Maintenance**: Polymorphism makes it easier to manage and maintain code. Since you can use a single reference variable for multiple methods, any change you make in a superclass method will automatically apply to all subclasses, reducing redundancy and improving maintainability.
+
 ## Access Modifiers
 
 - Uptil now we have majorly used **public** , so what is this **public**?, it is an type of access assigned to methods or variables.
@@ -2131,7 +2285,7 @@ class MyClass { // Accessible only within the same package
 
 - Encapsulation is the mechanism of wrapping the data (variables) and code (methods) that operates on the data into a single unit called a class. It restricts direct access to some of an object's components and prevents the accidental modification of data.
 - In simple terms, encapsulation is about bundling the data (attributes) and methods (functions) that operate on the data into a single unit (class), and controlling the access to the data to ensure the integrity of the object's state.
-- So then how to restrict your data access? , by making your instance variable private.
+- So then how to restrict your data access? , by making your instance variable **private**.
 
 ```
 
@@ -2195,17 +2349,43 @@ Output:
 Harsh, 20
 ```
 
+- Encapsulation in Java refers to integrating data (variables) and code (methods) into a single unit. In encapsulation, a class's variables are hidden from other classes and can only be accessed by the methods of the class in which they are found.
+- In simpler terms, encapsulation is the practice of hiding internal data and functionality of an object from external entities.
+- In Java, encapsulation is implemented through access modifiers such as private, public, and protected, which control the visibility of class members such as fields and methods. Private members can only be accessed within the same class, whereas public members can be accessed anywhere in the program. Protected members can be accessed within the same class, subclasses, and classes in the same package.
+
+### Getters and Setters
+
+- In developers community, to fetch a variable your must should be `getVarname` and while assign a value to a variable your method should be `setVarname`.
+
+```
+public class Person {
+  private String name; // private = restricted access
+
+  // Getter
+  public String getName() {
+    return name;
+  }
+
+  // Setter
+  public void setName(String newName) {
+    this.name = newName;
+  }
+}
+```
+
+>[!NOTE]
+> - This is a standard practice followed in industries however you can have your own name for getters and setters.
 
 
-https://medium.com/spring-boot/encapsulation-in-java-understanding-its-importance-and-benefits-7009f03d557e
 
+## Naming Convention
 
-## Method Overriding
+- Whenever you write a code , a good practice while creating class , methods or variable are:
+    - Class & Interface : Should be in Camel Case e.g class MyCalculator
+    - Variables & Methods : Should be in lower case e.g marks(), show()
+    - Constants : Should be in upper case e.g PIE, EPSON
 
-## Polymorphism
-
-
-
+- This provides readability. 
 
 
 
