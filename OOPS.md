@@ -2376,7 +2376,51 @@ public class Person {
 >[!NOTE]
 > - This is a standard practice followed in industries however you can have your own name for getters and setters.
 
+## Final
 
+- Lets say you have a variable in your program
+
+```
+public class AboutFinal {
+    public static void main(String[] args) {
+        int i=1;
+        i=2;
+        System.out.println("i value : "+i);
+    }
+}
+```
+
+- Lets apply **final** keyword on that variable.
+
+![alt text](image-22.png)
+
+- We get an error which says, `final variable i cannot be assigned`. When a variable is declared as final, its value cannot be changed once it is initialized. This effectively makes the variable a constant like `final double PIE=3.14`.
+
+```
+        final int j;
+        j=1;
+```
+
+- Here we declare a blank variable and then assigned the value to it which works fine.
+- What if , we apply final keyword on a **class**?
+
+![alt text](image-23.png)
+
+- It seems java is stopping us to inherit the class. When a class is declared as final, it cannot be subclassed. This is useful when you want to prevent the inheritance of a class.
+
+- What if we apply that on a method? , it will prevent method overriding if the method belongs is a subclass whos parent class as final method.
+
+![alt text](image-24.png)
+
+- When a method is declared as final, it cannot be overridden by subclasses. This is useful when you want to prevent a method from being modified or altered in any subclass.
+
+### Why final is required?
+
+- Lets say you are making a community based program for which you don't want anyone to modified your variables, method or class implementations, you can use the **final** keyword.
+- **Data Integrity and Consistency**: Using final helps in maintaining data integrity by preventing changes to critical variables or constants.
+- **Preventing Unwanted Overriding**: It ensures that certain methods or classes remain unchanged and consistent, which is important for the correct functioning of libraries and frameworks.
+- **Security**: Helps in securing sensitive parts of the code by preventing inheritance and modification.
+- **Optimization**: In some cases, the JVM can optimize the performance of final methods and variables since it knows they won't change or be overridden.
 
 ## Naming Convention
 
@@ -2385,7 +2429,7 @@ public class Person {
     - Variables & Methods : Should be in lower case e.g marks(), show()
     - Constants : Should be in upper case e.g PIE, EPSON
 
-- This provides readability. 
+- This provides readability.
 
 
 
