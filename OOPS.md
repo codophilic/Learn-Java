@@ -2422,15 +2422,213 @@ public class AboutFinal {
 - **Security**: Helps in securing sensitive parts of the code by preventing inheritance and modification.
 - **Optimization**: In some cases, the JVM can optimize the performance of final methods and variables since it knows they won't change or be overridden.
 
+## Object Class
+
+- **By default every class extends Object class**.
+- So here we create a class , behind the scene for any class java extends object class `extends Object`.
+
+```
+class My extends Object{
+
+}
+
+public class ObjectClass{
+    public static void main(String[] args) {
+        My my=new My();
+        System.out.println(my.toString());
+    }
+}
+
+Output:
+My@2f92e0f4
+```
+
+- If you see class **My** does not consist of any method, but there are default in-build method associated with reference variable **my**. This in-build method are inherited from the object class.
+
+![alt text](image-25.png)
+
+- Object class method (`Ctrl+Shift+O`)
+
+![alt text](image-26.png)
+
+## Upcasting & Downcasting
+
+- Lets take an example 
+
+```
+class Animal{
+
+    public void makeSound(){
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+
+    public void makeSound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class UpcastingDownCasting {
+    public static void main(String[] args) {
+
+        /**
+         * Upcasting
+         */
+        Animal a = (Animal) new Dog();
+        a.makeSound();
+
+        /**
+         * Downcasting
+         */
+        Animal a1 = new Dog();
+        Dog dog = (Dog) a1;
+        dog.makeSound();
+    }
+}
+
+Output:
+Dog barks
+Dog barks
+```
+
+- Upcasting and downcasting are related to inheritance and type conversion between parent and child classes.
+- Upcasting is when a subclass (child class) reference is automatically or explicitly converted to a superclass (parent class) reference.
+- Downcasting is the opposite of upcasting. It converts a superclass reference back to a subclass reference.
+- When you upcast a Dog object to an Animal reference, the actual object in memory is still a Dog. This is why, when you call the `makeSound()` method on the Animal reference a, the Dog class's overridden `makeSound()` method is executed instead of the Animal class's method.
+- Other way
+
+```
+        Animal myAnimal = new Dog(); // Upcasting
+        myAnimal.makeSound(); // Output: Dog barks
+```
+
+- Dynamic method dispatch is a upcasting.
+
+### Key Points to Remember
+
+- Upcasting is always safe and doesn't require explicit casting because every subclass is an instance of its parent class.
+- Downcasting requires explicit casting and is potentially unsafe because not all parent class instances are instances of a specific subclass.
+- Use upcasting when you want to treat different subclass objects uniformly as instances of their parent class.
+- Use downcasting only when you are sure about the actual object type and need to access subclass-specific methods.
+
 ## Naming Convention
 
 - Whenever you write a code , a good practice while creating class , methods or variable are:
     - Class & Interface : Should be in Camel Case e.g class MyCalculator
     - Variables & Methods : Should be in lower case e.g marks(), show()
     - Constants : Should be in upper case e.g PIE, EPSON
-
 - This provides readability.
 
+## Wrapper Classes
+
+- **Java is not purely Object-Oriented because it uses primitive data types to optimize performance. Primitive types are not objects; they are simple data types that represent single values and are stored directly in memory. Primitive data types are stored on the stack (for local variables) or directly in the memory locations of objects (for instance variables), allowing faster access and processing. Primitives are accessed directly by their memory address, without the need for dereferencing. This is faster than accessing object references, which involves additional indirection. Operations on primitives are significantly faster than operations on objects because there is no need for additional memory lookups or method invocations. Arithmetic operations on primitives `(+, -, *, /, etc.)` are performed directly on CPU registers or simple memory addresses, making them much quicker than operations on objects.**
+
+### What is Wrapper Classes?
+
+- Wrapper classes in Java provide a way to use primitive data types (int, char, boolean, etc.) as objects. Each primitive type has a corresponding wrapper class in the `java.lang` package:
+
+![alt text](image-27.png)
+
+- Lets understand via simple example.
+
+```
+public class WrapperClasses {
+    public static void main(String[] args) {
+        
+        // Primitive Data type
+        int i=1;
+
+        // Wrapper class for data type int
+        /**
+         * j is a reference variable of new object Integer
+         */
+        Integer j= new Integer(10);
+
+        System.out.println(i+j);
+
+
+    }
+}
+
+Output:
+11
+```
+
+- So here `Integer` is a class where as `int` is a primitive data type. So `i` is a just a simple variable but `j` is a reference variable. If we click on `Integer` it will show the internal implements which is similar like object and classes.
+
+![alt text](image-28.png)
+
+- Another way to implement these wrapper class and assign value is 
+
+```
+Integer wi=10; // Same as Integer wi= new Integer(10);
+```
+
+- Just like `Integer` we can use other wrapper classes.
+
+```
+public class WrapperClasses {
+    public static void main(String[] args) {
+        
+        // Primitive Data type
+        int i=1;
+
+        // Wrapper class for data type int
+        /**
+         * j is a reference variable of new object Integer
+         */
+        Integer j= new Integer(10);
+
+        System.out.println(i+j);
+
+        Integer wi=10;
+
+
+        float pf=1.5f;
+        Float wf= 1.5f;
+        System.out.println(pf+wf);
+
+        long pl=10l;
+        Long wl=20l;
+
+        System.out.println(pl+wl);
+
+        double pd= 10.20;
+        Double wd=20.10;
+        System.out.println(pd+wd);
+    }
+}
+
+
+Output:
+11
+3.0
+30
+30.3
+```
+
+#### Autoboxing & Unboxing
+
+- Now since wrapper classes are objects, it will have some methods? right? so in those method can we pass primitive variables? lets try
+
+```
+        /**
+         * Autoboxing
+         */
+
+         int pAuto=10;
+         Integer wAuto=pAuto;
+         System.out.println(wAuto);
+
+Output:
+10
+```
+
+- Autoboxing is a procedure of converting a primitive value into an object of the corresponding wrapper class. For example, converting int to Integer class or double to Double, etc.. The Java compiler applies autoboxing when a primitive value is:
+    - Passed as a parameter to a method that expects an object of the corresponding wrapper class.
+    - Assigned to a variable of the corresponding wrapper class.
 
 
 
