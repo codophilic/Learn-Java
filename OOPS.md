@@ -2609,6 +2609,10 @@ Output:
 30.3
 ```
 
+- Wrapper classes wrap primitive data type value into a class object. It is this wrapper class that helps to make Java object-oriented.
+
+![alt text](image-29.png)
+
 #### Autoboxing & Unboxing
 
 - Now since wrapper classes are objects, it will have some methods? right? so in those method can we pass primitive variables? lets try
@@ -2626,16 +2630,132 @@ Output:
 10
 ```
 
-- Autoboxing is a procedure of converting a primitive value into an object of the corresponding wrapper class. For example, converting int to Integer class or double to Double, etc.. The Java compiler applies autoboxing when a primitive value is:
+- **Autoboxing** is a procedure of converting a primitive value into an object of the corresponding wrapper class. For example, converting int to Integer class or double to Double, etc.. The Java compiler applies autoboxing when a primitive value is:
     - Passed as a parameter to a method that expects an object of the corresponding wrapper class.
     - Assigned to a variable of the corresponding wrapper class.
 
+```
+1. Passing a Primitive to a Method that Expects a Wrapper Class Object
 
+List<Double> doubleList = new ArrayList<>(); // List of Double objects // Collections
+double primitiveDouble = 15.5; // Primitive type
 
+doubleList.add(primitiveDouble); // Autoboxing occurs here
 
+- The ArrayList doubleList is defined to store Double objects (the wrapper class for double).
+- When we pass primitiveDouble (a double primitive) to the add() method, the Java compiler automatically converts primitiveDouble from double to Double. This is autoboxing in action.
 
+2. Assigning a Primitive to a Wrapper Class Variable:
 
+Integer intObject; // Wrapper class variable
+int primitiveInt = 10; // Primitive type
 
+intObject = primitiveInt; // Autoboxing occurs here
+
+```
+
+```
+
+         /**
+          * Unboxing
+          */
+          Integer a=3;
+          int var1=a.intValue(); // Unboxing // Explicit specify the conversion or unboxing.
+          int var2=a; // Auto-unboxing // Compiler automatically unbox from Wrapper to primitive
+
+Output:
+9
+```
+
+- The automatic conversion of wrapper type into its corresponding primitive type is known as unboxing. It is the reverse process of autoboxing. Unboxing on the other hand refers to converting an object of a wrapper type to its corresponding primitive value. For example conversion of Integer to int. The Java compiler applies to unbox when an object of a wrapper class is: 
+    - Passed as a parameter to a method that expects a value of the corresponding primitive type.
+    - Assigned to a variable of the corresponding primitive type.
+
+```
+1. Passing a Wrapper Class Object to a Method that Expects a Primitive Type:
+
+List<Double> doubleList = new ArrayList<>();
+doubleList.add(15.5); // Autoboxing: primitive double to Double
+
+double primitiveDouble = doubleList.get(0); //unboxing
+
+- The ArrayList doubleList is defined to store Double objects (wrapper class for double). When we retrieve an element from doubleList using list.get(0), it returns a Double object.
+- However, when passing this object to a method getFirstElement that expects a primitive double, unboxing automatically converts the Double object to its primitive double form.
+
+2. Assigning a Wrapper Class Object to a Primitive Type Variable:
+
+Integer intObject = 10; // Autoboxing: int to Integer
+int primitiveInt = intObject; // Unboxing: Integer to int
+
+```
+
+![alt text](image-30.png)
+
+### Why Wrapper Class is Invented?
+
+- Now the question arise why wrapper class is actually invented when we have primitive data types?
+- Java is an object-oriented language, and many of its features are designed around objects. Primitive data types (such as int, char, etc.) are not objects; they are simple data containers.
+
+<details>
+<summary>Memory management for primitive data types</summary>
+
+1. **Optimization**:
+    - Primitives require less memory compared to their corresponding wrapper classes because they do not have the overhead associated with objects, such as object headers or metadata.
+    - For example, an int variable occupies 4 bytes of memory, while an Integer object may occupy significantly more due to the overhead of the object itself (headers, metadata, and alignment padding).
+2. **Faster Access and Processing**
+    - Primitive data types are stored on the stack (for local variables) or directly in the memory locations of objects (for instance variables), allowing faster access and processing:
+    - Stack Storage: Local primitive variables are stored in the stack memory, which is much faster to allocate and access compared to heap memory (where objects are stored).
+    - Direct Access: Primitives are accessed directly by their memory address, without the need for dereferencing. This is faster than accessing object references, which involves additional indirection.
+    - Operations on primitives are significantly faster than operations on objects because there is no need for additional memory lookups or method invocations.
+    - Arithmetic operations on primitives (+, -, *, /, etc.) are performed directly on CPU registers or simple memory addresses, making them much quicker than operations on objects.
+3. **Lower Garbage Collection Overhead**
+    - Since primitive data types are not objects, they do not need to be managed by the garbage collector. This reduces the overhead of garbage collection and memory management
+    - Primitive variables do not involve object creation or destruction, so there are fewer allocations on the heap and less work for the garbage collector.
+    - Primitives do not need to be garbage collected, which reduces the frequency and duration of garbage collection cycles.
+    
+</details>
+
+- Wrapper classes (like Integer, Character, Double, etc.) allow primitives to be treated as objects, which enables their use in object-based APIs, collections, and other data structures that require objects (e.g., ArrayList, HashMap).
+- **Java collections (like ArrayList, HashMap, HashSet, etc.) and the generics system only work with objects, not primitive types**. You cannot create a `List<int>`, but you can create a `List<Integer>`. ( We will later about collections and generics).
+
+```
+List<Integer> list = new ArrayList<>(); // Works because Integer is a class
+list.add(10); // Autoboxing converts '10' (int) to 'Integer' object
+```
+
+- Wrapper classes provide utility methods to convert between primitive types and strings, parse strings into primitives, or perform numerical operations.
+
+```
+String numberString = "123";
+int number = Integer.parseInt(numberString); // Parses the string into a primitive int
+```
+
+- Primitive types cannot hold a null value, but their corresponding wrapper classes can. This feature is useful when you want to indicate the absence of a value (e.g., in databases or collections where a value might be optional or missing).
+
+```
+Integer number = null; // Possible with Integer (wrapper class)
+// int number = null; // Not possible with primitive int
+```
+
+- **Java automatically converts between primitives and their wrapper classes (autoboxing and unboxing) to make coding easier and more intuitive**. However, wrapper classes are still required because they offer capabilities that primitive types alone cannot provide, especially in contexts where objects are needed (like collections, generics, nullability, and utility methods).
+
+- **Wrapper classes are final and immutable**. Lets see what does it means, when we say 
+
+```
+Integer x=10; 
+x=11; // x reference variable is referring a new object.
+```
+
+- We can change the value if we look via code, but behind the scene a new object is created. `x` was initially pointing to 10. When a new Integer object is created with the value 11. The reference `x` is then updated to point to this new object. The original Integer object with the value 10 remains unchanged, but the reference `x` no longer points to it.
+
+- Wrapper Final classes cannot be extended, which means no other class can inherit from them and potentially introduce mutability or other behavior changes. This preserves the intended immutability and simplicity of the wrapper classes. Making wrapper classes final also prevents subclasses from overriding methods in a way that could violate the expected contract of immutability, such as adding setters or other mutating methods.
+-  In Java, the wrapper classes (Integer, Long, Boolean, etc.) provide a mechanism for caching commonly used objects within a certain range. When we create a new wrapper object for a primitive value within a certain range (e.g., Integer objects for values between -128 and 127), Java will reuse an existing object from an internal cache instead of creating a new one.
+
+```
+Integer a = 100; // Uses cached object
+Integer b = 100; // Reuses cached object
+System.out.println(a == b); // Output: true (same object)
+```
 
 
 

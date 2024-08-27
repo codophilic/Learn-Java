@@ -36,5 +36,16 @@ public class WrapperClasses {
          int pAuto=10;
          Integer wAuto=pAuto;
          System.out.println(wAuto);
+
+
+         /**
+          * Unboxing
+          */
+          Integer a=3;
+          int var1=a.intValue(); // Unboxing // Explicit specify the conversion or unboxing.
+          int var2=a; // Auto-unboxing // Compiler automatically unbox from Wrapper to primitive
+
+          System.out.println(a+var1+var2);
+
     }
 }
