@@ -2757,6 +2757,422 @@ Integer b = 100; // Reuses cached object
 System.out.println(a == b); // Output: true (same object)
 ```
 
+## Abstract 
+
+- Lets say you are building a AI , where the AI will solve any kind of problem but you don't know what ML & DL model it will require? but you sure know that ML & DL model are required for it ? so you just create an empty methods for ML and DL
+
+```
+class AI{
+    public void MLModel(){
+
+    }
+
+    public void DLModel(){
+
+    }
+
+    public void AllProblems(){
+        System.out.println("AI Solves All the problems but requires both ML and DL model");
+    }
+}
+```
+
+- In the AI developer community , developer will create a subclass and override these method, but as per code it does not implies that both ML & DL model are require, because when we create a subclass we can override both of these method or one of these , but to built AI it is compulsory to have both.
+
+```
+class AI{
+    public void MLModel(){
+
+    }
+
+    public void DLModel(){
+
+    }
+
+    public void AllProblems(){
+        System.out.println("AI Solves All the problems but requires both ML and DL model");
+    }
+}
+
+class DeveloperCommunity extends AI{
+
+    public void DLModel(){
+        System.out.println("I think only DL Model will perfectly work for AI");
+    }
+}
+```
+
+- Lets define `abstract` keyword. **Whenever we declare a method as abstract , we need to specify that class also as abstract**.
+
+```
+abstract class AI{
+    public abstract void MLModel();
+
+    public abstract void DLModel();
+
+    public void AllProblems(){
+        System.out.println("AI Solves All the problems but requires both ML and DL model");
+    }
+}
+```
+
+- Now if anyone extends our parent class AI , they need to **mandatory** define logic for ML as well as DL model.
+
+![alt text](image-31.png)
+
+
+```
+abstract class AI{
+    public abstract void MLModel();
+
+    public abstract void DLModel();
+
+    public void AllProblems(){
+        System.out.println("AI Solves All the problems but requires both ML and DL model");
+    }
+}
+
+class DeveloperCommunity extends AI{
+
+    @Override
+    public void DLModel(){
+        System.out.println("I think only DL Model will perfectly work for AI");
+    }
+
+    @Override
+    public void MLModel() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'MLModel'");
+    }
+}
+```
+
+- **Abstract** serves as a blueprint for other classes. It can have abstract methods (methods without a body) and concrete methods (methods with a body).
+- **Whenever a method is declared abstract, we need to make the class also as abstract. But astract class may or may not have abstract methods or may or may not have concrete methods**.
+- An abstract method is a method that does not have a body; it only has a method signature (name, return type, parameters) followed by a semicolon. Abstract methods must be implemented (i.e., given a body) by subclasses (non-abstract classes that extend the abstract class).
+- Can we try to create object of abstract class? lets try
+
+![alt text](image-32.png)
+
+- **An abstract class is a class that cannot be instantiated directly. This means you cannot create an object of an abstract class.**
+- But we can create object of subclass 
+
+```
+abstract class AI{
+
+    public abstract void MLModel();
+
+    public abstract void DLModel();
+
+    public void AllProblems(){
+        System.out.println("AI Solves All the problems but requires both ML and DL model");
+    }
+}
+
+class DeveloperCommunity extends AI{
+
+    @Override
+    public void DLModel(){
+        System.out.println("I think only DL Model will perfectly work for AI");
+    }
+
+    @Override
+    public void MLModel() {
+        // TODO Auto-generated method stub
+        System.out.println("I think ML and DL Model will perfectly work for AI");
+    }
+}
+
+public class AboutAbstract{
+    public static void main(String[] args) {
+        
+        AI ai=new DeveloperCommunity(); // Dynamic method dispatch
+        ai.DLModel();
+    }
+}
+
+Output:
+I think only DL Model will perfectly work for AI
+```
+
+### Why is Abstract Required?
+
+- An abstract method is a way to enforce that a method must be implemented by any subclass. If you simply declared a method as empty (e.g., void myMethod() {}), the subclass could choose to ignore it or not provide its specific behavior. By declaring a method as abstract, you ensure that every subclass must provide its own implementation of that method. This creates a contract between the abstract class and its subclasses.
+- Using abstract makes the design clearer. When you see an abstract method, you immediately understand that this method is meant to be overridden in subclasses and that each subclass will have its own specific implementation. If you just had an empty method, this intention wouldn't be as clear, making the code harder to understand and maintain.
+- **Design Purpose**: Abstract classes are used to provide a common base or blueprint for subclasses. They allow you to define methods that must be created in any subclass, enforcing a contract of what the subclass should do.
+- **Reuse Code**: They help in reusing code as they can have common functionality (concrete methods) that can be shared across multiple subclasses.
+- **Flexibility**: You can create abstract methods in the abstract class that can be implemented in multiple ways by different subclasses.
+
+
+- Lets say one of the developer builts AI only using ML model but that developer requires a plugin which is based on the future tech stack. So in that case your `DeveloperCommunity` also becomes a abstract class.
+
+```
+abstract class AI{
+
+    public abstract void MLModel();
+
+    public abstract void DLModel();
+
+    public void AllProblems(){
+        System.out.println("AI Solves All the problems but requires both ML and DL model");
+    }
+}
+
+abstract class DeveloperCommunity extends AI{
+
+    @Override
+    public void DLModel(){
+        System.out.println("I think only DL Model will perfectly work for AI");
+    }
+
+}
+
+class futureMLModelPlugin extends DeveloperCommunity{
+
+    @Override
+    public void MLModel() {
+        // TODO Auto-generated method stub
+        System.out.println("Only ML plugin can built AI");
+    }
+
+    
+}
+
+public class AboutAbstract{
+    public static void main(String[] args) {
+        
+        AI ai=new futureMLModelPlugin(); // Dynamic method dispatch
+        ai.DLModel();
+        ai.MLModel();
+    }
+}
+
+Output:
+I think only DL Model will perfectly work for AI
+Only ML plugin can built AI
+```
+
+## Nested or Inner classes
+
+- A nested class in Java is a class that is defined within another class.
+
+```
+class N1{
+    int i;
+
+    public void display(){
+        System.out.println("In N1 class");
+    }
+
+    class N2{
+        public void display(){
+            System.out.println("In N2 class");
+        }
+    }
+}
+
+
+public class AboutNestedClass {
+    public static void main(String[] args) {
+        
+        N1 n1 = new N1();
+        n1.display();
+
+        /**
+         * Create reference variable for non-static nested class using outer class object
+         */
+        N1.N2 n2 = n1. new N2();
+        n2.display();
+    }
+}
+
+Output:
+In N1 class
+In N2 class
+```
+
+- To access the nested class, we need to have object of its outer class. This was an example of Non-static Nested Class (Inner Class).
+- So basically for **Non-static nested class methods we require object of its outer class**.
+- Lets a static nested class example.
+
+```
+class N1{ // Non-Static class
+    int i;
+
+    public void display(){
+        System.out.println("In N1 class");
+    }
+
+    class N2{
+        public void display(){
+            System.out.println("In N2 class");
+        }
+    }
+
+    static class N3Static{
+        public void display(){
+            System.out.println("In N3Static");
+        }
+    }
+}
+
+
+
+
+public class AboutNestedClass {
+    public static void main(String[] args) {
+        
+        N1 n1 = new N1();
+        n1.display();
+
+        /**
+         * Create reference variable for non-static nested class using outer class object
+         */
+        N1.N2 n2 = n1. new N2();
+        n2.display();
+
+        /**
+         * Create reference variable for static nested class using outer class object
+         */
+        N1.N3Static n3 = new N1.N3Static();
+        n3.display();
+    }
+}
+
+
+Output:
+In N1 class
+In N2 class
+In N3Static
+```
+
+- **Outer class cannot be declare as static**.
+- Nested classes can access private members of the outer class, which helps in encapsulating the outer class's data.
+
+```
+class OuterClass {
+    private int outerValue = 10;
+
+    // Static nested class
+    static class StaticNestedClass {
+        void display() {
+            System.out.println("I am a static nested class");
+        }
+    }
+
+    // Non-static nested class (Inner class)
+    class InnerClass {
+        void display() {
+            System.out.println("I am an inner class. Outer value is " + outerValue);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Creating an instance of StaticNestedClass
+        OuterClass.StaticNestedClass staticNested = new OuterClass.StaticNestedClass();
+        staticNested.display(); // Output: I am a static nested class
+
+        // Creating an instance of InnerClass
+        OuterClass outer = new OuterClass();
+        OuterClass.InnerClass inner = outer.new InnerClass();
+        inner.display(); // Output: I am an inner class. Outer value is 10
+    }
+}
+```
+
+### Why Nested Class?
+
+- Consider a scenario where you need to use some class X within another class Y . The simplest way to do this is to create a top level class X and use it in class Y. That works but what if no other class needs X? X may not even have a significance of its own. X may have a meaning only in context of Y.
+- For example, use nested classes when the nested class logically belongs to the outer class. For example, a Node class within a LinkedList class, where the node is tightly coupled with the structure of the list.
+- If a class should not be visible to the outside world except to its containing class, make it a nested class.
+- Grouping classes together that are only used together makes the code easier to maintain and understand.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
