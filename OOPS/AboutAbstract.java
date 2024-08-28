@@ -1,5 +1,7 @@
 abstract class AI{
 
+    int i=10;
+    
     public abstract void MLModel();
 
     public abstract void DLModel();

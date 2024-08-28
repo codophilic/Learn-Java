@@ -2849,6 +2849,7 @@ class DeveloperCommunity extends AI{
 
 - **Abstract** serves as a blueprint for other classes. It can have abstract methods (methods without a body) and concrete methods (methods with a body).
 - **Whenever a method is declared abstract, we need to make the class also as abstract. But astract class may or may not have abstract methods or may or may not have concrete methods**.
+- An abstract class may or may not have instance variables
 - An abstract method is a method that does not have a body; it only has a method signature (name, return type, parameters) followed by a semicolon. Abstract methods must be implemented (i.e., given a body) by subclasses (non-abstract classes that extend the abstract class).
 - Can we try to create object of abstract class? lets try
 
