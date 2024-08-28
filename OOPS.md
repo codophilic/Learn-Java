@@ -2993,6 +2993,11 @@ In N2 class
 
 - To access the nested class, we need to have object of its outer class. This was an example of Non-static Nested Class (Inner Class).
 - So basically for **Non-static nested class methods we require object of its outer class**.
+- When we compile Nester class we get below type of class file
+
+![alt text](image-33.png)
+
+- The nested class is separated by `$`.
 - Lets a static nested class example.
 
 ```
@@ -3089,11 +3094,93 @@ public class Main {
 - If a class should not be visible to the outside world except to its containing class, make it a nested class.
 - Grouping classes together that are only used together makes the code easier to maintain and understand.
 
+### Anonymous Inner class
 
+- Lets say you have a class 
 
+```
+class OnceTobeUsed{
 
+    public void show(){
+        System.out.println("In OnceTobeUsed");
+    }
+}
+```
 
+- Now some where in your requirement you wanna to override the method `show` of class `OnceTobeUsed`, you could have create a new class or you could create **Anonymous class**.
 
+```
+
+        /**
+         * Anonymous Inner class
+         */
+        OnceTobeUsed utb = new OnceTobeUsed(){
+            public void show(){
+                System.out.println("Anonymous Class");
+            }
+        };
+
+        //utb is reference variable of anonymous {...} inner class and not OnceTobeUsed
+        utb.show();
+
+Output:
+Anonymous Class
+```
+
+- An anonymous inner class in Java is a type of inner class that does not have a name and is used to instantiate an object with certain **modifications** such as method overriding. It is typically used for creating an instance of a class with modifications for one-time use.
+- **You can override methods of the superclass. You cannot add new methods in the anonymous inner class because it doesn't have a name that can be used to call the new methods directly.**
+
+```
+Runnable runnable = new Runnable() {
+    @Override
+    public void run() {
+        System.out.println("Running...");
+    }
+
+    // This method is not accessible outside this block
+    public void newMethod() {
+        System.out.println("New method.");
+    }
+};
+
+// You cannot call runnable.newMethod(); because it's not part of the Runnable interface
+```
+
+- If you attempt to define a new method inside the anonymous inner class, it won't be accessible directly because you cannot refer to the class by name (as it doesn’t have one).
+- When we compile the class we get below class file
+
+![alt text](image-34.png)
+
+- If you see **1** indicates that an anonymous class, now if your have many such anonymous class then the value will increment like 2,3 etc..
+
+### Abstract Anonymous Inner class
+
+- What if your parent class is abstract class? 
+
+```
+abstract class AbstractOnceTobeUsed{
+    abstract public void display();
+}
+
+psvm..
+        /**
+         * Here AbstractOnceTobeUsed is abstract class we cannot create object of it
+         * but in the below code `new AbstractOnceTobeUsed(){...}` here we are creating object of anonymous inner class
+         */
+        AbstractOnceTobeUsed abc= new AbstractOnceTobeUsed() {
+            public void display(){
+                System.out.println("Abstract Anonymous Inner class");
+            }
+        };
+        abc.display();
+
+Output:
+Abstract Anonymous Inner class
+```
+
+- Look below compile anonymous classes.
+
+![alt text](image-35.png)
 
 
 

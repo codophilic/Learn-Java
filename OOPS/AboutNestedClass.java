@@ -19,6 +19,17 @@ class N1{ // Non-Static class
 }
 
 
+class OnceTobeUsed{
+
+    public void show(){
+        System.out.println("In OnceTobeUsed");
+    }
+}
+
+abstract class AbstractOnceTobeUsed{
+    abstract public void display();
+}
+
 
 
 public class AboutNestedClass {
@@ -38,5 +49,28 @@ public class AboutNestedClass {
          */
         N1.N3Static n3 = new N1.N3Static();
         n3.display();
+
+        /**
+         * Anonymous Inner class
+         */
+        OnceTobeUsed utb = new OnceTobeUsed(){
+            public void show(){
+                System.out.println("Anonymous Class");
+            }
+        };
+
+        //utb is reference variable of anonymous {...} inner class and not OnceTobeUsed
+        utb.show();
+
+        /**
+         * Here AbstractOnceTobeUsed is abstract class we cannot create object of it
+         * but in the below code `new AbstractOnceTobeUsed(){...}` here we are creating object of anonymous inner class
+         */
+        AbstractOnceTobeUsed abc= new AbstractOnceTobeUsed() {
+            public void display(){
+                System.out.println("Abstract Anonymous Inner class");
+            }
+        };
+        abc.display();
     }
 }
