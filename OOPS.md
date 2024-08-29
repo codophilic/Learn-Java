@@ -3184,6 +3184,231 @@ Abstract Anonymous Inner class
 ![alt text](image-35.png)
 
 
+## Interface
+
+- Lets say you have a class which consist of **abstract methods or variables only**.
+
+```
+abstract class AllTest{
+    public abstract void test1();
+    public abstract void test2();
+    ..
+    ..
+    public abstract void test100();
+}
+
+```
+
+- Suppose you need to create 100 test method , so every time you need to specify **public abstract** for each of these 100 test method, we can avoid this by using **Interface**
+
+```
+interface AllTest{
+     void test1();
+     void test2();
+    ..
+    ..
+     void test100();
+}
+```
+
+- An interface in Java is a reference type, similar to a class, that is a collection of abstract methods (methods without a body). Interfaces provide a way to define methods that must be implemented by any class that implements the interface, thereby providing a way to enforce certain behaviors across different classes. An interface can also contain constants, default methods, static methods, and nested types.
+- **All methods in an interface are, by default, public and abstract, and all variables declared in an interface are implicitly public, static (we need to call them using interface name), and final (if we declare variable then we need to initialized it)**.
+- Interface provides you the design whereas a class **implements** those design.
+
+```
+interface AllTest{
+
+    long totalMarks=100;
+
+    void test1();
+    void test2();
+    void test3();
+}
+
+class EnglishTest implements AllTest{
+
+    @Override
+    public void test1() {
+        System.out.println("English Test1");
+    }
+
+    @Override
+    public void test2() {
+        System.out.println("English Test2");
+    }
+
+    @Override
+    public void test3() {
+        System.out.println("English Test3");
+    }
+    
+}
+
+public class AboutInterface{
+    public static void main(String[] args) {
+
+        /**
+         * Cannot create object of interface
+         */
+        //AllTest at= new AllTest();
+
+        EnglishTest et= new EnglishTest();
+        et.test1();
+        System.out.println(AllTest.totalMarks); // Variables are static, so we can directly access it using interface name
+
+        // AllTest.totalMarks=100; // Cannot update final variable
+    }
+}
+
+Output:
+English Test1
+100
+```
+
+- Lets say you wanted to add more test cases for the interface, but not directly on the interface by implementing it.
+
+```
+interface AllTest{
+
+    long totalMarks=100;
+
+    void test1();
+    void test2();
+    void test3();
+}
+
+abstract class MoreTestCases implements AllTest{
+
+    public abstract void test4();
+    public abstract void test5();
+    public abstract void test6();
+}
+```
+
+- By default when we don't implement methods of an interface , the class becomes an **abstract** class.
+- But we have seen we can define all these repetitive `public abstract` methods into interface, right, so can we create a interface and then **extends** another interface?
+
+```
+interface AllTest{
+
+    long totalMarks=100;
+
+    void test1();
+    void test2();
+    void test3();
+}
+
+interface ManyTestCases extends AllTest{
+
+    void test4();
+    void test5();
+    void test6();
+    
+}
+
+class EnglishTest implements AllTest{
+
+    @Override
+    public void test1() {
+        System.out.println("English Test1");
+    }
+
+    @Override
+    public void test2() {
+        System.out.println("English Test2");
+    }
+
+    @Override
+    public void test3() {
+        System.out.println("English Test3");
+    }
+    
+}
+```
+
+
+### Why Can't We Create Objects of an Interface?
+
+- An interface cannot be instantiated directly because it does not have a complete implementation. Interfaces only provide method declarations, not method bodies. To use an interface, you need to have a concrete class that implements all the abstract methods of the interface.
+
+### Need of an Interface
+
+- In programming, a program must be generalize rather than specialized. This makes your application loosely coupled. Lets see an example.
+- So here we have Developer class , a developer requires a laptop to work with.
+
+```
+
+class Laptop{
+
+}
+
+class Developer{
+
+    public void development(Laptop device){
+        System.out.println("Developer performing development");
+    }
+}
+
+public class AboutInterface{
+    public static void main(String[] args) {
+
+        Laptop lap = new Laptop();
+        Developer dev= new Developer();
+        dev.development(lap);
+    }
+}
+
+Output:
+Developer performing development
+```
+
+- When the developer was doing WFH , he was doing development on a laptop, but when we went to office he has a desktop, now the development needs to be done on a desktop.
+
+```
+class Laptop{
+
+}
+
+class Desktop{
+
+}
+
+class Developer{
+
+    public void development(Laptop device){
+        System.out.println("Developer performing development");
+    }
+}
+
+public class AboutInterface{
+    public static void main(String[] args) {
+
+        Desktop dk= new Desktop();
+        dev.development(dk); // Error because dk is type of Desktop and Laptop
+    }
+}
+```
+
+- Now if you see, variable `dk` is of type **Desktop** and not type of **Laptop**, so we need to change argument type of `development` to Desktop `public void development(Desktop device)` OR we can do method overloading
+
+```
+class Developer{
+
+    public void development(Laptop device){
+        System.out.println("Developer performing development");
+    }
+
+    public void development(Desktop device){
+        System.out.println("Developer performing development");
+    }
+}
+```
+
+- What if tomorrow, there is a touch based computer device and the developer requires that to use it? you need to create a new method to do method overloading like `TouchBasedComp`, this dependency of class makes your application tightly coupled.
+- Lets use a generic interface which will be implemented by all types of devices like Laptop, Desktop or TouchBasedComp.
+
+
+
 
 
 
