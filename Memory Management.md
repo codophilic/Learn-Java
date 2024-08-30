@@ -261,3 +261,7 @@ class Car {
 #### Memory Areas in Java Before Java 8
 
 - https://www.linkedin.com/pulse/memory-management-java-softyoi-llp-wxrsf/
+
+where is interfaces present in memory management? abstract class ? static variables methods
+- types of interfaces, abstract
+- concept of nested classes and its type, for normal class static class abstract class , interfaces, class and interfaces method nested with class.

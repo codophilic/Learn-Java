@@ -85,12 +85,29 @@ interface Computer{
     void development();
 }
 
-class Laptop extends Computer{
+class Laptop implements Computer{
+
+    @Override
+    public void development() {
+        System.out.println("Using Laptop");
+    }
 
 }
 
-class Desktop{
+class Desktop implements Computer{
 
+    @Override
+    public void development() {
+        System.out.println("Using Desktop");
+    }
+}
+
+class TouchBasedComp implements Computer{
+
+    @Override
+    public void development() {
+        System.out.println("Using TouchBasedComp");
+    }
 }
 
 class Developer{
@@ -103,9 +120,32 @@ class Developer{
         System.out.println("Developer performing development");
     }
 
-    p
+    public void development(Computer com){
+        com.development();
+    }
 }
 
+interface first{
+    void display();
+}
+
+interface second{
+    void show();
+}
+
+class third implements first,second{
+
+    @Override
+    public void display() {
+
+    }
+
+    @Override
+    public void show() {
+        
+    }
+    
+}
 
 public class AboutInterface{
     public static void main(String[] args) {
@@ -127,5 +167,35 @@ public class AboutInterface{
 
         Desktop dk= new Desktop();
         dev.development(dk); // Error because dk is type of Desktop and Laptop
+
+
+        Developer dev1 = new Developer();
+        /**
+         * Developer Got Laptop
+         */
+        Computer com=new Laptop();
+        dev1.development(com);
+
+        /**
+         * Developer Got Desktop
+         */
+        com=new Desktop();
+        dev1.development(com);
+
+        /**
+         * Developer Got TouchBasedComp
+         */
+        com= new TouchBasedComp();
+        dev1.development(com);
+
+        Computer com1= new Computer() {
+
+            @Override
+            public void development() {
+                System.out.println("One-Time Purpose Only");
+            }
+        
+        };
+        com1.development();
     }
 }

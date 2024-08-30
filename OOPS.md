@@ -3406,17 +3406,185 @@ class Developer{
 
 - What if tomorrow, there is a touch based computer device and the developer requires that to use it? you need to create a new method to do method overloading like `TouchBasedComp`, this dependency of class makes your application tightly coupled.
 - Lets use a generic interface which will be implemented by all types of devices like Laptop, Desktop or TouchBasedComp.
+- So basically a developer requires a Computer , whether it could be laptop , desktop etc..
+
+```
+interface Computer{
+    void development();
+}
+
+class Laptop implements Computer{
+
+    @Override
+    public void development() {
+        System.out.println("Using Laptop");
+    }
+
+}
+
+class Desktop implements Computer{
+
+    @Override
+    public void development() {
+        System.out.println("Using Desktop");
+    }
+}
+
+class TouchBasedComp implements Computer{
+
+    @Override
+    public void development() {
+        System.out.println("Using TouchBasedComp");
+    }
+}
+
+class Developer{
+
+    public void development(Computer com){
+        com.development();
+    }
+}
+
+public class AboutInterface{
+    public static void main(String[] args) {
+
+        Developer dev1 = new Developer();
+        /**
+         * Developer Got Laptop
+         */
+        Computer com=new Laptop();
+        dev1.development(com);
+
+        /**
+         * Developer Got Desktop
+         */
+        com=new Desktop();
+        dev1.development(com);
+
+        /**
+         * Developer Got TouchBasedComp
+         */
+        com= new TouchBasedComp();
+        dev1.development(com);
+    }
+}
+
+Output:
+Using Laptop
+Using Desktop
+Using TouchBasedComp
+```
+
+- Here if you see we are passing reference variable of the implemented class `Computer` this makes the `development` loosely coupled.
+- The code is loosely coupled because the `Developer` class depends on the `Computer` interface, not on specific implementations (Laptop, Desktop, TouchBasedComp). This allows the Developer to work with any Computer implementation without changing its code, making the system more flexible and easier to extend with new types of computers.
+- Lets say you wanted to have an implementation of interface but only for 1 time.
+
+```
+public class AboutInterface{
+    public static void main(String[] args) {
 
 
+        Computer com1= new Computer() {
 
+            @Override
+            public void development() {
+                System.out.println("One-Time Purpose Only");
+            }
+        
+        };
+        com1.development();
+    }
+}
 
+Output:
+One-Time Purpose Only
+```
 
+- The code appears to create an object of the Computer interface, but it's actually creating an instance of an anonymous inner class that implements the Computer interface.
+- So, `com1` is not an instance of the Computer interface itself (since interfaces cannot be instantiated), but rather an instance of an anonymous class that implements Computer.
 
+#### Multiple Inheritance 
 
+- Consider below example
 
+```
 
+interface first{
+    void display();
+}
 
+interface second{
+    void show();
+}
 
+class third implements first,second{
+
+    @Override
+    public void display() {
+
+    }
+
+    @Override
+    public void show() {
+        
+    }
+    
+}
+```
+
+- Here class is implementing both interfaces `first` and `second`, does it will consists implementation of both the interfaces, this how **interfaces helps to provide multiple inheritance**.
+- In simple terms, interfaces in Java are needed for the following reasons:
+
+1. **Define a Contract:** Interfaces provide a way to define a set of methods that a class must implement. Think of an interface as a contract or agreement that any class must follow. If a class implements an interface, it promises to provide implementations for all the methods defined in the interface.
+
+2. **Achieve Abstraction:** Interfaces help in achieving abstraction, which means that you can define methods without worrying about how they are implemented. The details are hidden from the user of the interface, and only the method signatures are exposed.
+
+3. **Support Multiple Inheritance:** Java does not support multiple inheritance with classes (a class cannot extend more than one class), but a class can implement multiple interfaces. This allows a class to inherit behaviors (method contracts) from multiple sources, solving the problem of multiple inheritance in a safe and controlled manner.
+
+4. **Decouple Code:** Interfaces help in decoupling the code. For example, if a method uses an interface type instead of a specific class type, it can work with any object that implements that interface, making the code more flexible and easier to maintain.
+
+## Enum (enumerations)
+
+- In a week we have 5 working days, these days are fixed, Monday .. Friday. Since the number of days are fixed it will be always constant. Now in java if you wanted to store these days you could have 5 different variables. But what if Saturday also becomes a working day? you need to again create a new variable right?, so basically each time there is a new working day introduce or excluded we need to create or remove the variables.
+- What if we have a special class that only holds such constant values?, we have **Enums**
+- **Enums** (short for **enumerations**) in Java are a special type of class that represents a fixed set of constants. They are used to define a collection of constants that are related to each other.
+
+```
+enum WorkingDays{
+    Monday,Tuesday,Wednesday,Thursday,Friday;
+}
+
+public class AboutEnum{
+    public static void main(String[] args) {
+        
+        WorkingDays wd=WorkingDays.Monday;
+        System.out.println("Current working day is "+wd);
+
+        WorkingDays[] getAllDays = WorkingDays.values();
+        for(WorkingDays i: getAllDays){
+            System.out.println(i);
+        }
+
+        /**
+         * Each constant has a index in Enum , starting from 0
+         */
+        WorkingDays getFirstDay = WorkingDays.Monday;
+        System.out.println("Index of Monday - "+getFirstDay.ordinal());
+    }
+}
+
+Output:
+Current working day is Monday
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Index of Monday - 0
+```
+
+- We can call a constant variable inside an enum class by using the enum class name and the variable name.
+- https://medium.com/nerd-for-tech/enums-in-java-f70b155b443e
 
 
 
