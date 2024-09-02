@@ -3543,6 +3543,111 @@ class third implements first,second{
 
 4. **Decouple Code:** Interfaces help in decoupling the code. For example, if a method uses an interface type instead of a specific class type, it can work with any object that implements that interface, making the code more flexible and easier to maintain.
 
+### Types of Interface
+
+1. **Normal or Regular Interface**: A normal interface in Java contains abstract methods that need to be implemented by any class that implements the interface. All above  code example of interfaces are normal or regular interface.
+
+2. **Marker or Tag Interfaces**: A marker interface is an interface with no methods or fields.
+
+```
+interface SpecialEntity {
+    // Marker interface has no methods or fields
+}
+
+class SpecialClass implements SpecialEntity {
+    void display() {
+        System.out.println("SpecialClass object.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        SpecialClass specialObj = new SpecialClass();
+        specialObj.display();
+        
+        if (specialObj instanceof SpecialEntity) {
+            System.out.println("This object is marked as a SpecialEntity.");
+        } else {
+            System.out.println("This object is not marked as a SpecialEntity.");
+        }
+    }
+}
+
+Output:
+SpecialClass object.
+This object is marked as a SpecialEntity.
+```
+
+#### Why marker interface is required when it is empty ?
+
+- **Object Type Identification** : Marker interfaces are used to indicate that a class belongs to a particular category or possesses a specific capability. For example, a class implementing the Cloneable interface indicates that it supports cloning. The Java runtime can then use this information to allow or disallow certain operations (like cloning). At runtime, Java can use the **instanceof** operator to check if an object is of a particular marker interface type. This helps in making decisions based on whether an object is marked with a particular capability then we need to execute the statement or else not.
+- Marker interfaces were the best available solution before Java 5.0 introduced annotations. Many of the marker interfaces, such as `Serializable` and `Cloneable`, have been around since early versions of Java (JDK 1.1). Removing them would break backward compatibility with a massive amount of existing code.
+- Removing a marker interface or changing the way a class is marked as `Serializable` or `Cloneable` would require recompiling any class that relies on it, which could break binary compatibility. Java developers are very cautious about breaking binary compatibility, as it would force developers to recompile large amounts of code.
+- In practice, existing Java frameworks (e.g., Spring, Hibernate) often use marker interfaces to enforce certain behaviors. Rewriting these frameworks to use annotations instead of marker interfaces would involve a lot of work for little immediate gain
+
+
+3. **Functional or Single Abstract method Interfaces**: A functional interface is an interface with exactly one abstract method. These interfaces can be implemented using lambda expressions.
+
+```
+interface Greeting {
+    void sayHello(String name);
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Using lambda expression to implement the sayHello method
+        Greeting greeting = (name) -> System.out.println("Hello, " + name + "!");
+        
+        greeting.sayHello("Alice");
+    }
+}
+
+Output:
+Hello, Alice!
+```
+
+4. **Sealed Interfaces (Java 17 Feature)** A sealed interface restricts which other interfaces or classes may implement it. This feature provides more control over the inheritance hierarchy, allowing only a specific set of classes or interfaces to implement the sealed interface.
+
+```
+sealed interface Vehicle permits Car, Truck {
+    void displayType();
+}
+
+final class Car implements Vehicle {
+    @Override
+    public void displayType() {
+        System.out.println("This is a Car.");
+    }
+}
+
+final class Truck implements Vehicle {
+    @Override
+    public void displayType() {
+        System.out.println("This is a Truck.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Vehicle car = new Car();
+        Vehicle truck = new Truck();
+        
+        car.displayType();
+        truck.displayType();
+    }
+}
+
+
+Output:
+This is a Car.
+This is a Truck.
+```
+
+#### Why Sealed Interfaces are required?
+
+- Sealed interfaces, introduced in Java 17, provide a more refined approach to controlling inheritance. They allow a class or interface to specify which classes can implement or extend it.
+
+
 ## Enum (enumerations)
 
 - In a week we have 5 working days, these days are fixed, Monday .. Friday. Since the number of days are fixed it will be always constant. Now in java if you wanted to store these days you could have 5 different variables. But what if Saturday also becomes a working day? you need to again create a new variable right?, so basically each time there is a new working day introduce or excluded we need to create or remove the variables.

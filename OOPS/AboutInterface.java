@@ -147,6 +147,25 @@ class third implements first,second{
     
 }
 
+sealed interface Vehicle permits Car, Truck {
+    void displayType();
+}
+
+final class Car implements Vehicle {
+    @Override
+    public void displayType() {
+        System.out.println("This is a Car.");
+    }
+}
+
+final class Truck implements Vehicle {
+    @Override
+    public void displayType() {
+        System.out.println("This is a Truck.");
+    }
+}
+
+
 public class AboutInterface{
     public static void main(String[] args) {
 
@@ -197,5 +216,11 @@ public class AboutInterface{
         
         };
         com1.development();
+
+        Vehicle car = new Car();
+        Vehicle truck = new Truck();
+        
+        car.displayType();
+        truck.displayType();
     }
 }
