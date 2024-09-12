@@ -3,6 +3,26 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+class InvalidAgeException extends RuntimeException {
+
+    public InvalidAgeException(String exceptionMsg){
+
+        super(exceptionMsg);
+
+        /**
+         * Or using System.out.println or System.out.print if not to use super
+         */
+    }
+}
+
+class CompileTimeAgeCheckerException extends Exception{
+
+    public CompileTimeAgeCheckerException(String msg){
+        super(msg);
+    }
+}
+
+
 public class AboutExceptions{
     public static void main(String[] args) {
 
@@ -45,13 +65,49 @@ public class AboutExceptions{
         }
 
         try{
-            System.out.println("Division - "+division(5,0));
+            System.out.println("Division - "+division(5,0)); // Ducking occurs
         }catch(ArithmeticException de){
             System.out.println("Division method failed");
         }
+
+        try{
+            throw new OutOfMemoryError();
+        }catch(Throwable var){
+            System.out.println("Out of memory occurred");
+        }
+
+        try{
+            throw new ArithmeticException();
+        }catch(Throwable var){
+            System.out.println("Arithmetic Exception occurred");
+        }
+
+        int age=-5;
+        try{
+            if(age<0)
+            throw new InvalidAgeException("Age is negative");
+        }
+        catch(InvalidAgeException iae){
+            System.out.println(iae);
+        }
+
+        int Age=1000;
+        try {
+            System.out.println(display(Age));
+        } catch (CompileTimeAgeCheckerException eage) {
+            System.out.println(eage);
+        }
+
     }
 
-    public static int division(int num,int den) throws ArithmeticException("Custom Exception Message"),NullPointerException{
+        // Method ducks the ArithmeticException,NullPointerException by declaring it with 'throws'
+    public static int division(int num,int den) throws ArithmeticException,NullPointerException{
         return num/den;
+    }
+
+    public static String display(int age) throws CompileTimeAgeCheckerException{
+        if(age>100)
+            throw new CompileTimeAgeCheckerException("Age is greater than 100");
+        return "Age is valid";
     }
 }
