@@ -4547,7 +4547,7 @@ Division method failed
 
 - You cannot pass your own custom message in these exceptions.
 
->[!ERROR]
+> [!CAUTION]
 > - Below declaration is invalid leading to syntax error
 > ```
 > 
