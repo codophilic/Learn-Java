@@ -353,7 +353,7 @@ Output:
 >[!IMPORTANT]
 > - If we explicitly specify **`String str=new String("Explicitly telling java to create a new Object but still it won't create")`** then still it will search in String pool. If literal is not available then only its creates a new object of string.
 
-### Common String methods
+### Common String in-built methods
 
 ```
         String str = "Hello";
@@ -427,6 +427,8 @@ System.out.println(sb.toString()); // Output: Hello World
 - **Not Thread-Safe**: **StringBuilder** is not synchronized, meaning it is not safe to use in a multi-threaded environment without additional synchronization.
 - **Usage**: Use **StringBuilder** when you need to perform many modifications on a string in a single-threaded environment. It's more efficient than StringBuffer because it doesn’t have the synchronization overhead.
 - **Performance**: It is the fastest option for string modification when thread safety is not a concern.
+
+*We will explore String buffer and String builder when we will learn about threads*
 
 ```
 StringBuilder sb = new StringBuilder("Hello");
@@ -757,7 +759,7 @@ Statement got executed when the class is loaded
 Inside Main Method
 ```
 
-- A static block (also known as a static initializer block) is a block of code that is executed when the class is loaded into memory by the Java ClassLoader. 
+- A static block (also known as a static initializer block) is a block of code that is executed when the class is loaded into memory by the Java ClassLoader. So it only executes once because class is loaded once until new changes are made into it.
 - It is used to initialize static variables and perform any setup required for the class before any instances are created or any static methods are called
 
 #### Characteristics of Static Blocks
@@ -3606,6 +3608,8 @@ Output:
 Hello, Alice!
 ```
 
+*We will see more about lambda expression*
+
 4. **Sealed Interfaces (Java 17 Feature)** A sealed interface restricts which other interfaces or classes may implement it. This feature provides more control over the inheritance hierarchy, allowing only a specific set of classes or interfaces to implement the sealed interface.
 
 ```
@@ -3689,24 +3693,907 @@ Index of Monday - 0
 ```
 
 - We can call a constant variable inside an enum class by using the enum class name and the variable name.
-- https://medium.com/nerd-for-tech/enums-in-java-f70b155b443e
+- Since we call Enum variables using class name, so **all members of an enum are implicitly static, including its constants.**
+
+### Constructor in Enum
+
+- Lets say we have a laptop class
+
+```
+enum Laptop{
+    MACBOOK,HP,DELL,ASUS;
+}
+```
+
+- We need to define price for each of these laptop. We can do it this way
+
+```
+enum Laptop{
+    MACBOOK(1000),HP(500),DELL(750),ASUS(600);
+
+    private int price;
+
+    Laptop(int price) {
+        this.price=price;
+    }
+}
+```
+
+- If you see we have create a parameterized constructor, which takes a integer. So all these constant has assigned with a price and this price is stored into a variable `price`. But wait does it all the price of each constant are stored into a single variable? Nope, each constant will invoke the `Laptop` parameterize constructor, in which they gonna pass their data (`price`) into constructor.
+- Can we access this integer of each constant? yes, using getters setters.
+
+```
+enum Laptop{
+    MACBOOK(1000),HP(500),DELL(750),ASUS(600);
+
+    private int price;
+
+    Laptop(int price) {
+        this.price=price;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+}
+
+public class AboutEnum{
+    public static void main(String[] args) {
+
+        Laptop lap=Laptop.MACBOOK;
+        System.out.println("Laptop Price "+lap.getPrice());
+        lap.setPrice(2000);
+        System.out.println("Laptop Price "+lap.getPrice());
+    }
+}
+```
+
+- Lets say we need to define RAM for each laptop.
+
+```
+enum Laptop{
+    MACBOOK(1000,"64GB"),HP(500,"32GB"),DELL(750,"32GB"),ASUS(600,"128GB");
+
+    private int price;
+
+    private String ram;
+
+    Laptop(int price,String ram) {
+        this.price=price;
+        this.ram=ram;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public String getRam() {
+        return ram;
+    }
+
+    public void setRam(String ram) {
+        this.ram = ram;
+    }
+
+}
+
+public class AboutEnum{
+    public static void main(String[] args) {
+
+        Laptop lap=Laptop.MACBOOK;
+        System.out.println("Laptop Price "+lap.getPrice());
+        lap.setPrice(2000);
+        System.out.println("Laptop Price "+lap.getPrice());
+        System.out.println("Laptop RAM "+lap.getRam());
+
+    }
+}
+
+Output:
+Laptop Price 1000
+Laptop Price 2000
+Laptop RAM 64GB
+```
+
+- Lets say we will be having a new Laptop but the price and ram are not yet fixed. In such case we can simply just define the constant. Now since we have a parameterize constructor we need to also create a default constructor.
+
+```
+enum Laptop{
+    MACBOOK(1000,"64GB"),HP(500,"32GB"),DELL(750,"32GB"),ASUS(600,"128GB"),NEWLAPTOP;
+
+    private int price;
+
+    private String ram;
+
+    Laptop(){
+        System.out.println("Default Constructor");
+        this.price=0;
+        this.ram="not defined";
+    }
+
+    Laptop(int price,String ram) {
+        System.out.println("Parameterized Constructor");
+        this.price=price;
+        this.ram=ram;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public String getRam() {
+        return ram;
+    }
+
+    public void setRam(String ram) {
+        this.ram = ram;
+    }
+}
+
+public class AboutEnum{
+    public static void main(String[] args) {
+        Laptop lap=Laptop.MACBOOK;
+        System.out.println("Laptop Price "+lap.getPrice());
+        lap.setPrice(2000);
+        System.out.println("Laptop Price "+lap.getPrice());
+        System.out.println("Laptop RAM "+lap.getRam());
+        
+        Laptop newlap=Laptop.NEWLAPTOP;
+        System.out.println("Laptop Price "+newlap.getPrice());
+        System.out.println("Laptop RAM "+newlap.getRam());
+    }
+}
+
+Output:
+Parameterized Constructor
+Parameterized Constructor
+Parameterized Constructor
+Parameterized Constructor
+Default Constructor
+Laptop Price 1000
+Laptop Price 2000
+Laptop RAM 64GB
+Laptop Price 0
+Laptop RAM not defined
+```
+
+- As said , each constant calls the constructor . So here if we define only constant the default constructor got executed once whereas for constant associated with values , the parameterize constructor got executed 3 times.
+
+>[!NOTE]
+> - Enums are primarily meant to represent immutable constants, meaning their values should not change once they are defined.
+> - Allowing setters, as in above example, can technically modify the values, but that goes against the intended purpose of enums, which is to define constant values that should not be modified during runtime.
+> - In an enum, you cannot create new constants at runtime, but you can modify the data associated with a constant if you provide mutable fields or setters. However, this goes against the primary use case of enums, which is to represent immutable constants.
 
 
+### Features of Enum
+
+- Enum constants are **public, static, and final,** which means they are unchangeable and cannot be overridden.
+- When an enum is defined, Java automatically creates instances of each constant. You cannot create new instances of an enum because the set of constants is predefined and finite. Thats why can't we create objects of Enums. So, the object creation is handled internally, and new instances cannot be created by the user, as this would defeat the purpose of having a fixed set of constants.
+
+```
+public enum Day {
+    SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY;
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Day today = Day.MONDAY;
+        // Cannot create a new object like this: new Day() is not allowed
+        // Because the instances (like Day.MONDAY) are already created by the enum
+    }
+}
+```
+
+- Enums can have constructors, methods, and variables just like regular classes. However, enum constructors are implicitly private, meaning they cannot be called externally. Why are constructor private? enum constructor to be private because enums define a finite set of values. If the constructor was public or protected, people could potentially create more value. As we can’t create enum objects explicitly, hence we can’t call the enum constructor directly.
+
+```
+enum Direction {
+    NORTH(0), EAST(90), SOUTH(180), WEST(270);
+
+/**
+ * Each enum constant (NORTH, EAST, etc.) is internally treated like an instance or object of the Direction enum. So, when you declare NORTH(0), it is like creating an object Direction.NORTH with the value 0 passed to the constructor. NORTH(0) is equivalent to calling new Direction(0).
+ * Java automatically creates these objects for each constant at compile time
+ * The value 0 is passed to the constructor private Direction(int degrees)
+    public static final Direction NORTH = new Direction(0);
+    public static final Direction EAST = new Direction(90);
+ */
+    private int degrees;
+
+    // Constructor
+    private Direction(int degrees) {
+        this.degrees = degrees;
+    }
+
+    // Method
+    public int getDegrees() {
+        return degrees;
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Direction dir = Direction.NORTH;
+        System.out.println("Direction: " + dir + " Degrees: " + dir.getDegrees());
+    }
+}
 
 
+Output:
+Direction: NORTH Degrees: 0
+```
+
+- The number of times the constructor executes is determined by the number of constants in the enum.
+- Enums can implement interface but cannot extends any class. In java multiple inheritance are not supported in class i.e a class cannot extends multiple classes. Enum implicitly extends `java.lang.Enum ` now if it extends any other class it would break the multiple inheritance concept for a class. Thats why it can implement interfaces but cannot extends any class.
+
+```
+Code wise
+public enum Direction {
+    NORTH, EAST, SOUTH, WEST;
+}
+
+Internally
+public final class Direction extends java.lang.Enum<Direction> {
+    public static final Direction NORTH = new Direction();
+    public static final Direction EAST = new Direction();
+    // ... other constants
+}
+```
+
+- Example of interface.
+
+```
+interface Describable {
+    String getDescription();
+}
+
+enum Planet implements Describable {
+    EARTH("Third planet from the Sun"), MARS("Fourth planet from the Sun");
+
+    private String description;
+
+    private Planet(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        Planet p = Planet.EARTH;
+        System.out.println(p.getDescription());
+    }
+}
+
+Output:
+Third planet from the Sun
+```
+
+### Enum with if-else
+
+```
+enum LogLevel {
+    INFO, WARNING, ERROR;
+}
+
+public class LogTest {
+    public static void main(String[] args) {
+        LogLevel currentLogLevel = LogLevel.WARNING;
+
+        if (currentLogLevel == LogLevel.INFO) {
+            System.out.println("This is an INFO level message.");
+        } else if (currentLogLevel == LogLevel.WARNING) {
+            System.out.println("This is a WARNING level message.");
+        } else if (currentLogLevel == LogLevel.ERROR) {
+            System.out.println("This is an ERROR level message.");
+        }
+    }
+}
+
+Output:
+This is a WARNING level message.
+```
+
+### Enum with Switch Case
+
+```
+enum LogLevel {
+    INFO, WARNING, ERROR;
+}
+
+public class LogTest {
+    public static void main(String[] args) {
+        LogLevel currentLogLevel = LogLevel.ERROR;
+
+        switch (currentLogLevel) {
+            case INFO:
+                System.out.println("This is an INFO level message.");
+                break;
+            case WARNING:
+                System.out.println("This is a WARNING level message.");
+                break;
+            case ERROR:
+                System.out.println("This is an ERROR level message.");
+                break;
+            default:
+                System.out.println("Unknown log level.");
+        }
+    }
+}
+
+Output:
+This is an ERROR level message.
+```
+
+## Annotations
+
+- Lets consider below example
+
+```
+class A{
+
+    public void thisistheshowmethodwhichbelongstoaclass(){
+        System.out.println("In A");
+    }
+}
+class B extends A{
+
+    public void thisistheshowmethodwhichbelongtoaclass(){
+        System.out.println("In B");
+    }
+}
 
 
+public class AboutAnnotations {
+    
+    public static void main(String[] args) {
+        B b = new B();
+        b.thisistheshowmethodwhichbelongstoaclass();    
+    }
+
+}
+
+Output:
+In A
+```
+
+- Hey wait, here we create two method **thisistheshowmethodwhichbelongstoaclass** and **thisistheshowmethodwhichbelongtoaclass**, the the B class method must override the A class method right? , if you observe the B and A class method name , A class : *thisistheshowmethodwhichbelong**s**toaclass* and B class : *thisistheshowmethodwhichbelongtoaclass*, B class is missing letter **`s`**. Thats why in the output we got `In A`. 
+- Such human mistakes could happen, now to avoid this java provides some annotations e.g `@Override` which help to show that the method name is not same as parent method name.
+
+![alt text](image-36.png)
+
+```
+class A{
+
+    public void thisistheshowmethodwhichbelongstoaclass(){
+        System.out.println("In A");
+    }
+}
+class B extends A{
+
+    @Override
+    public void thisistheshowmethodwhichbelongstoaclass(){
+        System.out.println("In B");
+    }
+}
 
 
+public class AboutAnnotations {
+    
+    public static void main(String[] args) {
+        B b = new B();
+        b.thisistheshowmethodwhichbelongstoaclass(); 
+    }
+
+}
+
+Output:
+In B
+```
+
+- Annotations in Java are metadata that provide additional information about a program but do not directly affect the code’s operation. They are a form of syntactic metadata that can be applied to classes, methods, fields, parameters, and other elements in the code.
+- Annotations in Java are marked by the **@** symbol, followed by the annotation name. They can be applied to various code elements, including classes, methods, fields, parameters, and even other annotations.
+- Annotations in Java are a form of metadata, providing information about the code to the compiler, runtime, or other tools.
+- The annotation `@Override` tells the compiler that this method is an overridden method (metadata about the method), and if any such method does not exist in a subclass class which is extending the parent class, then throw a compiler error (method does not override a method from its parent class).
+- There are other annotations like `@Deprecated` which is applied on class or on methods stating the functionality can be use with the current version but will be remove in the future version.
+
+![alt text](image-37.png)
+
+- If any one uses the class or method, they will see strike in their editor.
+
+![alt text](image-38.png)
+
+- Even if you use it , something below like message will be shown during the run-time
+
+```
+Note: AboutAnnotations.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+In B
+```
+
+- We have seen about functional interface or single abstract method. We have an annotation of it `@FunctionalInterface`. If you see , second method `show1()` is not allowed , it gives some error.
+
+![alt text](image-39.png)
+
+- So this way annotation not only helps in readability but also helps the compiler to stick with the functionality mentioned using the annotation.
+- In Spring framework, there are pretty good amount of annotations used like `@Component`,`@Autowired`, `@Entity`, `@Table` etc..
+- Lets explore the `@Override` and `@Deprecated` annotation by clicking on it.
+
+![alt text](image-40.png)
+
+![alt text](image-41.png)
+
+- If you see both are interfaces and there is nothing any logic thing written on it, then how does it works? basically the java compiler knows the related logic for every in-built annotation. Thus the annotation just provide metadata or information to the compiler and using that the compiler, depending on whatever annotation, perform the compilation.
+- The Java compiler has built-in knowledge about how to handle these annotations. This knowledge is embedded within the compiler’s codebase. The compiler knows how to interpret the metadata provided by annotations and what checks or actions to perform based on them.
+- The java compiler leverages **annotation processor**. Annotation processors are a specialized tool that the Java compiler leverages during the compilation process. They play a crucial role in analyzing and processing annotations at compile time.
+- For `@Override`: The compiler checks whether the annotated method correctly overrides a method from a superclass or interface.
+- For `@Deprecated`: The compiler generates warnings when deprecated methods or classes are used.
+- For `@FunctionalInterface`: The compiler checks that the annotated interface meets the criteria for a functional interface.
+- If you see `@Retention` and `@Target` anntotation define, what are they?
+- Annotations in Java are processed at compile time or runtime, depending on their retention policy. The retention policy is specified by the `@Retention` annotation, and it can be one of three values: SOURCE, CLASS, or RUNTIME.
+    1. **SOURCE**: Annotations are only available in the source code and are discarded during compilation.
+    2. **CLASS**: Annotations are included in the class file during compilation but not accessible at runtime.
+    3. **RUNTIME**: Annotations are retained at runtime and can be accessed programmatically through reflection.
+- The `@Target` annotation specifies the types of program elements to which an annotation can be applied. The `@Target` annotation specifies where an annotation can be applied, defining the kinds of program elements (like methods, classes, fields) that the annotation can be used on via **ElementType**.
+- For example, if an annotation is designed for methods, you would use `@Target(ElementType.METHOD)`. `ElementType.TYPE` annotation can be applied to any class, interface, enum, or annotation type. `ElementType.FIELD` annotation can be applied to fields (i.e., member variables of a class). `ElementType.PARAMETER` annotation can be applied to method parameters , example `@RequestParam` in spring boot framework and so on.
+- Can we create our own annotation? , yes you can. Creating custom annotation is similar to writing an interface, except that the interface keyword is prefixed with `@` symbol.
+
+```
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@interface MyCustomAnnotation {
+    String value() default "default value";
+    int count() default 0;
+}
+
+@MyCustomAnnotation(value = "Hi",count = 2)
+class useAnnotation{
+    public void display(){
+        System.out.println("Use Annotation Display");
+    }
+}
 
 
+public class AboutAnnotations {
+    
+    public static void main(String[] args) {
+
+        useAnnotation uA= new useAnnotation();
+        uA.display();
+        MyCustomAnnotation getvalue=uA.getClass().getAnnotation(MyCustomAnnotation.class);
+        System.out.println(getvalue.count()+" "+getvalue.value());
+    }
+
+}
+
+Output:
+2 Hi
+```
+
+## Exception
+
+### Errors
+
+- Errors in Java are issues or problems that occur during the execution of a program, leading to abnormal or unexpected behavior. Errors can prevent a program from functioning correctly.
+
+#### Types of Errors
 
 
+##### Compile-time Error or Syntax Error
+
+- Compile Time Errors are those errors which prevent the code from running because of an incorrect syntax such as a missing semicolon at the end of a statement or a missing bracket, class not found, etc. These errors are detected by the java compiler and an error message is displayed on the screen while compiling. Compile Time Errors are sometimes also referred to as Syntax errors. 
+- These kind of errors are easy to spot and rectify because the java compiler finds them for you. The compiler will tell you which piece of code in the program got in trouble and its best guess as to what you did wrong. 
+- Usually, the compiler indicates the exact line where the error is, or sometimes the line just before it, however, if the problem is with incorrectly nested braces, the actual error may be at the beginning of the block. In effect, syntax errors represent grammatical errors in the use of the programming language.
+
+```
+class PrintingSentence {
+	public static void main(String args[])
+	{
+		String s = "GeeksforGeeks";
+
+		// Missing ';' at the end
+		System.out.println("Welcome to " + s)
+	}
+}
+
+Output:
+prog.java:8: error: ';' expected
+        System.out.println("Welcome to " + s)
+                                             ^
+1 error
 
 
+class MisspelledVar {
+	public static void main(String args[])
+	{
+		int a = 40, b = 60;
+
+		// Declared variable Sum with Capital S
+		int Sum = a + b;
+
+		// Trying to call variable Sum
+		// with a small s ie. sum
+		System.out.println(
+			"Sum of variables is "
+			+ sum);
+	}
+}
+
+Output:
+prog.java:14: error: cannot find symbol
+            + sum);
+              ^
+  symbol:   variable sum
+  location: class MisspelledVar
+1 error
+```
+
+##### Run-time Error
+
+- Run Time errors occur or we can say, are detected during the execution of the program.
+-  Runtime errors occur when a program does not contain any syntax errors but asks the computer to do something that the computer is unable to reliably do.
+
+```
+class DivByZero {
+    public static void main(String args[])
+    {
+        int var1 = 15;
+        int var2 = 5;
+        int var3 = 0;
+        int ans1 = var1 / var2;
+ 
+        // This statement causes a runtime error,
+        // as 15 is getting divided by 0 here
+        int ans2 = var1 / var3;
+ 
+        System.out.println(
+            "Division of va1"
+            + " by var2 is: "
+            + ans1);
+        System.out.println(
+            "Division of va1"
+            + " by var3 is: "
+            + ans2);
+    }
+}
+
+Output:
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+    at DivByZero.main(File.java:14)
 
 
+class RTErrorDemo {
+	public static void main(String args[])
+	{
+		int arr[] = new int[5];
 
+		// Array size is 5
+		// whereas this statement assigns
+
+		// value 250 at the 10th position.
+		arr[9] = 250;
+
+		System.out.println("Value assigned! ");
+	}
+}
+
+Output:
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 9
+    at RTErrorDemo.main(File.java:10)
+```
+
+##### Logical or Semantic Error
+
+- A logic error is when your program compiles and executes, but does the wrong thing or returns an incorrect result or no output when it should be returning an output.
+-  Logical errors are also called Semantic Errors. These errors are caused due to an incorrect idea or concept used by a programmer while coding. Syntax errors are grammatical errors whereas, logical errors are errors arising out of an incorrect meaning.
+
+```
+public class LErrorDemo {
+	public static void main(String[] args)
+	{
+		int num = 789;
+		int reversednum = 0;
+		int remainder;
+
+		while (num != 0) {
+
+			// to obtain modulus % sign should
+			// have been used instead of /
+			remainder = num / 10;
+			reversednum
+				= reversednum * 10
+				+ remainder;
+			num /= 10;
+		}
+		System.out.println("Reversed number is "
+						+ reversednum);
+	}
+}
+
+
+Output:
+Reversed number is 7870
+```
+
+
+- We can handle compile-time errors by writting correct syntax code, we can handle logical error by re-writing the correct logic but run-time error are kind of exception which may or may not be handle using. 
+- Examples:
+    - OutOfMemoryError: When the JVM runs out of memory.
+    - StackOverflowError: When the call stack limit is exceeded, usually due to deep recursion.
+    - VirtualMachineError: Indicates that the JVM is broken or has run into a serious problem.
+- Errors represent serious, often unrecoverable issues that occur outside the control of the application. These typically occur due to problems in the Java runtime environment (JVM), system resources, or hardware failures.
+- Errors are usually not recoverable. They indicate severe issues that a typical Java application cannot handle or recover from (e.g., out-of-memory conditions, stack overflows).
+- Since errors indicate issues beyond the scope of the application, it's rare to handle them programmatically or using codes.
+
+```
+public class Main {
+    public static void main(String[] args) {
+        causeStackOverflowError(); // Recursive call to cause stack overflow error
+    }
+    
+    public static void causeStackOverflowError() {
+        causeStackOverflowError();  // This will cause a StackOverflowError
+    }
+}
+```
+
+- Any error which we can handle using programmatically or using codes, those errors are called as **Exceptions**.
+
+| Aspect         | Error                                             | Exception                                       |
+|----------------|---------------------------------------------------|-------------------------------------------------|
+| Definition     | Represents serious system-level issues            | Represents issues within the application        |
+| Recoverability | Generally unrecoverable                           | Recoverable through `try-catch` blocks            |
+| Hierarchy      | Inherits from `java.lang.Error`                     | Inherits from `java.lang.Exception`               |
+| Handling       | Rarely handled in code                            | Handled using `try-catch` or declared             |
+| Cause          | Caused by JVM or resource failures (e.g., memory) | Caused by application logic or external events  |
+| Examples       | `OutOfMemoryError`, `StackOverflowError`              | `NullPointerException`, `IOException`, `SQLException` |
+
+
+- In Java, Exception is an unwanted or unexpected event, which occurs during the execution of a program, i.e. at run time, that disrupts the normal flow of the program’s instructions. Exceptions can be caught and handled by the program.
+- Lets take an example
+
+```
+public class AboutExceptions{
+    public static void main(String[] args) {
+
+        try{
+            int i=0;
+            int j=19;
+            System.out.println(j/i);
+        }catch(Exception e){
+            System.out.println("Got an exception "+e);
+        }
+
+    }
+}
+
+Output:
+Got an exception java.lang.ArithmeticException: / by zero
+```
+
+- So here whatever the statement you write , you fell it gonna throw some exception, you need to mentioned that in the try block . And whatever the exception thrown by java you need to catch that, catch it and store it in a variable (**`e`**).
+- If any exception is thrown by java, all the statement present inside the catch block will get executed.
+- Variable **`e`** consist of exception message.
+- Consider if you have an array and you are accessing element which is beyond the size of the array. You will get an exception.
+
+```
+public class AboutExceptions{
+    public static void main(String[] args) {
+
+        int a[] = new int[5];
+        try{
+            int i=19;
+            int j=19;
+            System.out.println(j/i);
+            System.out.println("Accessing element "+a[10]);
+        }catch(Exception e){
+            System.out.println("Got an exception "+e);
+        }
+
+    }
+}
+
+Output:
+1
+Got an exception java.lang.ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 5
+```
+
+- If you see our division program got execute but we got **ArrayIndexOutOfBoundsException**. Lets say in your program you need to print out two different statements whenever an **ArrayIndexOutOfBoundsException** or **ArithmeticException** occurs. We can do this using try multi-catch block.
+
+```
+public class AboutExceptions{
+    public static void main(String[] args) {
+
+        int a[] = new int[5];
+        try{
+            int i=19;
+            int j=19;
+            System.out.println(j/i);
+            System.out.println("Accessing element "+a[10]);
+        }
+        catch(ArithmeticException ae){
+            System.out.println("Cannot divided number by 0");
+        }
+        catch(ArrayIndexOutOfBoundsException aiobe){
+            System.out.println("You are trying to access and element which is greater than the actual size of array");
+        }
+        catch(Exception e){ // Don't know if any other exception occurs.
+            System.out.println("Got an exception "+e);
+        }
+
+    }
+}
+
+Output:
+1
+You are trying to access and element which is greater than the actual size of array
+```
+
+- **Exception** is a class. This class is parent of all the exceptions whether it is a built-in exception or user defined exception.
+- Always define your parent class **Excpetion** at the last of multi-catch exceptions because as soon as you define the parent exception above your multi-catch exception block , those multi-catch exception won't be reachable because any exception which should be part of multi-catch statement will go under the parent exception.
+
+![alt text](image-42.png)
+
+### Throw
+
+- Lets say when we divide the two numbers `num` and `den`, if `den` is zero then don't need to perform division we know we will get **ArithmeticException** . So can we throw **ArithmeticException** without performing division?
+
+```
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class AboutExceptions{
+    public static void main(String[] args) {
+
+        int num=10;
+        int den=0;
+        try{
+            if(den==0)
+                throw new ArithmeticException();
+            else
+                System.out.println(num/den);
+        }catch(ArithmeticException eden){
+            System.out.println(eden);
+        }
+    }
+}
+
+Output:
+java.lang.ArithmeticException
+```
+
+- Using **throw** keyword, we can explicitly throw an exception from a method or any block of code.
+- In the output, if you see we get `java.lang.ArithmeticException` what if we wanted to print out our own custom message.
+
+```
+        int num=10;
+        int den=0;
+        try{
+            if(den==0)
+                throw new ArithmeticException("Cannot Divided number by 0");
+            else
+                System.out.println(num/den);
+        }catch(ArithmeticException eden){
+            System.out.println(eden);
+        }
+
+Output:
+java.lang.ArithmeticException: Cannot Divided number by 0
+```
+
+- Using **throw** keyword you can throw any exception whether it is an in-built or user defined exception.
+- When we use **throw**, the flow of execution of the program stops immediately after the throw statement is executed and the nearest enclosing try block is checked to see if it has a catch statement that matches the type of exception. 
+- If it finds a match, controlled is transferred to that statement otherwise next enclosing try block is checked, and so on. If no matching catch is found then the default exception handler will halt the program.
+
+```
+class Test {
+	public static void main(String[] args)
+	{
+		System.out.println(1 / 0); // Program got halt
+        System.out.println("Hello");
+	}
+}
+
+Output:
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+```
+
+### Throws
+
+- Lets say there is a method which performs division, and the main method calls the method and passes the input argument to it. The main method must know if any **ArithmeticException** occurs in the division method, then the main method would perform some exception. So here if we use try-catch inside the division block, the main method won't be able to know if any **ArithmeticException** has occured and thats where we will use **throws** keyword.
+
+```
+public class AboutExceptions{
+    public static void main(String[] args) {
+        try{
+            System.out.println("Division - "+division(5,0));
+        }catch(ArithmeticException de){
+            System.out.println("Division method failed");
+        }
+    }
+
+    public static int division(int num,int den) throws ArithmeticException{
+        return num/den;
+    }
+}
+
+Output:
+Division method failed
+```
+
+- **throws** is used in method signatures to declare that a method may throw certain exceptions. This informs the caller that they need to handle or declare these exceptions. **throws** is placed after the method parameters in the method declaration, followed by a list of exceptions.
+
+```
+    public static int division(int num,int den) throws ArithmeticException,NullPointerException{
+        return num/den;
+    }
+```
+
+- You cannot pass your own custom message in these exceptions.
+
+>[!ERROR]
+> - Below declaration is invalid leading to syntax error
+> ```
+> 
+>    public static int division(int num,int den) throws ArithmeticException("Custom Exception Message"),NullPointerException{
+>         return num/den;
+>     }
+> ```
+
+- Lets day you have a string , you wanted to convert that into a date format.
+
+```
+        String myBirthDate="01-11-1999";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+        Date parsedDate = dateFormat.parse(myBirthDate); 
+```
+
+- When we do this , we get something like below
+
+![alt text](image-43.png)
+![alt text](image-44.png)
+
+- Java compiler automatically suggest to add a try-catch block, why so? because our string may or may not be in proper date format. This would lead to ParseException.
+
+```
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class AboutExceptions{
+    public static void main(String[] args) {
+
+        String myBirthDate="01-11-1999";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+        try {
+            Date parsedDate = dateFormat.parse(myBirthDate);
+        } catch (ParseException e) {
+        
+            System.out.println("Date is not in proper format");
+        } 
+    }
+}
+```
+
+- Such exceptions are called as **checked exceptions**. The **ArrayIndexOutOfBoundsException** or **ArithmeticException** these types of exceptions are called as **Unchecked exceptions**.
+- Checked exceptions are checked by compiler at compile-time.
 
 
 
