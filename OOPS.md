@@ -5237,6 +5237,9 @@ Hello
     - When you borrow a book from the library, you need a library card and the library sets aside that book for you. Similarly, when you open a file or a connection in a program for taking input (like `FileInputStream` or `FileOutputStream`), the system sets up resources (like a file handle or network connection) for you to use.
     - While you have the book, you can read it. This is like using the stream to read or write data.
     - When you’re done with the book, you return it to the library. This lets the library know that the book is available for others and releases the resources associated with it. Similarly, when you call `.close()` on a stream, you’re telling the system that you’re done using the resource (like the file or network connection). This releases the resource so it can be used by others or cleaned up properly.
+- All the streams implements `Closeable` interface.
+
+![alt text](image-53.png)
 
 - **Why Close a Stream?**
     - If you don’t close the stream, it’s like keeping the library book without returning it. The system might not be able to use that resource for other tasks or could run out of resources over time.
@@ -5270,3 +5273,104 @@ Hello
 ![alt text](image-52.png)
 
 ## Scanner
+
+- When we use `bufferedReader()`, the method returns input in string datatype. Incase if you use `bufferedInputStream()` you will get and integer value which is UTF-8 encoding format. Now in both the scenario , if you wanna perform any operations like mathematical or any calculation, you need to explicitly convert them into their respective primitive data type using wrapper classes. What if this all things is handle by `Scanner()`? lets see an example.
+
+```
+import java.util.*;
+
+class HelloWorld {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter an integer:");
+        int num = scanner.nextInt();
+        System.out.println("You entered: " + num);
+        scanner.close();
+    }
+}
+
+Output:
+Enter an integer:
+12
+You entered: 12
+```
+
+- **Scanner** handles parsing automatically. It reads the input (from the console, file, or another stream) and can automatically convert the input into primitive data types like int, double, etc., without needing to manually convert them yourself.
+- With Scanner, you don’t need to worry about converting strings to numbers or handling raw bytes. It handles the parsing and conversion internally, so you can directly read the values as the types you need.
+
+```
+Scanner scanner = new Scanner(System.in);
+int number = scanner.nextInt();  // Automatically reads and converts the input to an integer
+double value = scanner.nextDouble();  // Automatically reads and converts to a double
+```
+
+- The main advantage of Scanner is that it simplifies input handling by removing the need for manual conversion using wrapper classes.
+- Scanner is a utility class (`java.util`) primarily designed to parse and read input from various sources, such as user input (via the console), files, strings, etc. It's useful for handling primitive types (e.g., int, double) and strings, and it can split input based on delimiters (like spaces or newlines).
+- **Scanner is not part of Java I/O Streams. It is a utility class that provides input parsing on top of only byte-oriented stream like `InputStream`**.
+
+![alt text](image-54.png)
+
+- Scanner cannot directly use a **Reader** (like `FileReader` or `InputStreamReader`) because Scanner operates on input sources that are either InputStream, File, or String. Scanner works with byte-oriented streams (like `InputStream`) and not directly with character-oriented streams (like `Reader` and `Writer`). However, you can convert character-oriented streams to byte-oriented streams (e.g., `InputStream`) and use them with Scanner.  Scanner is not compatible with `BufferedReader` because `BufferedReader` works with character streams, not byte streams.
+- **You cannot print data using Scanner. The Scanner class is designed for reading and parsing input, not for output or printing data.**
+- **Scanner is primarly designed to parse primitive types and strings from text-based input.**
+- Scanner supports reading from files using the File or FileInputStream classes. However, it is limited to text files. If you need to read binary data (like images or PDFs), Scanner is not suitable. While Scanner can read from an `InputStream`, including those coming from network sockets, it is primarily meant for textual data. If you are reading data from a network stream (like a socket) that includes non-textual data (binary data, compressed data, etc.), you should use more specialized classes like `BufferedInputStream` or `DataInputStream`.
+- Even in scanner we need to close the resource `.close()`. When you create a Scanner object, it opens a connection to the input source. If the input source involves a resource (like a file or system input), it should be closed when you're done with it to release those resources. It implements **Closable** interface.
+
+### Limitations of Scanner
+- Text-Based Parsing: Scanner works well for parsing text and converting it to primitive types, but it is not suitable for handling raw binary data (e.g., image files, audio files).
+- Lack of Advanced Stream Handling: While Scanner can read from an InputStream, **it doesn't provide the buffering and performance optimizations** that you get with classes like `BufferedReader` or `BufferedInputStream`. For large files or streams, BufferedReader is usually more efficient for reading lines of text.
+- No Database Interaction: Scanner cannot interact with databases directly. For that, you would need a dedicated API like JDBC.
+- Scanner does not directly support character-oriented streams (Reader, BufferedReader, etc.). Scanner works with byte-oriented streams (InputStream), files, and strings. It can wrap an InputStream that is linked to a character stream but cannot directly take a Reader object.
+
+### When to Use Scanner vs. Other Stream Classes
+
+- **Use Scanner**:
+    - When you need to parse primitive data types or simple text from user input, files, or strings.
+    - When you are working with formatted text and want easy parsing (e.g., numbers, tokens, booleans).
+    - For simple, small-scale file or input handling tasks where performance is not a concern.
+
+- **Use Other Stream Classes (BufferedReader, DataInputStream, ObjectInputStream, etc.)**:
+    - When you need to handle large text files or binary data (e.g., reading images, audio, etc.).
+    - When you're dealing with network streams, especially if they contain non-textual data.
+    - When performance is critical, and you need efficient reading/writing of large datasets
+
+### Difference Table
+
+| Feature                   | Scanner                                                                         | Byte-Oriented Streams (InputStream)                            | Character-Oriented Streams (BufferedReader)                       |   |   |   |   |   |   |
+|---------------------------|---------------------------------------------------------------------------------|----------------------------------------------------------------|-------------------------------------------------------------------|---|---|---|---|---|---|
+| Purpose                   | Parsing text and primitive data types from input sources                        | Read raw bytes, suitable for binary data (e.g., files, images) | Reading large chunks or lines of text efficiently                 |   |   |   |   |   |   |
+| Best for                  | Parsing formatted text (numbers, words) and primitive types (e.g., int, double) | Handling binary data, such as files or network data            | Efficient reading of large text files, line-by-line reading       |   |   |   |   |   |   |
+| Input Sources Supported   | InputStream, File, String, System.in                                            | Files, network sockets, or other binary input sources          | Files, streams, or any Reader that provides character input       |   |   |   |   |   |   |
+| Data Types                | Text, primitive types (int, double, boolean, etc.)                              | Binary data (byte arrays)                                      | Text (String, character data)                                     |   |   |   |   |   |   |
+| Efficiency for Large Text | Less efficient for large text files; better for small-scale input               | Not suitable for text directly, needs conversion               | Highly efficient for reading large text files                     |   |   |   |   |   |   |
+| Text Parsing Capabilities | Can directly parse and return primitive types (e.g., nextInt(), nextDouble())   | No text parsing, returns raw bytes                             | Does not parse primitives, but can read text for later conversion |   |   |   |   |   |   |
+| Binary Data Handling      | Not suitable for binary data, focused on text                                   | Designed for binary data handling                              | Not suitable for binary data, focused on character streams        |   |   |   |   |   |   |
+| Line-by-Line Reading      | Can read lines (nextLine()), but not as efficient as BufferedReader             | Not suitable for reading lines (returns bytes instead)         | Ideal for reading text line by line (readLine())                  |   |   |   |   |   |   |
+| Use Cases                 | Simple console input from users                                               |     Reading raw data from files (e.g., images, audio). Working with network sockets for binary data                                                           |         Efficient reading of large text files. Text processing of large streams of data                                                          |
+
+
+
+
+| **Feature**                     | **Scanner**    | **BufferedReader**     | **BufferedInputStream**   |
+|---------------------------------|---------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| **Package**                     | java.util                                                                                               | java.io                                                                       | java.io                                                                                                      |
+| **Stream Type**                 | Not a stream, but works with input sources (such as InputStream, File, String)                          | Character-Oriented Stream (Reader)                                            | Byte-Oriented Stream (InputStream)                                                                           |
+| **Purpose**                     | Parses input and provides methods to read and convert primitive data types (e.g., int, double, boolean) | Efficient reading of large chunks of text, especially line-by-line            | Efficient reading of binary data (raw bytes) from files or input sources                                     |
+| **Data Type**                   | Text and primitive types (e.g., int, double)                                                            | Text (characters and strings)                                                 | Binary data (bytes)                                                                                          |
+| **Input Sources Supported**     | InputStream, File, System.in, String                                                                    | Files, streams, or any Reader (text-based)                                    | Files, network streams, or any binary data source (byte-based)                                               |
+| **Best for** | Parsing numbers, words, tokens from text input. Simple formatted text input. Interactive console input | Reading large text files efficiently. Line-by-line reading of text (e.g., logs, CSV files) | Reading binary files (images, audio, videos). Efficient processing of binary data |
+| **Performance with Large Text** | Less efficient for reading large text files, as it processes data token by token | Highly efficient for large text files, especially for line-by-line processing | Not suitable for text (works with bytes), but can be used with text files by converting bytes to characters |
+| **Performance with Binary Data** | Not suitable for binary data | Not suitable for binary data | Highly efficient for reading binary data |
+| **Text Parsing Capabilities** | Direct parsing of primitive types (e.g., `nextInt()`, `nextDouble()`) | Characters are converted but no direct primitive parsing | Cannot parse text, operates on raw byte data |
+| **Buffering Efficiency** | No internal buffering, reads token by token | Buffered for efficient reading of large text files | Buffered for efficient reading of large binary files |
+| **Primitive Data Parsing** | Directly parses input into primitive types (e.g., `int`, `double`, `boolean`) | Does not parse primitive data types; text needs manual conversion | Cannot parse primitive types, returns bytes |
+| **Handling of End of Line** | Reads entire lines with `nextLine()`, but token-based reading is common | Reads full lines efficiently with `readLine()` | Handles data as bytes, so it doesn't consider lines; end of line must be managed manually if interpreting text |
+| **Speed for Large Text Files** | Slower compared to `BufferedReader` due to no internal buffering | Faster than `Scanner` due to efficient buffering | Not used for text files; primarily for binary data | 
+| **Speed for Binary Data** | Cannot handle binary data | Cannot handle binary data | Faster than both `Scanner` and `BufferedReader` for binary data due to efficient buffering |
+
+
+
+
+
+
+
