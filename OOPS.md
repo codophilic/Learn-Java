@@ -4655,6 +4655,39 @@ Arithmetic Exception occurred
 - **`throws`**: Important for methods that may throw checked exceptions. It ensures that the method's callers are aware of and handle these exceptions.
 - **`Throwable`**: Useful for catching all possible exceptions and errors, but it is not common practice because it catches everything, including errors that usually shouldn't be handled.
 
+>[!NOTE]
+> - **`throw`** and **`throws`** can be used to handle **Error** (like IOError, StackOverflowError etc..) as well as **Exception**.
+
+
+>[!TIP]
+> - If we add **`throws`** keyword on a main method? then whos gonna handle it? now here main is the calling method? 
+> - If the `main` method declares exceptions using `throws`, then the **Java Virtual Machine (JVM)** is responsible for handling any uncaught exceptions that occur during the execution of the program. This means that if an exception is not caught in the program and the main method has a throws declaration, the JVM will handle the exception by typically printing an error stack trace and terminating the program.
+> - The JVM prints the exception's name, message, and stack trace, which includes details about where the exception occurred in the code.
+> - After printing the stack trace, the JVM terminates the program. This abrupt termination happens because the program didn't handle the exception.
+> 
+> ```
+> import java.io.IOException;
+> public class Main {
+>     public static void main(String[] args) throws IOException {
+>        readFile();  // IOException is thrown by this method
+>    }
+>
+>    public static void readFile() throws IOException {
+>        throw new IOException("File not found!");
+>    }
+>}
+> 
+> Exception in thread "main" java.io.IOException: File not found!
+>   at Main.readFile(Main.java:9)
+>   at Main.main(Main.java:5)
+> ```
+>
+> - **Letting the JVM handle exceptions is not recommended**.
+>   - The application will terminate abruptly if the exception isn't handled.
+>   - The program doesn't get a chance to recover or log the error in a controlled way.
+>   - If an uncaught exception terminates a program, the end user sees an error message, which isn't a good user experience.
+
+
 
 ### Types of Exceptions
 
@@ -4854,57 +4887,386 @@ This will always execute.
 
 - The code in the finally block will always be executed after the try block completes, whether an exception was thrown or not.
 
-## User Input
+## I/O Streams
+
+- Have you ever wondered how java accepts input and gives output? it is using **Streams** which is part of package `java.io`.
+- What are **Streams**?
+    - A stream is a sequence of data flowing from a source to a destination. Think of it as a pipeline through which data travels from some source (like the keyboard, a file, or a network) into your program, where you can use it.
+    - It is neither a data structure nor a store of data. For example, a river stream is where water flows from source to destination. Similarly, these are data streams; data flows through one point to another.
+    - The `java.io` package helps the user perform all input-output operations. Java IO package is primarily focused on input-output
+    - Streams support many different kinds of data, including simple bytes, primitive data types, localized characters, and objects. Some streams simply pass on data; others manipulate and transform the data in useful ways.
+    - No matter how they work internally, all streams present the same simple model to programs that use them.
+    - A program uses an input stream to read data from a source, one item at a time. A program uses an output stream to write data to a destination, one item at time.
+
+![alt text](image-55.png)
+
+![alt text](image-56.png)
 
 
 
+<details>
+
+<summary> What is ASCII and UTF-8 ? </summary>
+
+- ASCII (American Standard Code for Information Interchange) and UTF-8 (8-bit Unicode Transformation Format) are both systems for encoding characters so that computers can understand and process text.
+- ASCII was developed in the 1960s. It uses 7 bits to represent each character. Can encode 128 different characters, including the English alphabet (both uppercase and lowercase), digits, punctuation marks, and some control characters. For example, the letter "A" is represented by the number 65 in ASCII. Checkout ASCII table [here](https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html)
+- ASCII was designed for English, so it can only represent 128 basic characters (like A-Z, 0-9, and some punctuation). This is fine if you’re only working with English, but the world uses many languages with thousands of unique characters, such as Chinese, Arabic, or Hindi.
+- UTF-8 was developed to handle all characters from all languages, as well as symbols like emojis and special characters (e.g., mathematical symbols, currency signs). This is crucial for global communication, software, and the internet.
+- UTF-8 uses 1 to 4 bytes to represent each character. For common characters (like those in ASCII), it uses just 1 byte, but for more complex characters (like emojis or symbols from various languages), it uses more bytes.
+- So, while ASCII is a subset of UTF-8 (every ASCII character is represented the same way in UTF-8), UTF-8 can handle a much broader range of characters.
+- Checkout UTF-8 table [here](https://www.charset.org/utf-8)
+- **Why it is required?**
+    - Imagine sending an email or text in a language with characters that don’t exist in ASCII. Without a system like UTF-8, the receiver's computer wouldn’t understand the characters and would display garbled or missing text. UTF-8 ensures that different computers, systems, and platforms can all read and display the same text, regardless of the language or symbols used.
+    - UTF-8 is efficient because it uses 1 byte for common characters (like those in ASCII), and more bytes only when needed for more complex characters. This means it's space-efficient for text-heavy in English but still versatile enough for any other language. Since UTF-8 includes ASCII as a subset, systems using ASCII can work with UTF-8 without compatibility issues.
 
 
+</details>
+
+### Stream Categories
+
+#### Byte-oriented Stream
+
+- Lets take an example to understand byte-oriented stream, suppose you have a java program , your java program takes an input and display the same input as output. Suppose as a input you entered **code**, now these **code**  is converted travels to the steam from your keyboard as its source to your java program as destination in this way.
+
+![alt text](image-57.png)
+
+- Consider below code
+
+```
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+import java.io.InputStream;
+import java.io.IOException;
+
+class HelloWorld {
+    public static void main(String[] args) throws IOException {
+        InputStream inputStream = System.in;
+        System.out.println("Enter text:");
+        int byteData;
+        String enteredInput="";
+        // Reading byte by byte
+        while ((byteData = inputStream.read()) != '\n') { // '\n' marks the end of input
+            System.out.print(byteData+", ");
+            enteredInput+=(char) byteData; // Converting bytes to characters
+        }    
+        System.out.println();
+        System.out.println(enteredInput);
+        
+    }
+}
+
+Output:
+Enter text:
+code
+99, 111, 100, 101, 
+code
+```
+
+- You enter the text "code" on the console. Each character in converted as per UTF-8 encoding format (99,111,100,101) and then it travels via stream in form of byte (0's and 1's) representation.
+- The byte-oriented stream reads each byte, one by one, from the console.
+- Since the stream only understands bytes, it does not interpret the data as text but simply as a sequence of numbers.
+- If you want to display this input as characters, you must manually convert these bytes back to characters or decode it back (`(char) byteData`).
+- A byte stream in Java is used to **handle raw binary data**. It processes data in the form of **8-bit** and is commonly used for reading and writing **binary files** (such as images, videos, and audio). **Byte streams do not perform any encoding or decoding, which means they handle data as-is, without converting it into characters**. The key classes for byte streams are `InputStream` (for reading bytes) and `OutputStream` (for writing bytes).
+- Example
+
+```
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class ConsoleStreamExample {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+
+        try {
+            int byteData;
+
+            // Read bytes from input stream and write them to output stream
+            while ((byteData = inputStream.read()) != -1) {  // Read byte by byte
+                outputStream.write(byteData);  // Write the byte to output stream
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // No need to close System.in and System.out as they are managed by the JVM
+        }
+    }
+}
 
 
+Output:
+Hello
+Hello
+```
+
+#### Character-Oriented Stream
+
+- Consider below code
+
+```
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+
+public class ConsoleCharStreamExampleNoBuffer {
+    public static void main(String[] args) {
+        Reader reader = new InputStreamReader(System.in);
+        Writer writer = new OutputStreamWriter(System.out);
+
+        try {
+            int charData;
+
+            // Read characters from the console and write them to the console
+            while ((charData = reader.read()) != -1) {
+                writer.write(charData); // Write the character to the output
+                writer.flush();         // Ensure the character is immediately displayed
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+                writer.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+}
 
 
+Output:
+Hello
+Hello
+Hi
+Hi
+```
+
+- A character stream in Java is used to **handle text data**. It processes data in the form of **16-bit** characters (Unicode) and **automatically handles the conversion between bytes and characters** using a specific character encoding (e.g., UTF-8)
+- Character streams are ideal for reading and writing text files because they manage encoding/decoding automatically, converting bytes into readable characters. The key classes for character streams are Reader (for reading characters) and Writer (for writing characters).
+
+### Key Difference between Byte-Oriented and Character Oriented Stream
+
+- The main difference between byte and character streams is that byte streams handle raw bytes without any encoding/decoding, while character streams automatically convert bytes into characters using a defined character encoding (like UTF-8).
+- Byte streams are suitable for binary data, while character streams are better suited for text data.
+
+![alt text](image-58.png)
+
+- Here, to specify stream that our source and destination will be java console , thats why we use `System.in` and `System.out`.
+- Now when we use **Input/OutputStream** in case of Byte-oriented stream and **Reader/Writer** in case of character-oriented stream, don't you think processing byte/character one at a time will lead to slowness or performance issue in your program? it will also lead to increase in number of I/O operation which in turn increases CPU utilzation? thats why we have concept of **Buffer Stream**.
+
+### Buffering in Streams
+
+-**What is a Buffer?**
+    - A buffer is a temporary storage area, usually in memory (RAM), used to hold data while it is being transferred between two places. In the context of I/O streams, buffers help manage data efficiently by reducing the number of direct interactions with the underlying data source or destination.
+
+- Both byte-oriented and character-oriented streams use buffers to improve performance.
+- Instead of handling data one byte or one character at a time, streams often read/write chunks of data into memory (a buffer) to reduce the number of I/O operations. A buffer is like a temporary storage area (an array) that stores multiple bytes/characters before they're processed.
+- Default Buffer Sizes for `BufferedInputStream`, `BufferedOutputStream` , `BufferedReader` and `BufferedWriter` is 8 KB (8192 bytes).
+
+![alt text](image-59.png)
+
+- Simple Analogy
+    - Imagine you are filling a bucket with water from a slow tap:
+    - **Without Buffering**: You fill the bucket one cup of water at a time, running back and forth to the faucet each time.
+    - **With Buffering**: You use a larger container (the buffer) to collect water in larger amounts. Once it’s full, you transport it all at once. This is more efficient and faster.
+
+#### Byte-Oriented Buffered Stream Example
+
+- Here we print out details as soon as user enters input.
+
+```
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class ConsoleByteBufferedExample {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+
+        // Wrap the streams with buffered streams
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+
+        try {
+            int byteData;
+            // Read bytes from the console and write them to the console
+            while (true) {
+                byteData=bufferedInputStream.read();
+                if(byteData==49)  // Press 1 to exit program
+                    break;
+                bufferedOutputStream.write(byteData);
+                bufferedOutputStream.flush(); // Ensure the byte is immediately displayed
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedInputStream.close();
+                bufferedOutputStream.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+}
+
+Output:
+Hi Hello
+Hi Hello
+How are you?
+How are you?
+1
+```
+
+- Here we take all the details in buffer and then print it.
+
+```
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+public class ConsoleByteBufferedExample {
+    public static void main(String[] args) {
+        InputStream inputStream = System.in;
+        OutputStream outputStream = System.out;
+
+        // Wrap the streams with buffered streams
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+
+        try {
+            int byteData;
+            // Read bytes from the console and write them to the console
+            while (true) {
+                byteData=bufferedInputStream.read();
+                if(byteData==49)  // Press 1 to exit program
+                    break;
+                bufferedOutputStream.write(byteData);
+            }
+            bufferedOutputStream.flush(); // Ensure the byte is immediately displayed
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedInputStream.close();
+                bufferedOutputStream.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+}
 
 
+Output:
+Hi Hello
+Hey
+1
+Hi Hello
+Hey
+```
+
+#### Character-Oriented Buffered Stream Example
+
+- Here is the code for accepting input from buffer reader and writer.
+
+```
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+
+public class ConsoleCharBufferedExample {
+    public static void main(String[] args) {
+        Reader reader = new InputStreamReader(System.in);
+        Writer writer = new OutputStreamWriter(System.out);
+
+        // Wrap the streams with buffered streams
+        BufferedReader bufferedReader = new BufferedReader(reader);
+        BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+        try {
+            String line;
+
+            // Read lines from the console and write them to the console
+            while (true) {
+                line = bufferedReader.readLine();
+                if(line.equals("1")) //Exit when press 1
+                    break;
+                bufferedWriter.write(line);
+                bufferedWriter.newLine(); // Add a newline after each line
+                bufferedWriter.flush();   // Ensure the line is immediately displayed
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedReader.close();
+                bufferedWriter.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+}
+
+Output:
+Hi
+Hi
+Hello
+Hello
+1
+```
+
+### Closing Resources
+
+- Whats the purpose of `.close()`? lets understand this via analogy.
+- Imagine you’re borrowing a library book.
+    - When you borrow a book from the library, you need a library card and the library sets aside that book for you. Similarly, when you open a file or a connection in a program for taking input (like `FileInputStream` or `FileOutputStream`), the system sets up resources (like a file handle or network connection) for you to use.
+    - While you have the book, you can read it. This is like using the stream to read or write data.
+    - When you’re done with the book, you return it to the library. This lets the library know that the book is available for others and releases the resources associated with it. Similarly, when you call `.close()` on a stream, you’re telling the system that you’re done using the resource (like the file or network connection). This releases the resource so it can be used by others or cleaned up properly.
+
+- **Why Close a Stream?**
+    - If you don’t close the stream, it’s like keeping the library book without returning it. The system might not be able to use that resource for other tasks or could run out of resources over time.
+    - The system has limited resources like file handles or network connections. Closing a stream ensures these resources are released and available for other operations.
+
+## Difference between Byte-Oriented and Character-Oriented Stream
 
 
+| **Feature**               | **Byte Streams**                          | **Character Streams**                    |
+|---------------------------|-------------------------------------------|------------------------------------------|
+| **Base Classes**          | `InputStream`, `OutputStream`                 | `Reader`, `Writer`                           |
+| **Data Handling**         | Handles raw binary data (bytes)           | Handles character data (text)            |
+| **Operation Granularity** | Reads and writes one byte at a time       | Reads and writes one character at a time |
+| **Data Representation**   | Byte-oriented (8-bit)                     | Character-oriented (16-bit Unicode)      |
+| **Encoding**              | No encoding, handles raw bytes            | Handles character encoding (e.g., UTF-8) |
+| **Usage**                 | Suitable for binary files (images, audio) | Suitable for text files                  |
 
+- The `InputStream`, `OutputStream`, `Reader` and `Writer` all are abstract class which has multiple implement for various types of input and output, like for File related operations we have `FileInputStream`, `FileReader` and so on.
 
+![alt text](image-60.png)
 
+>[!TIP]
+> - Depending on the type of resource or operation you need to work with, you'll choose the appropriate stream.
+> - For example:
+>   - If you're reading text from a file, you'd typically use a FileReader.
+>   - If you're saving an object to a file, you'd use an ObjectOutputStream.
+>   - If you want better performance by minimizing the number of reads/writes to the disk, you could add buffering with BufferedReader or BufferedOutputStream.
 
+- Which stream does `System.out.println()` uses? it uses **PrintStream**.
 
+![alt text](image-52.png)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Scanner
