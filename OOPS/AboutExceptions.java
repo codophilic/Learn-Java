@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +25,7 @@ class CompileTimeAgeCheckerException extends Exception{
 
 
 public class AboutExceptions{
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         int a[] = new int[5];
         try{
@@ -96,6 +97,19 @@ public class AboutExceptions{
             System.out.println(display(Age));
         } catch (CompileTimeAgeCheckerException eage) {
             System.out.println(eage);
+        }
+
+        try{
+            // Statements
+        }
+        finally{
+            //Statements
+        }
+
+        try{
+            throw new IOException();
+        }catch(Exception e){
+            System.out.println("Inside catch block");
         }
 
     }

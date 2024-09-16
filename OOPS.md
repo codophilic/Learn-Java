@@ -4560,6 +4560,29 @@ Division method failed
 
 ![alt text](image-45.png)
 
+
+- Consider the below snippet. Can you guess will the catch block will get executed?
+
+```
+public class AboutExceptions{
+    public static void main(String[] args) throws IOException {
+
+        try{
+            throw new IOException();
+        }catch(Exception e){
+            System.out.println("Inside catch block");
+        }
+
+    }
+}
+
+Output:
+Inside catch block
+```
+
+- When an exception (like `IOException`) is thrown in the try block, the catch block for Exception catches it because `IOException` is a subclass of Exception. The `throws IOException` in the method declaration only comes into play if the exception is not caught inside the method. In this case, since the exception is caught by the `catch (Exception e)` block, it doesn't propagate outside the method, so the `throws IOException` part is not used.
+- The `catch` block takes precedence because it intercepts the exception. The `throws` clause would only apply if the exception wasn’t caught inside the method.
+
 ##### Ducking Exception
 
 - "**Ducking**" an exception refers to the practice of passing the responsibility of handling an exception to the calling method by declaring the exception in the method's signature using the `throws` keyword.
@@ -4886,6 +4909,16 @@ This will always execute.
 ```
 
 - The code in the finally block will always be executed after the try block completes, whether an exception was thrown or not.
+- **You can also write try-with-finally**
+
+```
+try{
+    // Statements
+}
+finally{
+    //Statements
+}
+```
 
 ## I/O Streams
 
@@ -5369,8 +5402,176 @@ double value = scanner.nextDouble();  // Automatically reads and converts to a d
 | **Speed for Binary Data** | Cannot handle binary data | Cannot handle binary data | Faster than both `Scanner` and `BufferedReader` for binary data due to efficient buffering |
 
 
+## Try block with Resources
+
+- The code in the **finally** block will always be executed after the try block completes, whether an exception was thrown or not. So when we use I/O streams, we need to close it whether the reading/writing was successfully done or not. So we can use the **try-catch-finally** block. Example
+
+```
+// Open IO stream
+try{
+    //Stream handling IO operations
+}catch(IOException e){
+    //Exception Statement
+}finally{
+    //Close IO stream
+}
+```
+
+- Now as a developer, when you build an application, you will be writing multiple streams to accept input in your applications, you will also write database related connections. So you may forget to close any of these resources during coding. So to avoid such error-prone we have **try-with-resources**. Lets take an example
+
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+public class AboutResources {
+    public static void main(String[] args) throws IOException {
+        
+        
+        try(
+            // Mention your resources related statements over here
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            Scanner sc = new Scanner(new InputStreamReader(System.in))
+        ){
+            System.out.println("Enter a input for Buffer Reader: ");
+            int n1=Integer.parseInt(br.readLine());
+            System.out.println("Enter a input for Scanner: ");
+            int n2=sc.nextInt();
+            System.out.println(n1+n2);
+        }
+    }
+}
+
+Output:
+Enter a input for Buffer Reader: 
+12
+Enter a input for Scanner: 
+12
+24
+```
+
+- **try-with-resources** simplifies the code significantly. The resources are always closed in the right order without additional effort, reducing the chance of resource leaks.
+- When you use **try-with-resources**, any object that implements the `AutoCloseable` or `Closeable` interface (like `InputStream`, `Reader`, etc.) is automatically closed at the end of the try block, even if an exception is thrown. You don’t need a finally block to handle cleanup.
+- So you declare resources inside the **try declaration**.
+
+![alt text](image-61.png)
+
+- You can also use **try-catch-with-resources**, to handle exception of your business code logic.
+
+```
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
+public class AboutResources {
+    public static void main(String[] args) throws IOException {
+        
+        
+        try(
+            // Mention your resources related statements over here
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            Scanner sc = new Scanner(new InputStreamReader(System.in))
+        ){
+            System.out.println("Enter a input for Buffer Reader: ");
+            int n1=Integer.parseInt(br.readLine());
+            System.out.println("Enter a input for Scanner: ");
+            int n2=sc.nextInt();
+            System.out.println(n1+n2);
+            throw new ArithmeticException();
+        }catch(ArithmeticException e){
+            System.out.println("Catch block");
+        }
+    }
+}
 
 
+Output:
+Enter a input for Buffer Reader:
+12
+Enter a input for Scanner:
+13
+25
+Catch block
+```
 
+- Lets create our own class which will act like a resource and lets see how our customize resource gets closed automatically. Now to implement auto closing of resources we need to implement **AutoCloseable**.
 
+```
+class CustomResource implements AutoCloseable {
+    private boolean isClosed = false;
+
+    public void doSomething() {
+        if (isClosed) {
+            throw new IllegalStateException("Resource is already closed!");
+        }
+        System.out.println("Doing something with the resource");
+    }
+
+    @Override
+    public void close() {
+        isClosed = true;
+        System.out.println("Resource closed");
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+}
+```
+
+- Lets create a **try-with-resources** block for our customize class.
+
+```
+public class AboutResources {
+    public static void main(String[] args) throws IOException {
+
+        try (CustomResource custResource = new CustomResource();
+            ) {
+                custResource.doSomething();
+        }catch(Exception e){
+            System.out.println("Business Logic Exception");
+        }
+    }
+}
+
+Output:
+Doing something with the resource
+Resource closed
+```
+
+- Now what if , in your try statements somewhere your **custResource** got assigned as `null`? it would certainly raised to `NullPointerException` while auto closing at the end of try block right? , but it won't.
+
+![alt text](image-62.png)
+
+- This is because inside the try block statement **you cannot assigned the resource variables thus avoiding any kind of exception related to the resources variables**.
+- However, making purposely `null` during initialzation will give you `NullPointerException`.
+
+```
+
+        try (CustomResource custResource = null
+            ) {
+                custResource.doSomething();
+        }catch(Exception e){
+            System.out.println("Business Logic Exception");
+        }
+
+Output:
+Business Logic Exception
+```
+
+- But do you think, the resources threw exception due to `close()` closing it? nope it threw exception due to `custResource.doSomething()`.
+
+```
+        try (CustomResource custResource = null
+        ) {
+        }
+        System.out.println("Code Executed");
+
+Output:
+Code Executed
+```
+
+- If you purposely assign `null` to a resource in a **try-with-resources** block, it will not throw a `NullPointerException` **when attempting to close it. The try-with-resources construct safely skips closing if the resource is null**. However, if you try to use the `null` resource inside the try block (e.g., calling a method on it like `custResource.doSomething()` ), then a `NullPointerException` will be thrown.
 
