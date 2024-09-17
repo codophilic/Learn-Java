@@ -264,6 +264,7 @@ class Car {
 
 where is interfaces present in memory management? abstract class ? static variables methods
 - types of interfaces, abstract, classes, sealed classes and interfaces
+- extends must be written before implements , but implements cannot be before extends
 - concept of nested classes and its type, for normal class static class abstract class , interfaces, class and interfaces method nested with class.
 - record classes. (Seperate markdown with all new java features)
 *We will explore String buffer and String builder when we will learn about threads*
@@ -273,3 +274,4 @@ where is interfaces present in memory management? abstract class ? static variab
 - finalize
 - The Buffer class in Java NIO (New I/O) provides the foundation for working with buffers. It's an abstract class with subclasses for different primitive data types (e.g., ByteBuffer, CharBuffer, IntBuffer).
 - transient
+- 
