@@ -6401,4 +6401,116 @@ WaitThread: I got the notification, time to proceed!
 
 ### Types of Threads
 
-Deamon, User
+**1. User Threads:**
+    - User threads, also known as application threads, are threads that are explicitly created by the programmer to perform specific tasks. They play a direct role in the main functionality of the application. User threads continue executing until their task is completed or until the application explicitly terminates them.
+    - They keep the application running as long as they are alive.
+    - All above examples we have seen are user threads.
+**2. Daemon Threads:**
+    - Daemon threads are threads that provide support to user threads. They run in the background and are considered "service" threads. Unlike user threads, daemon threads do not prevent the JVM from exiting, even if they are still running. When all user threads have finished executing, the JVM terminates, abruptly stopping any remaining daemon threads.
+    - Daemon threads are commonly used for tasks such as automatic memory management (garbage collection) or other housekeeping activities that should not delay the program's termination.
+
+## Finalize
+
+n Java, the finalize() method was part of the object cleanup process. It was called by the garbage collector before an object was removed from memory, giving the object a chance to release resources like file handles or network connections.
+
+Key Points about finalize():
+Purpose: The method was intended to allow an object to clean up resources before the object is destroyed by the garbage collector. For example, it could close files, release locks, or free memory for native resources.
+
+How it works:
+
+The method was called by the garbage collector when it determined that there were no more references to the object.
+However, it was not guaranteed when or even if the method would be called. The garbage collector decides when to perform garbage collection, and an object might not be finalized if the program exits before GC is triggered.
+Performance Issues: The use of finalize() had significant performance drawbacks:
+
+It added overhead to garbage collection.
+It was unreliable because there was no guarantee of timely execution. The garbage collector may delay the finalization, leading to resource leaks if not handled properly.
+Alternatives:
+
+try-with-resources: Introduced in Java 7, this is a more reliable and efficient way to manage resources (like files or database connections). It uses the AutoCloseable interface, ensuring that resources are closed immediately after use.
+close() method: It is encouraged to explicitly release resources using a close() method (often with try-finally blocks) instead of relying on finalize().
+Deprecation:
+Starting from Java 9, the finalize() method was deprecated, and Java strongly discourages its use. The preferred way to manage resources now is through the AutoCloseable interface and the try-with-resources statement.
+
+Why finalize() is no longer required:
+Unreliable behavior: Since it doesn't guarantee when an object will be finalized, it could cause unpredictable resource management.
+Better alternatives: The introduction of try-with-resources and explicit resource management provides more control and efficiency over resource handling.
+Would you like to explore how try-with-resources works in more detail?
+
+
+
+
+
+
+You said:
+can you share me code snip for  finalize 
+? it is applied on class method or variables? and why to use?
+
+2/2
+
+ChatGPT said:
+ChatGPT
+The finalize() method in Java is applied at the class level, specifically to objects, and it is not tied to individual variables or methods. When used, the finalize() method allows an object to perform cleanup operations before the garbage collector reclaims its memory. However, it is called on the object before it is destroyed, not on specific methods or variables.
+
+Here's a simple example that demonstrates how finalize() might have been used:
+
+Example of finalize() method:
+java
+Copy code
+class Resource {
+    public Resource() {
+        System.out.println("Resource acquired.");
+    }
+
+    // Override the finalize() method
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            System.out.println("Resource released in finalize()");
+        } finally {
+            // Call the superclass finalize() method to ensure proper cleanup
+            super.finalize();
+        }
+    }
+}
+
+public class FinalizeDemo {
+    public static void main(String[] args) {
+        Resource res = new Resource();
+        res = null; // Make the object eligible for garbage collection
+
+        // Requesting garbage collection (not guaranteed)
+        System.gc();
+
+        System.out.println("Main method ends.");
+    }
+}
+Explanation:
+Resource Class:
+
+The Resource class has a constructor that simulates acquiring a resource (e.g., opening a file or a network connection).
+The finalize() method is overridden to release resources when the object is garbage-collected.
+Finalize Method:
+
+Inside finalize(), it prints a message indicating resource release.
+It calls super.finalize() to ensure proper handling by the superclass's finalize() method, which is part of the Java object lifecycle.
+Garbage Collection:
+
+In the main method, a Resource object is created and then set to null, making it eligible for garbage collection.
+System.gc() is called to suggest the JVM perform garbage collection, but it’s only a request — garbage collection is not guaranteed to run immediately.
+Output (may vary):
+scss
+Copy code
+Resource acquired.
+Main method ends.
+Resource released in finalize()
+Why Use finalize() (In the Past):
+Resource Cleanup: It was used for cleaning up non-memory resources (e.g., file handles, sockets) in case they were not explicitly closed.
+Last Resort: It acted as a fallback if programmers forgot to release resources manually (e.g., through a close() method).
+Problems with finalize():
+Not Reliable: It’s not guaranteed when (or if) the garbage collector will call finalize(). Resources might not be released in time, leading to resource exhaustion.
+Performance Impact: It adds extra overhead to garbage collection and can delay the collection process, causing potential memory leaks.
+Better Alternative: try-with-resources
+The recommended approach now is to use try-with-resources to ensure timely release of resources like files, sockets, or database connections. This ensures proper handling without relying on the garbage collector.
+
+Would you like to see an example using try-with-resources for better resource management?
+
