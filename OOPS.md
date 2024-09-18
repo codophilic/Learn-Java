@@ -1351,6 +1351,12 @@ In display...
 
 ## Cohesion
 
+- Cohesion in Java is the Object-Oriented principle most closely associated with making sure that a class is designed with a single, well-focused purpose. In object-oriented design, cohesion refers to how a single class is designed.
+- Lets take an example 
+
+
+
+
 ## Inheritance
 
 - Lets say you have a Basic calculator class which only performs addition and subtraction. 
