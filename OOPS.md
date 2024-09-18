@@ -1352,10 +1352,161 @@ In display...
 ## Cohesion
 
 - Cohesion in Java is the Object-Oriented principle most closely associated with making sure that a class is designed with a single, well-focused purpose. In object-oriented design, cohesion refers to how a single class is designed.
-- Lets take an example 
+- Lets take an example, look the below code
+
+```
+// High Cohesion Example
+ 
+// This class is responsible only for managing books.
+class Book {
+    private String title;
+    private String author;
+    
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+ 
+    public String getTitle() {
+        return title;
+    }
+ 
+    public String getAuthor() {
+        return author;
+    }
+ 
+    public void displayBookDetails() {
+        System.out.println("Title: " + getTitle() + ", Author: " + getAuthor());
+    }
+}
+ 
+// This class is responsible only for library management tasks.
+class Library {
+
+    static int i=0;
+    static Book books[] = new Book[5];
+ 
+    public void addBook(Book book) {
+        books[i]=book;
+        i++;
+    }
+ 
+    public void displayAllBooks() {
+        for (int j=0;j<i;j++) {
+            books[j].displayBookDetails();
+        }
+    }
+}
+
+public class AboutCohesion{
+    public static void main(String args[]){
+
+        Library library = new Library();
+        Book book1 = new Book("1984", "George Orwell");
+        Book book2 = new Book("To Kill a Mockingbird", "Harper Lee");
+
+        library.addBook(book1);
+        library.addBook(book2);
+
+        library.displayAllBooks();
+
+    }
+}
+
+Output:
+Title: 1984, Author: George Orwell
+Title: To Kill a Mockingbird, Author: Harper Lee
+```
+
+- If you see the above code, the `Book` class has a single responsibility: to represent a book. The `Library` class manages books (adding, displaying).  Each class is focused on a single responsibility. This is called **High Cohesion**.
+- Now consider the below code.
+
+```
+// Low Cohesion Example
+class AllThingsInOneClass {
+    
+    static int bookCounter=0;
+    static int UserCounter=0;
+    String booksName[] = new String[5];
+    String booksAuthor[] = new String[5];
+    String Users[] = new String[5];
+    
+    // Book Management Responsibility
+    public void addBook(String name,String author) {
+        booksName[bookCounter]=name;
+        booksAuthor[bookCounter]=author;
+        bookCounter++;
+    }
+
+    public void displayAllBooks() {
+        for (int i=0;i<bookCounter;i++) {
+            System.out.println("Title: " + booksName[i] + ", Author: " + booksAuthor[i]);
+        }
+    }
+
+    // User Management Responsibility (Unrelated to books)
+    public void addUser(String user) {
+        Users[UserCounter]=user;
+        UserCounter++;
+    }
+
+    public void displayAllUsers() {
+        for (int i=0;i<UserCounter;i++) {
+            System.out.println("User: " + Users[i]);
+        }
+    }
+
+    // Some unrelated functionality (Unrelated to both books and users)
+    public void sendNotification(String message) {
+        System.out.println("Sending notification: " + message);
+    }
+}
+
+public class AboutCohesion{
+    public static void main(String args[]){
+
+        // Low Cohesion
+        AllThingsInOneClass allThingsInOneClass = new AllThingsInOneClass();
+        
+        // Book management
+        allThingsInOneClass.addBook("1984", "George Orwell");
+        
+        // User management
+        allThingsInOneClass.addUser("Alice");
+        
+        // Display all books and users
+        allThingsInOneClass.displayAllBooks();
+        
+        // Unrelated functionality
+        allThingsInOneClass.sendNotification("Library will be closed tomorrow.");
+    }
+}
+
+Output:
+Title: 1984, Author: George Orwell
+Sending notification: Library will be closed tomorrow.
+```
+
+- In the above code all things are maintained within the one single class. The `AllThingsInOneClass` class handles multiple unrelated tasks:
+    - Book management: Adding and displaying books.
+    - User management: Adding and displaying users.
+    - Notifications: Sending notifications.
+- It mixes concerns, making the class harder to understand and maintain. For example, if you need to modify the book management, you might accidentally impact the unrelated user or notification logic.
+- The class has too many responsibilities, leading to poor maintainability and increased complexity.
+- **High Cohesion**: The class performs only one role and focuses on doing one thing well.
+- **Low Cohesion**: The class tries to do too many things, making it harder to maintain, understand, and extend.
+- **High cohesion** leads to better design and more maintainable code, while **low cohesion** makes the code more error-prone, harder to extend, and more difficult to understand.
+
+| **Aspect**           | **High Cohesion**                       | **Low Cohesion**                                  |
+|----------------------|-----------------------------------------|---------------------------------------------------|
+| **Responsibilities** | Focused on a single responsibility.     | Multiple, unrelated responsibilities.             |
+| **Maintainability**  | Easy to maintain due to clear purpose.  | Harder to maintain due to mixed responsibilities. |
+| **Readability**      | Code is easier to read and follow.      | Code is harder to read and understand.            |
+| **Reusability**      | Classes can be reused easily.           | Classes are harder to reuse due to complexity.    |
+| **Complexity**       | Low complexity, small, focused classes. | Higher complexity, large, multi-purpose classes   |
 
 
-
+## Associat
 
 ## Inheritance
 
