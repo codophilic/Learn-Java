@@ -6414,7 +6414,7 @@ WaitThread: I got the notification, time to proceed!
 - In Java, the `finalize()` method was part of the object cleanup process. It was called by the garbage collector before an object was removed from memory, giving the object a chance to release resources like file handles or network connections.
 - The method was intended to allow an object to clean up resources before the object is destroyed by the garbage collector. For example, it could close files, release locks, or free memory for native resources.
 - The method was called by the garbage collector when it determined that there were no more references to the object.
-However, it was not guaranteed when or even if the method would be called. The garbage collector decides when to perform garbage collection, and an object might not be finalized if the program exits before GC is triggered.
+- However, it was not guaranteed when or even if the method would be called. The garbage collector decides when to perform garbage collection, and an object might not be finalized if the program exits before GC is triggered.
 Performance Issues: The use of finalize() had significant performance drawbacks:
 
 It added overhead to garbage collection.
