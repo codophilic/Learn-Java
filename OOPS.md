@@ -1349,6 +1349,8 @@ In display...
 - Anonymous objects are used when an object is needed only once. For example, when you want to call a method of an object and do not need to reuse the object afterwards.
 - Because anonymous objects are not stored in variables, they can help save memory. After the object is used, it becomes eligible for garbage collection immediately, reducing the memory footprint.
 
+## Cohesion
+
 ## Inheritance
 
 - Lets say you have a Basic calculator class which only performs addition and subtraction. 
@@ -3648,10 +3650,9 @@ This is a Car.
 This is a Truck.
 ```
 
-#### Why Sealed Interfaces are required?
+##### Why Sealed Interfaces are required?
 
 - Sealed interfaces, introduced in Java 17, provide a more refined approach to controlling inheritance. They allow a class or interface to specify which classes can implement or extend it.
-
 
 ## Enum (enumerations)
 
@@ -6413,54 +6414,23 @@ WaitThread: I got the notification, time to proceed!
 
 - In Java, the `finalize()` method was part of the object cleanup process. It was called by the garbage collector before an object was removed from memory, giving the object a chance to release resources like file handles or network connections.
 - The method was intended to allow an object to clean up resources before the object is destroyed by the garbage collector. For example, it could close files, release locks, or free memory for native resources.
-- The method was called by the garbage collector when it determined that there were no more references to the object.
+- Just before destroying any object, the garbage collector always calls `finalize()` method to perform clean-up activities on that object. This process is known as Finalization in Java.
 - However, it was not guaranteed when or even if the method would be called. The garbage collector decides when to perform garbage collection, and an object might not be finalized if the program exits before GC is triggered.
-Performance Issues: The use of finalize() had significant performance drawbacks:
+- **Finalize is not a keyword it is only a method under `java.lang.Object` class**. 
+- Lets see an example by overriding `finalize()` , here we will manually release the resources which were taken by our object.
 
-It added overhead to garbage collection.
-It was unreliable because there was no guarantee of timely execution. The garbage collector may delay the finalization, leading to resource leaks if not handled properly.
-Alternatives:
+```
 
-try-with-resources: Introduced in Java 7, this is a more reliable and efficient way to manage resources (like files or database connections). It uses the AutoCloseable interface, ensuring that resources are closed immediately after use.
-close() method: It is encouraged to explicitly release resources using a close() method (often with try-finally blocks) instead of relying on finalize().
-Deprecation:
-Starting from Java 9, the finalize() method was deprecated, and Java strongly discourages its use. The preferred way to manage resources now is through the AutoCloseable interface and the try-with-resources statement.
-
-Why finalize() is no longer required:
-Unreliable behavior: Since it doesn't guarantee when an object will be finalized, it could cause unpredictable resource management.
-Better alternatives: The introduction of try-with-resources and explicit resource management provides more control and efficiency over resource handling.
-Would you like to explore how try-with-resources works in more detail?
-
-
-
-
-
-
-You said:
-can you share me code snip for  finalize 
-? it is applied on class method or variables? and why to use?
-
-2/2
-
-ChatGPT said:
-ChatGPT
-The finalize() method in Java is applied at the class level, specifically to objects, and it is not tied to individual variables or methods. When used, the finalize() method allows an object to perform cleanup operations before the garbage collector reclaims its memory. However, it is called on the object before it is destroyed, not on specific methods or variables.
-
-Here's a simple example that demonstrates how finalize() might have been used:
-
-Example of finalize() method:
-java
-Copy code
 class Resource {
     public Resource() {
-        System.out.println("Resource acquired.");
+        System.out.println("Taken Resource for reading data from files");
     }
 
     // Override the finalize() method
     @Override
     protected void finalize() throws Throwable {
         try {
-            System.out.println("Resource released in finalize()");
+            System.out.println("Resource released explicitly in finalize(), read all the data from files");
         } finally {
             // Call the superclass finalize() method to ensure proper cleanup
             super.finalize();
@@ -6468,8 +6438,46 @@ class Resource {
     }
 }
 
-public class FinalizeDemo {
-    public static void main(String[] args) {
+public class AboutFinalize{
+
+    public static void main(String args[]){
+        Resource res = new Resource();
+        res = null; // Make the object eligible for garbage collection
+
+        System.out.println("Main method ends.");
+    }
+}
+
+
+Output:
+Taken Resource for reading data from files
+Main method ends.
+```
+
+- If you see our the `finalize()` method is not called, why so? because the garbage collector is not called because when the garbage collector method is called then only the `finalize()` method will be invoked. How to called garbage collector? using `System.gc()`.
+
+```
+
+class Resource {
+    public Resource() {
+        System.out.println("Taken Resource for reading data from files");
+    }
+
+    // Override the finalize() method
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            System.out.println("Resource released explicitly in finalize(), read all the data from files");
+        } finally {
+            // Call the superclass finalize() method to ensure proper cleanup
+            super.finalize();
+        }
+    }
+}
+
+public class AboutFinalize{
+
+    public static void main(String args[]){
         Resource res = new Resource();
         res = null; // Make the object eligible for garbage collection
 
@@ -6479,33 +6487,50 @@ public class FinalizeDemo {
         System.out.println("Main method ends.");
     }
 }
-Explanation:
-Resource Class:
 
-The Resource class has a constructor that simulates acquiring a resource (e.g., opening a file or a network connection).
-The finalize() method is overridden to release resources when the object is garbage-collected.
-Finalize Method:
 
-Inside finalize(), it prints a message indicating resource release.
-It calls super.finalize() to ensure proper handling by the superclass's finalize() method, which is part of the Java object lifecycle.
-Garbage Collection:
-
-In the main method, a Resource object is created and then set to null, making it eligible for garbage collection.
-System.gc() is called to suggest the JVM perform garbage collection, but it’s only a request — garbage collection is not guaranteed to run immediately.
-Output (may vary):
-scss
-Copy code
-Resource acquired.
+Output:
+Taken Resource for reading data from files
+Resource released explicitly in finalize(), read all the data from files
 Main method ends.
-Resource released in finalize()
-Why Use finalize() (In the Past):
-Resource Cleanup: It was used for cleaning up non-memory resources (e.g., file handles, sockets) in case they were not explicitly closed.
-Last Resort: It acted as a fallback if programmers forgot to release resources manually (e.g., through a close() method).
-Problems with finalize():
-Not Reliable: It’s not guaranteed when (or if) the garbage collector will call finalize(). Resources might not be released in time, leading to resource exhaustion.
-Performance Impact: It adds extra overhead to garbage collection and can delay the collection process, causing potential memory leaks.
-Better Alternative: try-with-resources
-The recommended approach now is to use try-with-resources to ensure timely release of resources like files, sockets, or database connections. This ensures proper handling without relying on the garbage collector.
+```
 
-Would you like to see an example using try-with-resources for better resource management?
+- Lets run the above program multiple times, and now you may get the below output.
+
+```
+Output:
+Taken Resource for reading data from files
+Main method ends.
+Resource released explicitly in finalize(), read all the data from files
+```
+
+- Why so? like we saw above **`However, it was not guaranteed when or even if the method would be called. The garbage collector decides when to perform garbage collection, and an object might not be finalized if the program exits before GC is triggered`**. We get this output due to the **non-deterministic nature of the garbage collector in Java**.
+- The garbage collector (GC) is managed by the JVM, and its execution timing is not predictable. It runs in the background, concurrently with the rest of your program. When you call `System.gc()`, you are only requesting the garbage collector to run, but there’s no guarantee that it will run immediately or even at all. The JVM decides when it's necessary to free memory. The garbage collection process may run on a separate thread, concurrently with the execution of your main thread (where the `main()` method is running).
+So, your `main()` method might continue executing (printing "Main method ends.") while the JVM considers whether or not to perform garbage collection at that time.
+- **Two Scenarios**:
+    - When `Main method ends.` is printed before `Resource released explicitly in finalize(), read all the data from files`
+        - This is the case when the `main()` method finishes executing before the garbage collector runs. You requested GC using `System.gc()`, but the JVM has not immediately responded to the request. 
+    - When `Main method ends.` is printed after `Resource released explicitly in finalize(), read all the data from files`
+        - In this case, the JVM decided to perform garbage collection promptly after the `System.gc()` call. As a result, the garbage collector calls `finalize()` before the `main()` method prints `Main method ends.` 
+
+- Have you noticed the below snip in our above code?
+
+```
+finally {
+            // Call the superclass finalize() method to ensure proper cleanup
+            super.finalize();
+        }
+```
+
+- We are already overriding `finalize()` method releasing our resources then why again calling `super.finalize()`?, lets say your class is extending another class , your base class or child class has clean up activities written inside your override finalize method, but your parent class does not, then in this case `super.finalize()` will help you to perform clean up activities of your parent class as well. Apart from that if you miss any of the clean up activity for a particular resource, `super.finalize()` will do the needful. 
+- `super.finalize()` in the object class may include important cleanup operations which are part of JVM's default mechanism for object cleaning. So it is better to follow with this convection.
+
+### Drawbacks of finalize
+
+- It added overhead to garbage collection. Thus giving performance issue
+- It was unreliable because there was no guarantee of timely execution. The garbage collector may delay the finalization, leading to resource leaks if not handled properly.
+
+### Alternative `try-with-resource`
+
+- **Starting from Java 9, the `finalize()` method was deprecated, and Java strongly discourages its use. The preferred way to manage resources now is through the `AutoCloseable` interface and the `try-with-resources` statement. It is always suggested that instead of finalize use `try-with-resource` block as it provides `AutoCloseable` interface, ensuring the resources are close immediately after the try block execution is finished**.
 
