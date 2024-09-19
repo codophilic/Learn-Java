@@ -269,7 +269,7 @@ where is interfaces present in memory management? abstract class ? static variab
 - record , sealed classes. (Seperate markdown with all new java features)
 *We will explore String buffer and String builder when we will learn about threads*
 *We will see more about lambda expression*
-- Serialization an marker interface example toh vo maker ka part hai aisa batana hai
+- Serialization an marker interface example toh vo marker ka part hai aisa batana hai
 - simple date local date dd-mm-yyyy or YYYYY
 - what is psvm?
 - The Buffer class in Java NIO (New I/O) provides the foundation for working with buffers. It's an abstract class with subclasses for different primitive data types (e.g., ByteBuffer, CharBuffer, IntBuffer).
