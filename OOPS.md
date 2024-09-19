@@ -7065,6 +7065,9 @@ This is the updated content.
 > - Deleting Non-existent File: `File.delete()` does not throw an exception if the file doesn't exist; it simply returns `false`.
 > - Reading a Non-existent File: Trying to read from a non-existent file results in a `FileNotFoundException`.
 
+## Reflection
+
+
 
 ## Serialization & Deserialization
 
