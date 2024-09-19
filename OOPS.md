@@ -5440,12 +5440,13 @@ Hi
 Hi
 ```
 
-- A character stream in Java is used to **handle text data**. It processes data in the form of **16-bit** characters (Unicode) and **automatically handles the conversion between bytes and characters** using a specific character encoding (e.g., UTF-8)
-- Character streams are ideal for reading and writing text files because they manage encoding/decoding automatically, converting bytes into readable characters. The key classes for character streams are Reader (for reading characters) and Writer (for writing characters).
+- A character stream in Java is used to **handle text data**. It processes data in the form of **16-bit** characters (Unicode) and **automatically handles the conversion between bytes and characters using a specific character encoding (e.g., UTF-8). So the stream details are converted into the the unicode value and not the actual character. This means that when data is read from a file (which is stored as a sequence of bytes), the character stream will convert the byte sequence into Unicode characters (65,49,80..,C2 80, C2 81).**
+- Example: The byte sequence representing "A" in UTF-8 might be `0x41`. When you read it using `FileReader`, it converts this byte into the Unicode value `65` (which is the Unicode value for the character 'A').
+- Character streams are ideal for reading and writing text files because they manage encoding/decoding automatically, converting bytes into readable  unicode characters. The key classes for character streams are Reader (for reading characters) and Writer (for writing characters).
 
 ### Key Difference between Byte-Oriented and Character Oriented Stream
 
-- The main difference between byte and character streams is that byte streams handle raw bytes without any encoding/decoding, while character streams automatically convert bytes into characters using a defined character encoding (like UTF-8).
+- The main difference between byte and character streams is that byte streams handle raw bytes without any encoding/decoding, while character streams automatically convert bytes into unicode characters using a defined character encoding (like UTF-8).
 - Byte streams are suitable for binary data, while character streams are better suited for text data.
 
 ![alt text](image-58.png)
@@ -5646,7 +5647,7 @@ Hello
 | **Feature**               | **Byte Streams**                          | **Character Streams**                    |
 |---------------------------|-------------------------------------------|------------------------------------------|
 | **Base Classes**          | `InputStream`, `OutputStream`                 | `Reader`, `Writer`                           |
-| **Data Handling**         | Handles raw binary data (bytes)           | Handles character data (text)            |
+| **Data Handling**         | Handles raw binary data (bytes)           | Handles unicode character data (text)            |
 | **Operation Granularity** | Reads and writes one byte at a time       | Reads and writes one character at a time |
 | **Data Representation**   | Byte-oriented (8-bit)                     | Character-oriented (16-bit Unicode)      |
 | **Encoding**              | No encoding, handles raw bytes            | Handles character encoding (e.g., UTF-8) |
@@ -6893,4 +6894,181 @@ finally {
 ### Alternative `try-with-resource`
 
 - **Starting from Java 9, the `finalize()` method was deprecated, and Java strongly discourages its use. The preferred way to manage resources now is through the `AutoCloseable` interface and the `try-with-resources` statement. It is always suggested that instead of finalize use `try-with-resource` block as it provides `AutoCloseable` interface, ensuring the resources are close immediately after the try block execution is finished**.
+
+
+## File Handling
+
+- In File handling, we will create, read, write/update and delete file. So now we need to use **Streams**, now there are two streams.
+
+1. Byte Stream (`FileInputStream`, `FileOutputStream`) is preferred for handling binary files like images or videos.
+
+2. Character Stream (`FileReader`, `FileWriter`) is preferred for handling text files, as they properly handle character encoding.
+
+- Lets use first character stream, first we will create a new file, write contents in it, update contents in it then read the file . Post all operations we will delete that file. Here we will be creating text file which will consist of characters.
+
+```
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+
+public class AboutFileHandling {
+    public static void main(String[] args) {
+        String filePath = "characterStreamExample.txt";
+
+        /**
+         * Here we are using try-with-resource block to close resources
+         */
+
+        // Step 1: Create and Write initial content to the file
+        try (FileWriter writer = new FileWriter(filePath)) {
+            writer.write("Hello, world!\n");
+            writer.write("This is the first content.\n");
+            System.out.println("File created and initial content written.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Step 2: Update the content of the file (append new content)
+        try (FileWriter writer = new FileWriter(filePath, true)) { // 'true' enables appending
+            writer.write("This is the updated content.\n");
+            System.out.println("File updated with new content.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Step 3: Read the content of the file
+        try (FileReader reader = new FileReader(filePath)) {
+            int data;
+            System.out.println("Reading file content:");
+
+            /**
+             * When you read data using FileReader, the stream decodes the bytes from the file 
+             * and converts them into their corresponding Unicode values (integers). 
+             * This is why the FileReader.read() method returns an int — 
+             * because it's returning the Unicode code point of the character, not the raw byte data.
+             * 
+             * Example: The byte sequence representing "A" in UTF-8 might be 0x41. 
+             * When you read it using FileReader, it converts this byte into the Unicode value 65 
+             * (which is the Unicode value for the character 'A').
+             * 
+             * Casting this int to a char gives you the actual character that corresponds to the Unicode code point
+             * -1 is used in the read() method in Java is to signal the end of the file (EOF).
+             * 
+             * Why -1? 
+             *  - Valid character/byte values (usually between 0 and 65535 for char values, or 0 to 255 for byte values).
+             * -1 is used as a sentinel value to signal that there is no more data to read (i.e., you've reached the end of the file).
+             */
+
+            while ((data = reader.read()) != -1) {
+                System.out.print((char) data);  // Output file content character by character
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Step 4: Delete the file
+        File file = new File(filePath);
+        if (file.delete()) {
+            System.out.println("\nFile deleted successfully.");
+        } else {
+            System.out.println("\nFailed to delete the file.");
+        }
+    }
+}
+
+
+Output:
+File created and initial content written.
+File updated with new content.
+Reading file content:
+Hello, world!
+This is the first content.
+This is the updated content.
+
+File deleted successfully.
+```
+
+- The purpose of using byte stream handling binary files like images or videos since it does not requires character conversion, though we can still use byte stream for text files , here we need to explicitly convert the bytes into unicode number then from unicode number to character.
+
+```
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+public class AboutFileHandling {
+    public static void main(String[] args) {
+        String BytefilePath = "byteStreamExample.txt";
+        
+        // Step 1: Create and write initial content to the file using FileOutputStream
+        try (FileOutputStream outputStream = new FileOutputStream(BytefilePath)) {
+            String initialContent = "Hello, world..!\nThis is the first content.\n";
+            outputStream.write(initialContent.getBytes(StandardCharsets.UTF_8));
+            System.out.println("File created and initial content written.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Step 2: Update the file (append new content)
+        try (FileOutputStream outputStream = new FileOutputStream(BytefilePath, true)) { // 'true' enables appending
+            String updatedContent = "This is the updated content.\n";
+            outputStream.write(updatedContent.getBytes(StandardCharsets.UTF_8));
+            System.out.println("File updated with new content.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Step 3: Read the content of the file using FileInputStream
+        try (FileInputStream inputStream = new FileInputStream(BytefilePath)) {
+            byte[] data = new byte[inputStream.available()];
+            int bytesRead = inputStream.read(data);
+            if (bytesRead != -1) {
+                String fileContent = new String(data, StandardCharsets.UTF_8);
+                System.out.println("Reading file content:");
+                System.out.println(fileContent);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Step 4: Delete the file
+        File bytefile = new File(BytefilePath);
+        if (bytefile.delete()) {
+            System.out.println("File deleted successfully.");
+        } else {
+            System.out.println("Failed to delete the file.");
+        }
+    }
+
+}
+
+
+
+Output:
+File created and initial content written.
+File updated with new content.
+Reading file content:
+Hello, world..!
+This is the first content.
+This is the updated content.
+```
+
+
+>[!NOTE]
+> - Overwriting Behavior: `FileWriter` and `FileOutputStream` will overwrite an existing file without deleting it.
+> - File Creation: If a file doesn't exist during a write or update operation, both streams will create a new file and write/update details
+> - Deleting Non-existent File: `File.delete()` does not throw an exception if the file doesn't exist; it simply returns `false`.
+> - Reading a Non-existent File: Trying to read from a non-existent file results in a `FileNotFoundException`.
+
+
+## 
+
+
+
+
 
