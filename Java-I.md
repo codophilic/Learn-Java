@@ -11,7 +11,7 @@
 - To use the class, you create or instantiate an object. The object is a specific instance of the class, with its own customized properties using the properties of class (like a red Ferrari with a 3902 cc engine) and access to the methods defined in the class.
 - When you instantiate an object, you can set its properties to match what you need, and then use its methods to perform actions. This approach helps in organizing code, making it more modular, reusable, and easier to manage.
 
-![alt text](image.png)
+![alt text](Images/java-1/image.png)
 
 ```
 package OOPS;
@@ -198,7 +198,7 @@ Output:
 Not creating reference variable of any class
 ```
 
-![alt text](image-17.png)
+![alt text](Images/java-1/image-17.png)
 
 - If you see we can see **SimpleOOP.class** file but not **Car.class** file, this is because we have not created any object of it. Such class whose object is not created are not compiled by java.
 
@@ -267,31 +267,31 @@ Output:
 
 - Now when the program will get executed , main method will have a stack. Inside the stack all its local variables will be there
 
-![alt text](image-1.png)
+![alt text](Images/java-1/image-1.png)
 
 - `new Calculator()` creates an object inside the heap memory , the address of that object gets stored in the main method stack for **calc** variable. So **calc is a reference variable and not object because it as reference of Calculator Object not the object itself**
 
-![alt text](image-3.png)
+![alt text](Images/java-1/image-3.png)
 
 - What happens to the instance variable? `int instanceVar` , now instance variable are not part of stack, it gets created within the heap under the same object address.
 
-![alt text](image-4.png)
+![alt text](Images/java-1/image-4.png)
 
 - Now **calc** calls **add** method , so now a new stack for add method will be created, this add method will have all its local variables.
 
-![alt text](image-2.png)
+![alt text](Images/java-1/image-2.png)
 
 - What will the values of **n1** and **n2**? it will be 5 and 4 because that it was it been pass when **calc** calls **add** method. After executing add it will return 7 as its output to the variable sum.
 
-![alt text](image-5.png)
+![alt text](Images/java-1/image-5.png)
 
 - Now we have set the **instanceVar=6** .
 
-![alt text](image-7.png)
+![alt text](Images/java-1/image-7.png)
 
 - We creating a new object reference for **calc1** and setting **instanceVar=7** for that newly object reference.
 
-![alt text](image-10.png)
+![alt text](Images/java-1/image-10.png)
 
 - If you notice, the heap size has been also increase thus heap memory is also called as **dynamic memory**.
 
@@ -348,7 +348,7 @@ Output:
 
 - It is the same. Java uses a special memory area called the **String Pool** to store string literals or value. When a string literal is created, the JVM checks the string pool to see if an identical string already exists. If it does, the new reference points to the existing string. If not, a new string is created in the pool.
 
-![alt text](image-6.png)
+![alt text](Images/java-1/image-6.png)
 
 >[!IMPORTANT]
 > - If we explicitly specify **`String str=new String("Explicitly telling java to create a new Object but still it won't create")`** then still it will search in String pool. If literal is not available then only its creates a new object of string.
@@ -446,11 +446,11 @@ System.out.println(sb.toString()); // Output: Hello World
 - Packages are simple sort of folder where all your require files are structure. Packages help avoid naming conflicts for two same while which does the same function but present in different packages or folder.
 - When you are working on large project you might require a different package for a database conections. Lets create that
 
-![alt text](image-12.png)
+![alt text](Images/java-1/image-12.png)
 
 - Lets create a project java file which will call this **DatabaseDetails.java** 
 
-![alt text](image-13.png)
+![alt text](Images/java-1/image-13.png)
 
 - If you see it is suggesting to import **DatabaseDetails** of **DatabaseFolder** package, since the class is in different folder
 - Post importing
@@ -475,7 +475,7 @@ Connecting Database..
 - **Every class methods you use belongs to a package**. There are some in-built packages which comes with JDK.
 - Have wonder `System.out.println` belongs to ?
 
-<video controls src="20240824-0748-27.8244916.mp4" title="Title"></video>
+<video controls src="Images/java-1/20240824-0748-27.8244916.mp4" title="Title"></video>
 
 - The `System` is a class which belongs to `java.lang` folder, it means some where in the jdk there is a java folder , inside that there is a sub-folder called lang which has a class called **System**.
 - `java.lang.*` is imported by default into a Java program. When we say `java.lang.*` it means all the files present under lang folder are imported by default.
@@ -567,7 +567,7 @@ School name: BITS ,ID: 2 ,marks: 96
 - Static variables are useful when you want to share a common piece of data across all instances of a class. For example, a variable that counts the number of instances of a class created.
 - The static variables are stored in **MetaSpace** 
 
-![alt text](image-11.png)
+![alt text](Images/java-1/image-11.png)
 
 - What if the **static** key word is applied on method? , lets apply static keyword on the `details()` method.
 
@@ -603,7 +603,7 @@ public class AboutStatic {
 }
 ```
 
-![alt text](image-8.png)
+![alt text](Images/java-1/image-8.png)
 
 - We got an error **`Cannot make a static reference to the non-static field id, Cannot make a static reference to the non-static field marks`**. So basically there is 1 value for the variable **schoolname** since it is a static variable, but there are 2 values of **id** and **marks** (`s1.id=1,s2.id=2` and `s1.marks=95,s2.marks=96`) , these are non-static variables. Now since there are two different values, how will the static method will get to know which one to be called and printed?
 - Thats why we can use **a static variable inside a static method but we cannot use a non-static variable inside a static method**.
@@ -652,7 +652,7 @@ School name: BITS ,ID: 1 ,marks: 95
 
 - We see below warnings which says 
 
-![alt text](image-9.png)
+![alt text](Images/java-1/image-9.png)
 
 - **Clarity and Intent**: Calling static methods or accessing static variables via the class name makes it clear that these members belong to the class, not to any specific instance. It clarifies that the method or variable is not dependent on the state of any particular object.
 - **Avoid Confusion**: If you call a static method using an object, it can give the false impression that the method is tied to the instance's state, which it is not. Using the class name prevents this confusion.
@@ -1344,7 +1344,7 @@ In display...
 - An anonymous object in Java is an object that is created without being assigned a reference variable. This means that the object is instantiated and immediately used without storing it in a variable.
 - Since it has no reference, it cannot be reused after its creation and initial use.
 
-![alt text](image-14.png)
+![alt text](Images/java-1/image-14.png)
 
 - Anonymous objects are used when an object is needed only once. For example, when you want to call a method of an object and do not need to reuse the object afterwards.
 - Because anonymous objects are not stored in variables, they can help save memory. After the object is used, it becomes eligible for garbage collection immediately, reducing the memory footprint.
@@ -1953,7 +1953,7 @@ Student: Aaron
 
 - Association here is between `Teacher` and `Student` classes. The Teacher class has a list of Student objects, demonstrating a One-to-Many association. The relationship is not strong like inheritance, meaning the Teacher class does not own or control the Student class, but can interact with it.
 
-![alt text](image-76.png)
+![alt text](Images/java-1/image-76.png)
 
 - Types of Association
     - **IS-A Relationship (Inheritance)**:
@@ -2057,7 +2057,7 @@ Engine is starting...
 
 - So **Composition** makes your tightly coupled whereas **Aggregation** makes your code loosely coupled.
 
-![alt txt](image-77.png)
+![alt txt](Images/java-1/image-77.png)
 
 
 
@@ -2380,7 +2380,7 @@ Parameterized double constructor of Y
 - Just like `super`, `this` access current class methods and variables it must be always the **first statement** within the constructor.
 - What happens if we write both? , if both `super()` and `this()` need to be the first statement, then only one of them can actually be the first statement in any given constructor. It is not possible to have two first statements, so you cannot use both super() and this() simultaneously in a single constructor.
 
-![alt text](image-18.png)
+![alt text](Images/java-1/image-18.png)
 
 ## Polymorphism
 
@@ -2481,7 +2481,7 @@ public class Main {
 - Dynamic method dispatch (also called **runtime polymorphism**) occurs when a method is called on a reference of a superclass (or interface), but the actual method that gets executed is the one in the object of the subclass at runtime.
 - Lets see the backend memory management for it.
 
-![alt text](image-21.png)
+![alt text](Images/java-1/image-21.png)
 
 - Also one thing if you observer , we are using the same reference variable of Animal for Cat's object creation. This makes your code **loosely coupled** , so lets say in future you will create another subclass name `Cow` which extends Animal, using the same reference variable you can create object of Cow thus making your code **loosely coupled**.
 - If you have created individual reference variable for each class it would ended up taking space in heap and also made your application **tightly coupled** means for a new subclass like `Cow` you need to create a new reference variable.
@@ -2515,7 +2515,7 @@ public class Main {
     - **Usage**: Used to restrict access to sensitive data or methods that should not be exposed outside the class.
 
     
-    ![alt text](image-19.png)
+    ![alt text](Images/java-1/image-19.png)
     
     
     - Private methods can be accessible within the same method of that class.
@@ -2634,7 +2634,7 @@ class MyClass { // Accessible only within the same package
 
 #### Summary of types of access modifiers
 
-![alt text](image-20.png)
+![alt text](Images/java-1/image-20.png)
 
 
 - Can we apply these access modifiers on a **class**, uptil now we have applied this on class members like instance variable and methods. What if we apply access modifiers on a **class**.
@@ -2646,7 +2646,7 @@ class MyClass { // Accessible only within the same package
 - Let say if a stranger ask you about personal information like name, age etc.. would you share the details? now it depends like if you are taking a loan the bank manager requires your details to sanction you loan. Your personal information must not be share until and unless it is require. Your personal information data is encapsulated in your brain.
 - Similarly in terms of java, no one must have access of your instance variable of class directly, if any other program needs your instance variable they must ask or they must get the access via method.
 
-![alt text](image-15.png)
+![alt text](Images/java-1/image-15.png)
 
 - Encapsulation is the mechanism of wrapping the data (variables) and code (methods) that operates on the data into a single unit called a class. It restricts direct access to some of an object's components and prevents the accidental modification of data.
 - In simple terms, encapsulation is about bundling the data (attributes) and methods (functions) that operate on the data into a single unit (class), and controlling the access to the data to ensure the integrity of the object's state.
@@ -2676,7 +2676,7 @@ Harsh ,20
 
 - The above method is not encapsulated, we are still able to access instance variables. Lets make those **private**.
 
-![alt text](image-16.png)
+![alt text](Images/java-1/image-16.png)
 
 - The moment we make those variable private, the variables are not visible or accessible to other class directly. Lets create a method to make it access indirectly.
 
@@ -2757,7 +2757,7 @@ public class AboutFinal {
 
 - Lets apply **final** keyword on that variable.
 
-![alt text](image-22.png)
+![alt text](Images/java-1/image-22.png)
 
 - We get an error which says, `final variable i cannot be assigned`. When a variable is declared as final, its value cannot be changed once it is initialized. This effectively makes the variable a constant like `final double PIE=3.14`.
 
@@ -2769,13 +2769,13 @@ public class AboutFinal {
 - Here we declare a blank variable and then assigned the value to it which works fine.
 - What if , we apply final keyword on a **class**?
 
-![alt text](image-23.png)
+![alt text](Images/java-1/image-23.png)
 
 - It seems java is stopping us to inherit the class. When a class is declared as final, it cannot be subclassed. This is useful when you want to prevent the inheritance of a class.
 
 - What if we apply that on a method? , it will prevent method overriding if the method belongs is a subclass whos parent class as final method.
 
-![alt text](image-24.png)
+![alt text](Images/java-1/image-24.png)
 
 - When a method is declared as final, it cannot be overridden by subclasses. This is useful when you want to prevent a method from being modified or altered in any subclass.
 
@@ -2810,11 +2810,11 @@ My@2f92e0f4
 
 - If you see class **My** does not consist of any method, but there are default in-build method associated with reference variable **my**. This in-build method are inherited from the object class.
 
-![alt text](image-25.png)
+![alt text](Images/java-1/image-25.png)
 
 - Object class method (`Ctrl+Shift+O`)
 
-![alt text](image-26.png)
+![alt text](Images/java-1/image-26.png)
 
 ## Upcasting & Downcasting
 
@@ -2894,7 +2894,7 @@ Dog barks
 
 - Wrapper classes in Java provide a way to use primitive data types (int, char, boolean, etc.) as objects. Each primitive type has a corresponding wrapper class in the `java.lang` package:
 
-![alt text](image-27.png)
+![alt text](Images/java-1/image-27.png)
 
 - Lets understand via simple example.
 
@@ -2923,7 +2923,7 @@ Output:
 
 - So here `Integer` is a class where as `int` is a primitive data type. So `i` is a just a simple variable but `j` is a reference variable. If we click on `Integer` it will show the internal implements which is similar like object and classes.
 
-![alt text](image-28.png)
+![alt text](Images/java-1/image-28.png)
 
 - Another way to implement these wrapper class and assign value is 
 
@@ -2976,7 +2976,7 @@ Output:
 
 - Wrapper classes wrap primitive data type value into a class object. It is this wrapper class that helps to make Java object-oriented.
 
-![alt text](image-29.png)
+![alt text](Images/java-1/image-29.png)
 
 #### Autoboxing & Unboxing
 
@@ -3054,7 +3054,7 @@ int primitiveInt = intObject; // Unboxing: Integer to int
 
 ```
 
-![alt text](image-30.png)
+![alt text](Images/java-1/image-30.png)
 
 ### Why Wrapper Class is Invented?
 
@@ -3183,7 +3183,7 @@ abstract class AI{
 
 - Now if anyone extends our parent class AI , they need to **mandatory** define logic for ML as well as DL model.
 
-![alt text](image-31.png)
+![alt text](Images/java-1/image-31.png)
 
 
 ```
@@ -3218,7 +3218,7 @@ class DeveloperCommunity extends AI{
 - An abstract method is a method that does not have a body; it only has a method signature (name, return type, parameters) followed by a semicolon. Abstract methods must be implemented (i.e., given a body) by subclasses (non-abstract classes that extend the abstract class).
 - Can we try to create object of abstract class? lets try
 
-![alt text](image-32.png)
+![alt text](Images/java-1/image-32.png)
 
 - **An abstract class is a class that cannot be instantiated directly. This means you cannot create an object of an abstract class.**
 - But we can create object of subclass 
@@ -3361,7 +3361,7 @@ In N2 class
 - So basically for **Non-static nested class methods we require object of its outer class**.
 - When we compile Nester class we get below type of class file
 
-![alt text](image-33.png)
+![alt text](Images/java-1/image-33.png)
 
 - The nested class is separated by `$`.
 - Lets a static nested class example.
@@ -3515,7 +3515,7 @@ Runnable runnable = new Runnable() {
 - If you attempt to define a new method inside the anonymous inner class, it won't be accessible directly because you cannot refer to the class by name (as it doesn’t have one).
 - When we compile the class we get below class file
 
-![alt text](image-34.png)
+![alt text](Images/java-1/image-34.png)
 
 - If you see **1** indicates that an anonymous class, now if your have many such anonymous class then the value will increment like 2,3 etc..
 
@@ -3546,7 +3546,7 @@ Abstract Anonymous Inner class
 
 - Look below compile anonymous classes.
 
-![alt text](image-35.png)
+![alt text](Images/java-1/image-35.png)
 
 
 ## Interface
@@ -4436,7 +4436,7 @@ In A
 - Hey wait, here we create two method **thisistheshowmethodwhichbelongstoaclass** and **thisistheshowmethodwhichbelongtoaclass**, the the B class method must override the A class method right? , if you observe the B and A class method name , A class : *thisistheshowmethodwhichbelong**s**toaclass* and B class : *thisistheshowmethodwhichbelongtoaclass*, B class is missing letter **`s`**. Thats why in the output we got `In A`. 
 - Such human mistakes could happen, now to avoid this java provides some annotations e.g `@Override` which help to show that the method name is not same as parent method name.
 
-![alt text](image-36.png)
+![alt text](Images/java-1/image-36.png)
 
 ```
 class A{
@@ -4473,11 +4473,11 @@ In B
 - The annotation `@Override` tells the compiler that this method is an overridden method (metadata about the method), and if any such method does not exist in a subclass class which is extending the parent class, then throw a compiler error (method does not override a method from its parent class).
 - There are other annotations like `@Deprecated` which is applied on class or on methods stating the functionality can be use with the current version but will be remove in the future version.
 
-![alt text](image-37.png)
+![alt text](Images/java-1/image-37.png)
 
 - If any one uses the class or method, they will see strike in their editor.
 
-![alt text](image-38.png)
+![alt text](Images/java-1/image-38.png)
 
 - Even if you use it , something below like message will be shown during the run-time
 
@@ -4489,15 +4489,15 @@ In B
 
 - We have seen about functional interface or single abstract method. We have an annotation of it `@FunctionalInterface`. If you see , second method `show1()` is not allowed , it gives some error.
 
-![alt text](image-39.png)
+![alt text](Images/java-1/image-39.png)
 
 - So this way annotation not only helps in readability but also helps the compiler to stick with the functionality mentioned using the annotation.
 - In Spring framework, there are pretty good amount of annotations used like `@Component`,`@Autowired`, `@Entity`, `@Table` etc..
 - Lets explore the `@Override` and `@Deprecated` annotation by clicking on it.
 
-![alt text](image-40.png)
+![alt text](Images/java-1/image-40.png)
 
-![alt text](image-41.png)
+![alt text](Images/java-1/image-41.png)
 
 - If you see both are interfaces and there is nothing any logic thing written on it, then how does it works? basically the java compiler knows the related logic for every in-built annotation. Thus the annotation just provide metadata or information to the compiler and using that the compiler, depending on whatever annotation, perform the compilation.
 - The Java compiler has built-in knowledge about how to handle these annotations. This knowledge is embedded within the compiler’s codebase. The compiler knows how to interpret the metadata provided by annotations and what checks or actions to perform based on them.
@@ -4808,7 +4808,7 @@ You are trying to access and element which is greater than the actual size of ar
 - **Exception** is a class. This class is parent of all the exceptions whether it is a built-in exception or user defined exception.
 - Always define your parent class **Excpetion** at the last of multi-catch exceptions because as soon as you define the parent exception above your multi-catch exception block , those multi-catch exception won't be reachable because any exception which should be part of multi-catch statement will go under the parent exception.
 
-![alt text](image-42.png)
+![alt text](Images/java-1/image-42.png)
 
 ### Throw
 
@@ -4920,7 +4920,7 @@ Division method failed
 
 - **The `throw` keyword is used to handover the instance of the exception created by the programmer to the JVM manually. The `throws` keyword used to handover the responsibility of handling the exception occurred in the method to the caller method**.
 
-![alt text](image-45.png)
+![alt text](Images/java-1/image-45.png)
 
 
 - Consider the below snippet. Can you guess will the catch block will get executed?
@@ -5086,8 +5086,8 @@ Arithmetic Exception occurred
 
 - When we do this , we get something like below
 
-![alt text](image-43.png)
-![alt text](image-44.png)
+![alt text](Images/java-1/image-43.png)
+![alt text](Images/java-1/image-44.png)
 
 - Java compiler automatically suggest to add a try-catch block or use throws, why so? because our string may or may not be in proper date format. This would lead to ParseException.
 
@@ -5130,18 +5130,18 @@ public class AboutExceptions{
 
 
 
-![alt text](image-46.png)
+![alt text](Images/java-1/image-46.png)
 
 
 ### Custom Exception
 
 - Before creating our own exception , lets see how in-built exceptions are made. This will give us idea to built our own exceptions. Lets see the implementation of **ArithmeticException**.
 
-![alt text](image-47.png)
+![alt text](Images/java-1/image-47.png)
 
-![alt text](image-48.png)
+![alt text](Images/java-1/image-48.png)
 
-![alt text](image-49.png)
+![alt text](Images/java-1/image-49.png)
 
 - Now **ArithmeticException** extends **RuntimeException** and **RuntimeException** extends **Exception**.
 - When defining a custom exception in Java, you can extend either the **RuntimeException** class (for unchecked exceptions) or the Exception class (for checked exceptions). The choice of whether to extend **RuntimeException** or **Exception** depends on the specific behavior you want for your custom exception and how you expect it to be handled by users of your code.
@@ -5232,9 +5232,9 @@ class CompileTimeAgeCheckerException extends Exception{
 
 - Inside the main block, we can see we are getting the checked exception like message.
 
-![alt text](image-50.png)
+![alt text](Images/java-1/image-50.png)
 
-![alt text](image-51.png)
+![alt text](Images/java-1/image-51.png)
 
 ```
         int Age=1000;
@@ -5293,9 +5293,9 @@ finally{
     - No matter how they work internally, all streams present the same simple model to programs that use them.
     - A program uses an input stream to read data from a source, one item at a time. A program uses an output stream to write data to a destination, one item at time.
 
-![alt text](image-55.png)
+![alt text](Images/java-1/image-55.png)
 
-![alt text](image-56.png)
+![alt text](Images/java-1/image-56.png)
 
 
 
@@ -5323,7 +5323,7 @@ finally{
 
 - Lets take an example to understand byte-oriented stream, suppose you have a java program , your java program takes an input and display the same input as output. Suppose as a input you entered **code**, now these **code**  is converted travels to the steam from your keyboard as its source to your java program as destination in this way.
 
-![alt text](image-57.png)
+![alt text](Images/java-1/image-57.png)
 
 - Consider below code
 
@@ -5449,7 +5449,7 @@ Hi
 - The main difference between byte and character streams is that byte streams handle raw bytes without any encoding/decoding, while character streams automatically convert bytes into unicode characters using a defined character encoding (like UTF-8).
 - Byte streams are suitable for binary data, while character streams are better suited for text data.
 
-![alt text](image-58.png)
+![alt text](Images/java-1/image-58.png)
 
 - Here, to specify stream that our source and destination will be java console , thats why we use `System.in` and `System.out`.
 - Now when we use **Input/OutputStream** in case of Byte-oriented stream and **Reader/Writer** in case of character-oriented stream, don't you think processing byte/character one at a time will lead to slowness or performance issue in your program? it will also lead to increase in number of I/O operation which in turn increases CPU utilzation? thats why we have concept of **Buffer Stream**.
@@ -5463,7 +5463,7 @@ Hi
 - Instead of handling data one byte or one character at a time, streams often read/write chunks of data into memory (a buffer) to reduce the number of I/O operations. A buffer is like a temporary storage area (an array) that stores multiple bytes/characters before they're processed.
 - Default Buffer Sizes for `BufferedInputStream`, `BufferedOutputStream` , `BufferedReader` and `BufferedWriter` is 8 KB (8192 bytes).
 
-![alt text](image-59.png)
+![alt text](Images/java-1/image-59.png)
 
 - Simple Analogy
     - Imagine you are filling a bucket with water from a slow tap:
@@ -5635,7 +5635,7 @@ Hello
     - When you’re done with the book, you return it to the library. This lets the library know that the book is available for others and releases the resources associated with it. Similarly, when you call `.close()` on a stream, you’re telling the system that you’re done using the resource (like the file or network connection). This releases the resource so it can be used by others or cleaned up properly.
 - All the streams implements `Closeable` interface.
 
-![alt text](image-53.png)
+![alt text](Images/java-1/image-53.png)
 
 - **Why Close a Stream?**
     - If you don’t close the stream, it’s like keeping the library book without returning it. The system might not be able to use that resource for other tasks or could run out of resources over time.
@@ -5655,7 +5655,7 @@ Hello
 
 - The `InputStream`, `OutputStream`, `Reader` and `Writer` all are abstract class which has multiple implement for various types of input and output, like for File related operations we have `FileInputStream`, `FileReader` and so on.
 
-![alt text](image-60.png)
+![alt text](Images/java-1/image-60.png)
 
 >[!TIP]
 > - Depending on the type of resource or operation you need to work with, you'll choose the appropriate stream.
@@ -5666,7 +5666,7 @@ Hello
 
 - Which stream does `System.out.println()` uses? it uses **PrintStream**.
 
-![alt text](image-52.png)
+![alt text](Images/java-1/image-52.png)
 
 ## Scanner
 
@@ -5704,7 +5704,7 @@ double value = scanner.nextDouble();  // Automatically reads and converts to a d
 - Scanner is a utility class (`java.util`) primarily designed to parse and read input from various sources, such as user input (via the console), files, strings, etc. It's useful for handling primitive types (e.g., int, double) and strings, and it can split input based on delimiters (like spaces or newlines).
 - **Scanner is not part of Java I/O Streams. It is a utility class that provides input parsing on top of only byte-oriented stream like `InputStream`**.
 
-![alt text](image-54.png)
+![alt text](Images/java-1/image-54.png)
 
 - Scanner cannot directly use a **Reader** (like `FileReader` or `InputStreamReader`) because Scanner operates on input sources that are either InputStream, File, or String. Scanner works with byte-oriented streams (like `InputStream`) and not directly with character-oriented streams (like `Reader` and `Writer`). However, you can convert character-oriented streams to byte-oriented streams (e.g., `InputStream`) and use them with Scanner.  Scanner is not compatible with `BufferedReader` because `BufferedReader` works with character streams, not byte streams.
 - **You cannot print data using Scanner. The Scanner class is designed for reading and parsing input, not for output or printing data.**
@@ -5818,7 +5818,7 @@ Enter a input for Scanner:
 - When you use **try-with-resources**, any object that implements the `AutoCloseable` or `Closeable` interface (like `InputStream`, `Reader`, etc.) is automatically closed at the end of the try block, even if an exception is thrown. You don’t need a finally block to handle cleanup.
 - So you declare resources inside the **try declaration**.
 
-![alt text](image-61.png)
+![alt text](Images/java-1/image-61.png)
 
 - You can also use **try-catch-with-resources**, to handle exception of your business code logic.
 
@@ -5906,7 +5906,7 @@ Resource closed
 
 - Now what if , in your try statements somewhere your **custResource** got assigned as `null`? it would certainly raised to `NullPointerException` while auto closing at the end of try block right? , but it won't.
 
-![alt text](image-62.png)
+![alt text](Images/java-1/image-62.png)
 
 - This is because inside the try block statement **you cannot assigned the resource variables thus avoiding any kind of exception related to the resources variables**.
 - However, making purposely `null` during initialzation will give you `NullPointerException`.
@@ -5944,18 +5944,18 @@ Code Executed
 - Similarly, a thread is an independent path of execution in a program that allows multiple tasks to run at the same time.
 - If there is a process with five tasks and it takes 10 mins to complete sequentially, the process can complete within 2 mins by five parallel tasks. 
 
-![alt text](image-63.png)
+![alt text](Images/java-1/image-63.png)
 
 - When considering an enterprise-level application, there are hundreds of tasks and it will be more efficient if the programmer divides them into multiple threads properly.
 - Technically, a Thread is a very light-weighted process, or we can say the smallest part of the process that allows a program to operate more efficiently by running multiple tasks simultaneously. All the tasks are executed without affecting the main program. In a program or process, all the threads have their own separate path for execution, so each thread of a process is independent.
 
-![alt text](image-64.png)
+![alt text](Images/java-1/image-64.png)
 
 - Another benefit of using thread is that if a thread gets an exception or an error at the time of its execution, it doesn't affect the execution of the other threads. All the threads share a common memory and have their own stack, local variables etc.. When multiple threads are executed in parallel at the same time, this process is known as **Multithreading**.
 
 ### Lifecycle
 
-![alt text](image-65.png)
+![alt text](Images/java-1/image-65.png)
 
 - The life cycle of the thread in java is controlled by JVM. There are five states a thread can stay from birth to death. Whenever a thread goes to the death state that cannot be revert.
     - **New** — The thread is created but hasn’t started yet.
@@ -6020,7 +6020,7 @@ Thread has finished execution (TERMINATED state).
 
 - If you see `start()` method is not present in the class **ThreadLifecycleDemo**, behind the scene it calls the `run()` method and these threads are managed using **Thread Schedular**.
 
-![alt text](image-71.png)
+![alt text](Images/java-1/image-71.png)
 
 #### Thread scheduler
 
@@ -6032,29 +6032,29 @@ Thread has finished execution (TERMINATED state).
 
 ##### First Come First Serve Scheduling (non-preemptive):
 
-![alt text](image-66.png)
+![alt text](Images/java-1/image-66.png)
 
 - In the above table, we can see that Thread t1 has arrived first, then Thread t2, then t3, and at last t4, and the order in which the threads will be processed is according to the time of arrival of threads. Hence, Thread t1 will be processed first, and Thread t4 will be processed last.
 
-![alt text](image-67.png)
+![alt text](Images/java-1/image-67.png)
 
 ##### Time-slicing scheduling:
 
 - Usually, the First Come First Serve algorithm is non-preemptive, which is bad as it may lead to infinite blocking (also known as starvation). To avoid that, some time-slices are provided to the threads so that after some time, the running thread has to give up the CPU. Thus, the other waiting threads also get time to run their job.
 
-![alt text](image-68.png)
+![alt text](Images/java-1/image-68.png)
 
 - In the above diagram, each thread is given a time slice of 2 seconds. Thus, after 2 seconds, the first thread leaves the CPU, and the CPU is then captured by Thread2. The same process repeats for the other threads too.
 
 ##### Preemptive-Priority Scheduling:
 
-![alt text](image-69.png)
+![alt text](Images/java-1/image-69.png)
 
 - Suppose there are multiple threads available in the runnable state. The thread scheduler picks that thread that has the highest priority. Since the algorithm is also preemptive, therefore, time slices are also provided to the threads to avoid starvation. Thus, after some time, even if the highest priority thread has not completed its job, it has to release the CPU because of preemption.
 
 ##### Working of the Java Thread Scheduler
 
-![alt text](image-70.png)
+![alt text](Images/java-1/image-70.png)
 
 - The JVM delegates thread scheduling to the underlying operating system. So, the behavior of thread scheduling may differ depending on the platform (Windows, Linux, etc.). Different systems may have different scheduling behavior based on their specific implementation.
 - The JVM and the underlying operating system control the thread scheduler. You can influence thread execution by setting priorities or yielding execution, but there are no guarantees about the exact order of execution.
@@ -6062,7 +6062,7 @@ Thread has finished execution (TERMINATED state).
 
 #### How Start method calls Run method In Thread class?
 
-![alt text](image-71.png)
+![alt text](Images/java-1/image-71.png)
 
 - When you create a Thread object (`ThreadLifecycleDemo thread = new ThreadLifecycleDemo();`). This thread is in the **NEW** state. It has been created but hasn't started executing yet.
 - When you call `thread.start();`, the `start()` method does not directly run the `run()` method. Instead, it prepares the thread for execution and creates a new OS thread.
@@ -6188,9 +6188,9 @@ class B extends A implements Runnable{
 
 - If you see **Thread** class implements **Runnable**. Now inside the Runnable interface we have a method `run()`.
 
-![alt text](image-72.png)
+![alt text](Images/java-1/image-72.png)
 
-![alt text](image-73.png)
+![alt text](Images/java-1/image-73.png)
 
 - If you see there is only one method, thus **Runnable** is a Functional Interface. But when we create a new thread (`new ThreadName()`) we use `start()` function right? it is not there inside **Runnable**? but what if we can pass the implementation of **Runnable** object while creating a thread? `new ThreadName(RunnableObjImpl)`.
 
@@ -6297,11 +6297,11 @@ Output:
 
 - Why are we getting different values though? this is because when the main program execution is started, it creates two threads `c1` and `c2` and the job of main method is done. Then it prints the count of `i` , the main program does not waits for the execution of these two threads. So whatever the value will be of `i` update by these two threads during the time when the main program retrieve , that value is printed. So there are 3 threads, one for the main program, one for the `c1` and one for the `c2`.
 
-![alt text](image-74.png)
+![alt text](Images/java-1/image-74.png)
 
 - So now we need to tell main program, that "Hey main program just wait for these two threads to finish their job , then your print it". We can do this using `join()`. `java.lang.Thread` class provides the `join()` method which allows one thread to wait until another thread completes its execution. `join()` method is a checked exception.
 
-![alt text](image-75.png)
+![alt text](Images/java-1/image-75.png)
 
 ```
 class Counter{
