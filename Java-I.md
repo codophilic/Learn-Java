@@ -898,7 +898,6 @@ Assigned Number 7
 - So `Class.forName("A")` accepts a string parameter of your class name and just loads the class inside your JVM.
 - This concludes that **static block statements gets executed when the class is loaded or a object of that class is instantiated**.
 
-
 ## Array Objects
 
 - In Java, an Array of Objects refers to an array that can store references to objects of a particular class. Just like arrays of primitive types (e.g., int[], char[]), an array of objects can store multiple elements, but each element is a reference to an instance of a class.
@@ -1381,6 +1380,91 @@ Name: Meet, age:24
 - **Definition**: A parameterized constructor is one that accepts parameters (arguments). It allows you to pass values to the constructor when creating an object, providing a way to initialize the object with different values.
 - **Purpose**: To initialize objects with specific values provided at the time of creation, allowing for greater flexibility and customization.
 - **When It's Used**: When you want to initialize an object with specific values or require certain parameters to be set upon object creation.
+
+## Instance or Instance initializer Block
+
+- When a class is loaded , the statement inside the static block gets executed similarly when an new object is created , the statement inside the instance block gets executed. Lets see the example.
+
+```
+class Object1A{
+
+    //Instance block
+    {
+        System.out.println("Instance block executed");
+    }
+}
+
+
+public class AboutInstanceBlock{
+    public static void main(String[] args) {
+        Object1A a = new Object1A();
+    }
+}
+
+Output:
+Instance block executed
+```
+
+- An instance block (also known as an instance initializer block) in Java is a block of code that is executed when an object is created.
+- It looks similar to constructor without method name right? but it isn't . Just after the constructor and before the body of the constructor the instance block gets executed.
+- Lets see example.
+
+```
+class Object1A{
+
+    int speed;
+    //Instance block
+    {
+        System.out.println("Instance block executed");
+        speed=50;
+        System.out.println("Given Default speed value "+speed);
+    }
+
+    Object1A(){
+        System.out.println("Default Constructor");
+        System.out.println("Speed value "+speed);
+    }
+
+    Object1A(int updatedSpeed){
+        System.out.println("Parameterize Constructor or Constructor Overloading");
+        speed+=updatedSpeed;
+        System.out.println("Speed value "+speed);
+    }
+}
+
+
+public class AboutInstanceBlock{
+    public static void main(String[] args) {
+        Object1A a = new Object1A();
+        Object1A a1 = new Object1A(100);
+    }
+}
+
+Output:
+Instance block executed
+Given Default speed value 50
+Default Constructor
+Speed value 50
+Instance block executed
+Given Default speed value 50
+Parameterize Constructor or Constructor Overloading
+Speed value 150
+```
+
+- Instance blocks are primarily used when you want to perform common initialization tasks for objects that multiple constructors share, without duplicating code in each constructor. For example, suppose you want every object of a class to initialize some resource or setting, and you don't want to repeat this code across all constructors. So here just for demonstration we have used `speed` variable which is used by all the constructors.
+- So each object will have different setting depending upon the parameterize constructor used.
+
+### Instance block VS Static Block
+
+
+| **Aspect**              | **Instance Block**                        | **Static Block**                                |
+|-------------------------|-------------------------------------------|-------------------------------------------------|
+| **Execution**           | Executes every time an object is created. | Executes once when the class is loaded.         |
+| **Association**         | Associated with object creation.          | Associated with class loading.                  |
+| **Purpose**             | Common object-level initialization. (details not shared with all the objects created)    | Static-level initialization (shared resources among objects). |
+| **Access to Variables** | Can access instance variables.            | Can only access static variables.               |
+| **When to Use**         | For code common to multiple constructors. | For initializing static data.                   |
+
 
 ## Anonymous Object
 
