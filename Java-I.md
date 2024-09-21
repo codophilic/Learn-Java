@@ -4306,6 +4306,79 @@ This is a Truck.
 
 - Sealed interfaces, introduced in Java 17, provide a more refined approach to controlling inheritance. They allow a class or interface to specify which classes can implement or extend it.
 
+### Interfaces and Classes
+
+- Lets say there is one class (`ACommonMethod3`) and one interface (`ACommonMethod1`). Both of them have a common method called `acommonmethod()`. We create another class (`ImplMethod`) which extends class `ACommonMethod3` and implements `ACommonMethod1`. We don't define implementation of `acommonmethod()` thus preventing overriding of method of parent class `ACommonMethod3`. In this case what will be the output?
+
+```
+interface ACommonMethod1{
+    void acommonmethod();
+}
+
+class ACommonMethod3{
+    public void acommonmethod(){
+        System.out.println("Inside class ACommonMethod3");
+    }
+}
+
+class ImplMethod extends ACommonMethod3 implements ACommonMethod1{
+
+}
+
+
+public class AboutInterface{
+    public static void main(String[] args) {
+
+        ImplMethod imp=new ImplMethod();
+        imp.acommonmethod();
+    }
+}
+
+
+Output:
+Inside class ACommonMethod3
+```
+
+- Class takes precedence on interface. In inheritance, when a method is available from a parent class (in this case, `ACommonMethod3`), the child class (`ImplMethod`) will inherit that method, and Java uses the method from the class hierarchy. Interfaces do not contain implementations, so they can't provide actual functionality unless you explicitly override the method in the class that implements the interface.
+- Lets say there are two interfaces `ACommonMethod1` and `ACommonMethod2`. Now both these interfaces have same method name.
+
+```
+interface ACommonMethod1{
+    void acommonmethod();
+}
+
+interface ACommonMethod2{
+    void acommonmethod();
+}
+
+class ImplMethod1 implements ACommonMethod1,ACommonMethod2{
+    public void acommonmethod(){
+        System.out.println("In ImplMethod1");
+    }
+}
+
+public class AboutInterface{
+    public static void main(String[] args) {
+
+        ImplMethod imp=new ImplMethod();
+        imp.acommonmethod();
+        
+        ImplMethod1 imp1 = new ImplMethod1();
+        imp1.acommonmethod();
+    }
+}
+
+Output:
+In ImplMethod1
+```
+
+- Since both interfaces declare the same method signature, the `acommonmethod()` in `ImplMethod1` satisfies the requirements for both interfaces, so there's no conflict or ambiguity. In this case, the situation of having the same method name in both interfaces can be seen as redundant. You could simplify your design by having only one interface declare the method, or you could avoid duplicating method declarations unless both interfaces represent distinct conceptual roles in your design.
+
+>[!IMPORTANT]
+> - Whenever a class is extending any parent class and implementing any interface, first the class must have the extending class name and then all the interfaces implementation. So the ordering should be extending the parent class followed by implementation of all the interfaces.
+> - Example **`class ImplMethod extends ACommonMethod3 implements ACommonMethod1`** is the correct way, **`class ImplMethod implements ACommonMethod1 extends ACommonMethod3`** is the incorrect way it will also lead to compilation error.
+
+
 ## Enum (enumerations)
 
 - In a week we have 5 working days, these days are fixed, Monday .. Friday. Since the number of days are fixed it will be always constant. Now in java if you wanted to store these days you could have 5 different variables. But what if Saturday also becomes a working day? you need to again create a new variable right?, so basically each time there is a new working day introduce or excluded we need to create or remove the variables.

@@ -165,9 +165,38 @@ final class Truck implements Vehicle {
     }
 }
 
+interface ACommonMethod1{
+    void acommonmethod();
+}
+
+interface ACommonMethod2{
+    void acommonmethod();
+}
+
+class ACommonMethod3{
+    public void acommonmethod(){
+        System.out.println("Inside class ACommonMethod3");
+    }
+}
+
+class ImplMethod extends ACommonMethod3 implements ACommonMethod1{
+
+}
+
+class ImplMethod1 implements ACommonMethod1,ACommonMethod2{
+    public void acommonmethod(){
+        System.out.println("In ImplMethod1");
+    }
+}
 
 public class AboutInterface{
     public static void main(String[] args) {
+
+        ImplMethod imp=new ImplMethod();
+        imp.acommonmethod();
+        
+        ImplMethod1 imp1 = new ImplMethod1();
+        imp1.acommonmethod();
 
         /**
          * Cannot create object of interface
