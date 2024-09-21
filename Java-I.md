@@ -1063,6 +1063,69 @@ Output:
 Number value is - 5
 ```
 
+## Call By Value or Pass By Value
+
+- When you pass a primitive data type (like int, char, double, etc.) to a method, you are passing a copy of the value. Changes made to the parameter inside the method do not affect the original value.
+
+```
+
+public class AboutCallByValue {
+
+    public void modifyValue(int n1){
+        n1=100;
+    }
+
+    public static void main(String[] args) {
+        int n1=10;
+        AboutCallByValue obj = new AboutCallByValue();
+        obj.modifyValue(n1);
+        System.out.println(n1);
+    }
+}
+
+Output:
+10
+```
+
+- Lets say if you have a class , you pass the reference object id of that class to a method. A copy of the reference object id is created but the object remains same.
+
+
+```
+class Test{
+    int i;
+}
+
+
+public class AboutCallByValue {
+
+    public void modifyValue(int n1){
+        n1=100;
+    }
+
+    public void ModifyTesti(Test inputobj){
+        inputobj.i=99;
+    }
+
+    public static void main(String[] args) {
+        AboutCallByValue obj = new AboutCallByValue();
+        Test t = new Test();
+        t.i=10;
+        obj.ModifyTesti(t);
+        System.out.println(t.i);
+    }
+}
+
+
+Output:
+99
+```
+
+- When you pass an object to a method, a copy of the reference (the "address" or "ID" of the object in memory) is created and pushed onto the method's stack. This means the method has its own copy of the reference, but it still points to the same object in the heap memory.
+- The actual object itself remains in the heap memory, and both the original reference (e.g., `obj`) and the copied reference (e.g., `inputobj` inside the method) point to that same object.
+- Inside the method, you can use the copied reference to modify the state of the object. Any changes made using this reference will affect the original object because they both reference the same memory location.
+- Thus java used **call by value or pass by value**
+
+
 ## Method Overloading
 
 - Lets say we have a class calculator , for which we need add two numbers and returns the value. Uptil now we have used **void** which means that the method won't return anything , now the method will compute and return a integer value.
@@ -1319,7 +1382,6 @@ Name: Meet, age:24
 - **Purpose**: To initialize objects with specific values provided at the time of creation, allowing for greater flexibility and customization.
 - **When It's Used**: When you want to initialize an object with specific values or require certain parameters to be set upon object creation.
 
-
 ## Anonymous Object
 
 - What if instead of creating reference variable of an object , can we create only just a object? lets see
@@ -1505,9 +1567,155 @@ Sending notification: Library will be closed tomorrow.
 | **Reusability**      | Classes can be reused easily.           | Classes are harder to reuse due to complexity.    |
 | **Complexity**       | Low complexity, small, focused classes. | Higher complexity, large, multi-purpose classes   |
 
+
+## Variable-length arguments (varargs)
+
+- Lets say you have a basic calculator which takes 2 input and performs addition of it.
+
+```
+
+class Calculator{
+    public void add(int n1,int n2){
+        System.out.println("Sum is "+(n1+n2));
+    }
+}
+public class AboutVarargs {
+    public static void main(String[] args) {
+        Calculator cal = new Calculator();
+        cal.add(5, 6);
+    }
+}
+
+
+Output:
+Sum is 11
+```
+
+- What if you have a requirement, where the arguments could be not be only two parameters, it could 3,4 .. any n parameters? how to achieve such varying arguments? in java we have **varagrs**. Varargs are defined using three dots or ellipsis (`...`) followed by the parameter type.
+
+```
+
+class Calculator{
+    public void add(int... inputArray){
+        int addition=0;
+        for(int i: inputArray){
+            addition+=i;
+        }
+        System.out.println("Sum is "+addition);
+    }
+}
+public class AboutVarargs {
+    public static void main(String[] args) {
+        Calculator cal = new Calculator();
+        cal.add(5, 6,7,8,9,10);
+        cal.add(5,7);
+        cal.add();
+    }
+}
+
+
+Output:
+Sum is 45
+Sum is 12
+Sum is 0
+```
+
+- When you use varargs, Java internally treats it as an array, so you can pass multiple values (or none), and the method can process them as if they were an array.
+- Varargs are helpful when the number of arguments is not known in advance, such as when printing multiple items or performing operations on a variable number of inputs.
+- Suppose we to make our `add()` class like when user tells to add we will be performing addition, if user tells subtract then we will perform subtraction? so we more additional parameter, lets rename our method as well.
+
+```
+
+class Calculator{
+
+    public void operation(String operationType,int... inputArray){
+        int finalAns=0;
+        for(int i: inputArray){
+            if(operationType.equalsIgnoreCase("add")){
+                finalAns+=i;
+            }
+            else{
+                finalAns-=i;
+            }
+        }
+
+        System.out.println(operationType+" of given arrays is "+finalAns);
+
+    }
+}
+
+public class AboutVarargs {
+    public static void main(String[] args) {
+        Calculator cal = new Calculator();
+        cal.operation("add", 5,6,7,8,9,10);
+        cal.operation("subtract", 5,6,7,8,9,10);
+    }
+}
+
+Output:
+add of given arrays is 45
+subtract of given arrays is -45
+```
+
+- When we are defining a different datatype argument along with varargs argument, the varargs parameter must be the last in the method signature. Below method signature will give you error
+
+```
+public void operation(int... inputArray,String operationType)
+
+ERROR:
+AboutVarargs.java:11: error: varargs parameter must be the last parameter
+    public void operation(String operationType,int... inputArray, )
+```
+
+- If we have same datatype as an additional parameter something `public void operation(String operationType,int anyNumber,int... inputArray)`. Consider below code
+
+```
+
+class Calculator{
+
+    public void operation(String operationType,int anyNum,int... inputArray){
+        int finalAns=anyNum;
+        for(int i: inputArray){
+            if(operationType.equalsIgnoreCase("add")){
+                finalAns+=i;
+            }
+            else{
+                finalAns-=i;
+            }
+        }
+
+        System.out.println(operationType+" of given arrays is "+finalAns);
+
+    }
+}
+
+public class AboutVarargs {
+    public static void main(String[] args) {
+        Calculator cal = new Calculator();
+        cal.operation("add",100, 5,6,7,8,9,10);
+        cal.operation("subtract",100, 5,6,7,8,9,10);
+    }
+}
+
+
+Output:
+add of given arrays is 145
+subtract of given arrays is 55
+```
+
+- The first int argument will be considered by `anyNum` parameter in method signature.
+- You cannot have multiple varargs. You can only have one varargs parameter in a method. If you try to declare more than one, you’ll get a compilation error.
+
+```
+    public void test(int... inputArrayInt, String ...inputArrayString){
+        
+    }
+Compilation Error
+```
+
 ## Inheritance
 
-- Lets say you have a Basic calculator class which only performs addition and subtraction. 
+- Lets say you have a Basic calculator class which only performs addition and subtraction.
 
 ```
 class BasicCalculator{
@@ -5641,7 +5849,7 @@ Hello
     - If you don’t close the stream, it’s like keeping the library book without returning it. The system might not be able to use that resource for other tasks or could run out of resources over time.
     - The system has limited resources like file handles or network connections. Closing a stream ensures these resources are released and available for other operations.
 
-## Difference between Byte-Oriented and Character-Oriented Stream
+### Difference between Byte-Oriented and Character-Oriented Stream
 
 
 | **Feature**               | **Byte Streams**                          | **Character Streams**                    |
@@ -7077,4 +7285,146 @@ This is the updated content.
 > - File Creation: If a file doesn't exist during a write or update operation, both streams will create a new file and write/update details
 > - Deleting Non-existent File: `File.delete()` does not throw an exception if the file doesn't exist; it simply returns `false`.
 > - Reading a Non-existent File: Trying to read from a non-existent file results in a `FileNotFoundException`.
+
+## PSVM `(public static void main(String args[]))`
+
+- When we write any standalone java code we need to specify `public static void main(String args[])` (psvm).
+
+#### Why it is always required?
+- The `main` method is the entry point of any standalone Java application. When you run a Java program, the JVM (Java Virtual Machine) looks for this `main` method signature to begin executing the program.
+- **Can we have a custom method name instead of main?** No, you cannot have a custom method name. The JVM specifically looks for the method named `main` to start executing the program. If you use a different name, the JVM will not recognize it, and you'll get an error indicating that the main method is missing.
+
+#### Why public?
+
+- The main method must be public so that the JVM can access it. The JVM calls this method from outside the class, so it needs to be visible to external code, which is why it must have the public access modifier.
+- **Can we use other access modifiers like private or protected?** No, if you make the main method private or use any other access modifier, the JVM won’t be able to access it, and you will get an error. It must be public.
+
+#### Why Static?
+
+- The main method is declared static because it needs to be invoked by the JVM without creating an instance of the class. Since the JVM starts execution without knowing anything about the object (or its instances), the method must belong to the class itself, not an instance of it.
+- **Can we omit static?** No, omitting static would require the JVM to create an object to invoke the method, which is not feasible for starting the execution of the program. Hence, the main method must be static.
+
+#### Why void?
+- The main method is void because it doesn't return any value to the JVM. Once the execution of main completes, the JVM ends the program, and there’s no need to return any value.
+- **Can we have a different return type like int?** No, the main method must always return void. If you change it to return int or any other type, the JVM won’t recognize it as the proper main method signature.
+
+#### Whats the use of `(String args[])` ?
+
+- Lets see an example
+
+```
+public class AboutMainMethodPSVM {
+    public static void main(String[] args) {
+        for(String i:args){
+            System.out.println(i);
+        }
+    }
+}
+``` 
+
+- Lets run the program via cmd.
+
+![alt text](image-5.png)
+
+- The `String[] args` is used to pass command-line arguments to the program. These are optional arguments that you can specify when running the Java program. The args array would contain `{"Hi", "Hello"}`. This is useful if you want to provide inputs to your program from the command line.
+- **Can i change the variable name `args` to any other name?**, yep you can `public static void main(String[] cmdInput)`
+- So now when use any editor like VSCode , Eclipse etc. we aren't using cmd option to pass any parameter right?, then can we ignore `String args[]`? can we have only `public static void main()` ? **No**, even though you’re not passing any command-line arguments when using editors like Eclipse or Visual Studio Code, it’s important to keep the `String[]` args in the main method. The Java specification requires the exact method signature `public static void main(String[] ANY_VARIABLE_NAME )` as the entry point for your program, even if you don't use or need command-line arguments.
+- The JVM looks for the specific signature with `String[] args`. Removing it will cause a compilation error or prevent the program from running.
+
+```
+Error: Main method not found in class AboutMainMethodPSVM, please define the main method as:
+   public static void main(String[] args)
+or a JavaFX application class must extend javafx.application.Application
+```
+
+- **Can we overload the main method**? lets try
+
+```
+public class AboutMainMethodPSVM {
+    public static void main(String[] args) {
+        System.out.println("Main String method");
+        for(String i:args){
+            System.out.println(i);
+        }
+
+        // Explicitly calling the overloaded main method with an int array
+        int[] intArgs = {1, 2, 3};
+        main(intArgs);  // Call to overloaded main method    
+    }
+
+    public static void main(int[] args) {
+        System.out.println("Main Int method");
+        for(int i:args){
+            System.out.println(i);
+        }
+    }
+}
+
+
+Output:
+Main String method
+Main Int method
+1
+2
+3
+```
+
+- In above example of method overloading of the main method. The JVM will only invoke the `main(String[] args)` method when you run the program because the JVM specifically looks for this method signature as the entry point. The `main(String[] args)` method will be called when you execute the program. The JVM does not call the overloaded `main(int[] args)` method. If you want the `main(int[] args)` method to execute, you would need to explicitly call it from within `main(String[] args)` or elsewhere in your code.
+- **Can we override the main method?** No, you cannot override the main method in the traditional sense. Overriding requires that the method be an instance method, but the main method is **static**. **Since static methods belong to the class and not to an instance of the class, you cannot override them**. In Java, static methods can only be hidden, not overridden.
+- Below code for overriding, it won't produce any compilation or run-time error but it does not make any sense because to create child class object you would require main method.
+
+```
+public class AboutMainMethodPSVM {
+    public static void main(String[] args) {
+        System.out.println("Main String method");
+        for(String i:args){
+            System.out.println(i);
+        }
+
+        // Explicitly calling the overloaded main method with an int array
+        int[] intArgs = {1, 2, 3};
+        main(intArgs);  // Call to overloaded main method    
+    }
+
+    public static void main(int[] args) {
+        System.out.println("Main Int method");
+        for(int i:args){
+            System.out.println(i);
+        }
+    }
+
+
+}
+
+class childClass extends AboutMainMethodPSVM{
+    public static void main(String[] args) {
+        System.out.println("Child main");
+    }
+}
+
+
+Output:
+Main String method
+Main Int method
+1
+2
+3
+```
+
+- Different ways to write the main method.
+1. Changing Order of Modifiers
+
+```
+static public void main(String[] args) {
+    // code here
+}
+```
+
+2. Using varargs (Ellipsis ...)
+
+```
+public static void main(String... args) {
+    // code here
+}
+```
 

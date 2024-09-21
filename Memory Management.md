@@ -267,8 +267,6 @@ where is interfaces present in memory management? abstract class ? static variab
 - extends must be written before implements , but implements cannot be before extends
 - concept of nested classes and its type, for normal class static class abstract class , interfaces, class and interfaces method nested with class.
 - record , sealed classes. (Seperate markdown with all new java features)
-*We will explore String buffer and String builder when we will learn about threads*
-*We will see more about lambda expression*
 - Serialization an marker interface example toh vo marker ka part hai aisa batana hai
 - simple date local date dd-mm-yyyy or YYYYY
 - what is psvm?
