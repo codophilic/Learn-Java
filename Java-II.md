@@ -472,6 +472,86 @@ Processing item 5.6
 
 #### Multiple Bounded Type Parameters
 
+- Lets say you have a interface (`SimpleInterface`) as well. You wanted to implement a Generic which **extends Number and implements SimpleInterface interface**. So such type of restrictions are multiple bounded parameters.
+
+```
+interface SimpleInterface{
+    void process();
+}
+
+class SimpleClass{
+
+}
+
+class MyCustomClass extends SimpleClass implements SimpleInterface{
+
+    public void process(){
+        System.out.println("Processing..");
+    }
+}
+
+class GenericMultipleBounded<T extends SimpleClass & SimpleInterface> {
+
+    public void process(){
+        System.out.println("In GenericMultipleBounded");
+    }
+}
+
+public class AboutGenerics{
+    public static void main(String[] args) {
+        GenericMultipleBounded<MyCustomClass> gmb=new GenericMultipleBounded<>();
+        gmb.process();
+    }
+}
+
+Output:
+In GenericMultipleBounded
+```
+
+- Another example
+
+```
+// Defining interfaces
+interface Movable {
+    void move();
+}
+
+interface Flyable {
+    void fly();
+}
+
+// Generic class with multiple interface bounds
+public class MultiBoundClass<T extends Movable & Flyable> {
+    private T entity;
+
+    public MultiBoundClass(T entity) {
+        this.entity = entity;
+    }
+
+    public void performActions() {
+        entity.move();
+        entity.fly();
+    }
+}
+
+// Class that implements both Movable and Flyable
+class Bird implements Movable, Flyable {
+    @Override
+    public void move() {
+        System.out.println("Bird is moving");
+    }
+
+    @Override
+    public void fly() {
+        System.out.println("Bird is flying");
+    }
+}
+```
+
+- You can specify multiple bounds for a generic type parameter using the `&` symbol (AND condition). Only interfaces and one class can be used with multiple bounds.
+- **You cannot use the `||` (OR) condition. In Java generics, multiple bounds work with &, meaning the type must satisfy all the bounds.**
+
+
 ## Collections
 
 - 

@@ -74,7 +74,27 @@ class NumberBoundedBox<T extends Number>{
     }
 }
 
+interface SimpleInterface{
+    void process();
+}
 
+class SimpleClass{
+
+}
+
+class MyCustomClass extends SimpleClass implements SimpleInterface{
+
+    public void process(){
+        System.out.println("Processing..");
+    }
+}
+
+class GenericMultipleBounded<T extends SimpleClass & SimpleInterface> {
+
+    public void process(){
+        System.out.println("In GenericMultipleBounded");
+    }
+}
 
 public class AboutGenerics{
     public static void main(String[] args) {
@@ -120,5 +140,8 @@ public class AboutGenerics{
          *   parameter <T extends Number> of the type NumberBoundedBox<T>
          */
         // NumberBoundedBox<String> nbb1= new NumberBoundedBox<>();
+
+        GenericMultipleBounded<MyCustomClass> gmb=new GenericMultipleBounded<>();
+        gmb.process();
     }
 }

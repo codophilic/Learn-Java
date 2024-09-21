@@ -210,7 +210,6 @@ public class Example {
   - In case 2 we have the JIT compiler. Now before the bytecode is passed onto the interpreter for conversion to machine code, the JIT compiler scans the full code to see if it can be optimized. As it finds the last line is redundant it removes it from the bytecode and passes only 4 lines to the interpreter thus making it more efficient and faster as the interpreter now has 1 line less to interpret.
   - So this is how JIT compiler speeds up the overall execution process.
 
-- [Reference](https://simplesnippets.tech/execution-process-of-java-program-in-detail-working-of-just-it-time-compiler-jit-in-detail/)
 - [Reference Video](https://www.youtube.com/watch?app=desktop&v=GXUiEouK7DM)
 
 - **If the Class Loader Fails**:
