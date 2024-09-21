@@ -57,8 +57,13 @@ class AnyProcessor<T> implements Processor<T>{
     }
 }
 
-// Generic Method
+// Generic Method & Constructor
 class PrintUtility {
+
+    <T> PrintUtility(T item){
+        System.out.println("Item is "+item);
+    }
+
     public static <T> void printArray(T[] array) {
         for (T element : array) {
             System.out.println(element);
@@ -96,6 +101,11 @@ class GenericMultipleBounded<T extends SimpleClass & SimpleInterface> {
     }
 }
 
+class WildCardBox<T> {
+    public void printBox(Box<? extends Number> box) {
+        System.out.println(box);
+    }
+}
 public class AboutGenerics{
     public static void main(String[] args) {
         
@@ -131,6 +141,8 @@ public class AboutGenerics{
         String[] strArray = {"A", "B", "C"};
         PrintUtility.printArray(strArray);
 
+        PrintUtility pu = new PrintUtility("String");
+
         NumberBoundedBox<Double> nbb= new NumberBoundedBox<>();
         nbb.process(5.6);
 
@@ -143,5 +155,11 @@ public class AboutGenerics{
 
         GenericMultipleBounded<MyCustomClass> gmb=new GenericMultipleBounded<>();
         gmb.process();
+
+        Box<Number> numBox = new Box<>();
+Box<Integer> intBox = new Box<>();
+
+numBox.printBox(numBox);  // Works fine
+numBox.printBox(intBox);  // Error, because Integer is not exactly Number
     }
 }

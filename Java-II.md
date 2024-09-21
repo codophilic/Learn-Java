@@ -417,6 +417,8 @@ class PrintUtility {
 
 public class AboutGenerics{
     public static void main(String[] args) {
+
+
         // Using the generic method
         Integer[] intArray = {1, 2, 3};
         PrintUtility.printArray(intArray);
@@ -433,6 +435,29 @@ Output:
 A
 B
 C
+```
+
+#### Generic Constructors
+
+- Similarly like methods we can have generic constructor.
+
+```
+class PrintUtility {
+
+    <T> PrintUtility(T item){
+        System.out.println("Item is "+item);
+    }
+
+}
+
+public class AboutGenerics{
+    public static void main(String[] args) {
+        PrintUtility pu = new PrintUtility("String");
+    }
+}
+
+Output:
+Item is String
 ```
 
 #### Bounded Type Parameters
@@ -550,6 +575,9 @@ class Bird implements Movable, Flyable {
 
 - You can specify multiple bounds for a generic type parameter using the `&` symbol (AND condition). Only interfaces and one class can be used with multiple bounds.
 - **You cannot use the `||` (OR) condition. In Java generics, multiple bounds work with &, meaning the type must satisfy all the bounds.**
+
+#### Wildcards in Generics
+
 
 
 ## Collections
