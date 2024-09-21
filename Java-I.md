@@ -6771,7 +6771,7 @@ WaitThread: I got the notification, time to proceed!
     - Daemon threads are threads that provide support to user threads. They run in the background and are considered "service" threads. Unlike user threads, daemon threads do not prevent the JVM from exiting, even if they are still running. When all user threads have finished executing, the JVM terminates, abruptly stopping any remaining daemon threads.
     - Daemon threads are commonly used for tasks such as automatic memory management (garbage collection) or other housekeeping activities that should not delay the program's termination.
 
-### String Builder are thread safe why?
+### String Buffer are thread safe why?
 
 - When we open its implementation, we get the **synchronized** keyword used against string operations.
 
