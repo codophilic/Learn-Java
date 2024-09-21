@@ -428,7 +428,7 @@ System.out.println(sb.toString()); // Output: Hello World
 - **Usage**: Use **StringBuilder** when you need to perform many modifications on a string in a single-threaded environment. It's more efficient than StringBuffer because it doesn’t have the synchronization overhead.
 - **Performance**: It is the fastest option for string modification when thread safety is not a concern.
 
-*We will explore String buffer and String builder when we will learn about threads*
+*We will explore String buffer how it is thread safe when we will learn about threads*
 
 ```
 StringBuilder sb = new StringBuilder("Hello");
@@ -6770,6 +6770,19 @@ WaitThread: I got the notification, time to proceed!
 **2. Daemon Threads:**
     - Daemon threads are threads that provide support to user threads. They run in the background and are considered "service" threads. Unlike user threads, daemon threads do not prevent the JVM from exiting, even if they are still running. When all user threads have finished executing, the JVM terminates, abruptly stopping any remaining daemon threads.
     - Daemon threads are commonly used for tasks such as automatic memory management (garbage collection) or other housekeeping activities that should not delay the program's termination.
+
+### String Builder are thread safe why?
+
+- When we open its implementation, we get the **synchronized** keyword used against string operations.
+
+![alt text](Images/java-1/image-78.png)
+
+- Internally, StringBuffer uses a monitor (a lock) to ensure that only one thread can execute a method on the object at a time.
+- When a thread calls a method on a StringBuffer, it acquires the lock.
+- If another thread tries to access the same StringBuffer object while the lock is held, it will have to wait until the first thread releases the lock.
+- This synchronization mechanism ensures that the internal state of the StringBuffer remains consistent even in a multithreaded environment.
+- The synchronization overhead in StringBuffer makes it slower than StringBuilder, especially in single-threaded environments where thread safety is not a concern. If you're working in a single-threaded environment, using StringBuffer introduces unnecessary synchronization, which can impact performance.
+
 
 ## Finalize
 

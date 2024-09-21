@@ -274,4 +274,4 @@ where is interfaces present in memory management? abstract class ? static variab
 - what is psvm?
 - The Buffer class in Java NIO (New I/O) provides the foundation for working with buffers. It's an abstract class with subclasses for different primitive data types (e.g., ByteBuffer, CharBuffer, IntBuffer).
 - transient
-- 
+- instance block, its diff with static block

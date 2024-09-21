@@ -1,3 +1,149 @@
+# Java Concepts
+
+## Lambda Expression
+
+- Lets say you have a Functional interface, and you implement this interface using anonymous class.
+
+```
+package Java2;
+
+@FunctionalInterface
+interface A{
+    void show();
+}
+
+
+public class AboutLambdaExpression{
+    public static void main(String[] args) {
+        
+        /**
+         * Anonymous class
+         */
+        A a = new A() {
+            public void show(){
+                System.out.println("In A show");
+            }
+        };
+
+        a.show();
+    }
+}
+
+Output:
+In A show
+```
+
+- You can reduce the above code to below code.
+
+```
+package Java2;
+
+@FunctionalInterface
+interface A{
+    void show();
+}
+
+
+public class AboutLambdaExpression{
+    public static void main(String[] args) {
+        A a = () ->System.out.println("In A show");
+        a.show();
+    }
+}
+
+Output:
+In A show
+```
+
+- This is an example of Lambda expression.
+- The Lambda expression is used to provide the implementation of an interface which has functional interface or single abstract method interface. It saves a lot of code. In case of lambda expression, we don't need to define the method again (just like in anonymous class we had define `public void show()`) for providing the implementation. Here, we just write the implementation code.
+- Lambda expression provides implementation of functional interface. Behind the scene , `()->` it is instantiating a `new A()`.
+- Lets see how lambda expression works when there are parameters in your method.
+
+```
+@FunctionalInterface
+interface B{
+    void doubleTheValue(int i);
+}
+
+public class AboutLambdaExpression{
+    public static void main(String[] args) {
+        B b = (int val)->{
+            System.out.println("Number entered : "+val);
+            System.out.println("Doubled value is " +val*val);
+        };
+        b.doubleTheValue(5);
+    }
+}
+
+Output:
+Number entered : 5
+Doubled value is 25
+```
+
+- Since we are using **one argument**, we can reduce the above implementation to below
+
+```
+        B b = val->{
+            System.out.println("Number entered : "+val);
+            System.out.println("Doubled value is " +val*val);
+        };
+        b.doubleTheValue(5);
+
+Output:
+Number entered : 5
+Doubled value is 25
+```
+
+- Lambda expression not only makes your code concise and readable but also decrease your file size by eliminating **Anonymous class**. How but? when we compile a class which has anonymous class, check the size.
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+- When we use lambda expression.
+
+![alt text](image-3.png)
+
+![alt text](image-4.png)
+
+- See the difference in size.
+- If your functional interface have a method which returns something then in that case how to implement lambda expression?
+
+```
+@FunctionalInterface
+interface Addition{
+    int add(int n1,int n2);
+}
+
+public class AboutLambdaExpression{
+    public static void main(String[] args) {
+        Addition addvalues = (int i,int j) -> {
+            return i+j;
+        };
+        System.out.println(addvalues.add(6, 5));
+    }
+}
+
+Output:
+11
+```
+
+- You can reduce the above code to below
+
+```
+        Addition addvalues = (int i,int j) ->  i+j;
+        System.out.println(addvalues.add(6, 5));
+
+Output:
+11
+```
+
+- After `->` you don't need to add `return` keyword, the lambda expression handle that by itself.
+- Lambda expression can only be used with functional interface because it only consist of one abstract method. Incase of multiple abstract methods it won't work because the statements of the lambda expression will wont't able to distinguish for which abstract method the implementation is written.
+
+
+
 ## Reflection
 
 
