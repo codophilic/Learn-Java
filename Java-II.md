@@ -576,9 +576,193 @@ class Bird implements Movable, Flyable {
 - You can specify multiple bounds for a generic type parameter using the `&` symbol (AND condition). Only interfaces and one class can be used with multiple bounds.
 - **You cannot use the `||` (OR) condition. In Java generics, multiple bounds work with &, meaning the type must satisfy all the bounds.**
 
-#### Wildcards in Generics
+
+#### Upper Bounded Generic
+
+- An upper-bound restricts the type parameter to be of a certain type or a subclass of that type. Consider below example
+
+```
+class UpperBoundExample<T extends Number> {
+    private T value;
+
+    public UpperBoundExample(T value) {
+        this.value = value;
+    }
+
+    public void printValue() {
+        System.out.println("Value: " + value);
+    }
+}
+
+public class AboutGenerics{
+    public static void main(String[] args) {
+        UpperBoundExample<Integer> intObj = new UpperBoundExample<>(10);
+        UpperBoundExample<Double> doubleObj = new UpperBoundExample<>(5.5);
+
+        intObj.printValue();  // Output: Value: 10
+        doubleObj.printValue();  // Output: Value: 5.5
+    }
+}
+
+Output:
+Value: 10
+Value: 5.5
+```
+
+- `T extends Number` ensures that `T` can only be of type `Number` or its subclasses like `Integer`, `Double`, `Float`, etc.
+In the main method, the UpperBoundExample class is instantiated with `Integer` and `Double` (both subclasses of `Number`)
 
 
+#### Wildcards(?) in Generics
+
+- Generics (`<T>`) define a type parameter that must be the same throughout the entire class, method, or interface.
+
+```
+class Box<T> {
+    private T value;
+
+    public void set(T value) {
+        this.value = value;
+    }
+
+    public T get() {
+        return value;
+    }
+}
+```
+
+- Here, when you instantiate the `Box<T>`, `T` could be `Integer`, `String`, or any other type, but the type remains the same for the entire object.
+- So, `<T>` is a placeholder for a specific, fixed type. Now consider the below class and guess what will be the output?
+
+```
+class BoxWithoutWildCard<T> {
+    public void inspect(BoxWithoutWildCard<T> item) {
+        System.out.println(item);
+    }
+}
+
+public class AboutGenerics{
+    public static void main(String[] args) {
+        BoxWithoutWildCard<Integer> integerBoxWithoutWild = new BoxWithoutWildCard<>();
+        BoxWithoutWildCard<Double> doubleBoxWithoutWild = new BoxWithoutWildCard<>();
+        /**
+         * Compilation ERROR
+         * The method inspect(BoxWithoutWildCard<Integer>) in the type BoxWithoutWildCard<Integer> 
+         * is not applicable for the arguments (BoxWithoutWildCard<Double>)
+         */
+        integerBoxWithoutWild.inspect(doubleBoxWithoutWild);
+    }
+}
+
+Compilation Error
+```
+
+- Here, `inspect(BoxWithoutWildCard<T> item)` forces the type to be the same. So, if you instantiate `BoxWithoutWildCard<Integer>`, the method will only accept `BoxWithoutWildCard<Integer>` objects, and it will reject any other type like `BoxWithoutWildCard<Double>`. **This is rigid.**
+- Lets use wildcard (`?`) and check it.
+
+```
+class BoxWithWildCard<T> {
+    public void inspect(BoxWithWildCard<?> item) {
+        System.out.println(item);
+    }
+}
+
+public class AboutGenerics{
+    public static void main(String[] args) {
+        BoxWithWildCard<Number> integerBoxWithWild = new BoxWithWildCard<>();
+        BoxWithWildCard<Double> doubleBoxWithWild = new BoxWithWildCard<>();
+        integerBoxWithWild.inspect(doubleBoxWithWild); // Accepts any parameter type.
+    }
+}
+
+Output:
+BoxWithWildCard@548c4f57
+```
+
+- Here, using `BoxWithWildCard<?>` tells the method that it doesn’t care if it’s `BoxWithWildCard<Integer>,` `BoxWithWildCard<Double>`, or any other type. **This way the type becomes unknown (?)**. Wildcard `?` provides flexibility because it don’t care about the exact type. It allows you to handle any type. Whereas `<T>` enforces consistency. It means that you are working with a specific type that is fixed throughout the code. You know the exact type at compile time (like `Integer`, `String`, etc.).
+- You can also add bounded parameter like below
+
+```
+class BoxWithWildCard<T> {
+    public void inspect(BoxWithWildCard<? extends Number> item) {
+        System.out.println(item);
+    }
+}
+```
+
+- Wildcards (`?`) are typically used in method parameters or return types where you need flexibility. However, they cannot be used as type parameters for classes or interfaces themselves.
+- Return type example
+
+```
+// Return a list that can contain any type of object
+public List<?> getItems() {
+    return new ArrayList<String>();
+}
+```
+
+- Another example of wildcard generic
+
+```
+        ArrayList<?> aGenericList = new ArrayList<String>();
+        aGenericList=new ArrayList<Integer>();
+```
+
+- Here instead we are able to change the collection type. This allows the variable to accept any type of ArrayList, **but you still can't add elements to it because the exact type remains unknown at compile-time.**
+
+```
+aGenericList.add("Hello");  // Compilation error!
+aGenericList.add(42);       // Compilation error!
+aGenericList.add(null);     // Allowed, because null can represent any type
+```
+
+- The reason you can't add items like "Hello" or 42 is because `aGenericList` is of type `ArrayList<?>`, and the exact type of `?` is unknown. The compiler cannot be sure whether it’s safe to add a String or an Integer because it doesn't know the real type of `?`.
+
+>[!NOTE]
+> - Consider below code
+> ```
+> class BoxWithWildCard<T> {
+>    public void inspect(<?> item) { 
+>       System.out.println(item);
+>   }
+> } // Compilation Error
+> ```
+> - Wildcard generic can't be used to declare a standalone parameter type like `<?> item`.
+> - `T`  is a type parameter that represents a specific type, used for a generic class or method. `?` is a wildcard used with generic types (like `List<?>`, `BoxWithWildCard<?>` etc..)
+> - **`Wildcards works with Generic, it does not operate independently`**.
+
+#### Lower Bounded Generic
+
+- A lower-bound restricts the type parameter to be of a certain type or a superclass of that type. Consider below example
+
+```
+class LowerBoundExample {
+
+    public static void addNumbers(ArrayList<? super Integer> list) {
+        for (int i = 1; i <= 5; i++) {
+            list.add(i);
+        }
+    }
+}
+
+public class AboutGenerics{
+    public static void main(String[] args) {
+        ArrayList<Number> numberList = new ArrayList<>();
+        LowerBoundExample.addNumbers(numberList);
+        System.out.println(numberList); // Output: [1, 2, 3, 4, 5]
+    }
+}
+
+Output:
+[1, 2, 3, 4, 5]
+```
+
+- In this example, the `addNumbers` method accepts a list of any type that is a supertype of `Integer`. This means you can pass in a `ArrayList<Integer>`, a `ArrayList<Number>`, or even a `ArrayList<Object>`.
+
+![alt text](image-6.png)
+
+>[!NOTE]
+> - Lower bounds (`<? super Something>`) are only valid with wildcards and are typically used in method parameters, not in class declarations.
+> - Java doesn't allow `T super Something` in the type parameter definition in class or method.
 
 ## Collections
 

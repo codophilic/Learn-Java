@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 // Generic Classes
 class Box<T>{
@@ -101,11 +102,39 @@ class GenericMultipleBounded<T extends SimpleClass & SimpleInterface> {
     }
 }
 
-class WildCardBox<T> {
-    public void printBox(Box<? extends Number> box) {
-        System.out.println(box);
+class BoxWithoutWildCard<T> {
+    public void inspect(BoxWithoutWildCard<T> item) {
+        System.out.println(item);
     }
 }
+
+class BoxWithWildCard<T> {
+    public void inspect(BoxWithWildCard<?> item) {
+        System.out.println(item);
+    }
+}
+
+class UpperBoundExample<T extends Number> {
+    private T value;
+
+    public UpperBoundExample(T value) {
+        this.value = value;
+    }
+
+    public void printValue() {
+        System.out.println("Value: " + value);
+    }
+}
+
+class LowerBoundExample {
+
+    public static void addNumbers(ArrayList<? super Integer> list) {
+        for (int i = 1; i <= 5; i++) {
+            list.add(i);
+        }
+    }
+}
+
 public class AboutGenerics{
     public static void main(String[] args) {
         
@@ -156,10 +185,31 @@ public class AboutGenerics{
         GenericMultipleBounded<MyCustomClass> gmb=new GenericMultipleBounded<>();
         gmb.process();
 
-        Box<Number> numBox = new Box<>();
-Box<Integer> intBox = new Box<>();
+        BoxWithoutWildCard<Integer> integerBoxWithoutWild = new BoxWithoutWildCard<>();
+        BoxWithoutWildCard<Double> doubleBoxWithoutWild = new BoxWithoutWildCard<>();
+        /**
+         * Compilation ERROR
+         * The method inspect(BoxWithoutWildCard<Integer>) in the type BoxWithoutWildCard<Integer> 
+         * is not applicable for the arguments (BoxWithoutWildCard<Double>)
+         */
+        // integerBoxWithoutWild.inspect(doubleBoxWithoutWild);
 
-numBox.printBox(numBox);  // Works fine
-numBox.printBox(intBox);  // Error, because Integer is not exactly Number
+        BoxWithWildCard<Number> integerBoxWithWild = new BoxWithWildCard<>();
+        BoxWithWildCard<Double> doubleBoxWithWild = new BoxWithWildCard<>();
+        integerBoxWithWild.inspect(doubleBoxWithWild);
+
+        ArrayList<?> aGenericList = new ArrayList<String>();
+        aGenericList=new ArrayList<Integer>();
+        // aGenericList.add(1);
+        UpperBoundExample<Integer> intObj = new UpperBoundExample<>(10);
+        UpperBoundExample<Double> doubleObj = new UpperBoundExample<>(5.5);
+
+        intObj.printValue();  // Output: Value: 10
+        doubleObj.printValue();  // Output: Value: 5.5
+
+        ArrayList<Double> numberList = new ArrayList<>();
+        LowerBoundExample.addNumbers(numberList);
+        System.out.println(numberList); // Output: [1, 2, 3, 4, 5]
+
     }
 }
