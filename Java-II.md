@@ -764,9 +764,575 @@ Output:
 > - Lower bounds (`<? super Something>`) are only valid with wildcards and are typically used in method parameters, not in class declarations.
 > - Java doesn't allow `T super Something` in the type parameter definition in class or method.
 
-## Collections
+## All About Collection
 
-- 
+- Consider the example of a piggy bank. We all had it during our childhood where we used to store our coins. This piggy bank is called a Collection and the coins are nothing but objects.
+- Technically, a collection is an object or a container that stores a group of other objects. A Collection in Java is an object which represents a group of objects, known as its elements.
+- How these collections of data will be stored? , there are many ways to store or organize these data but below are the most prominent ways used by developers to store the elements.
+
+**1. List**: In list, we can store elements in sequentially way in which they are added in the list. It can hold duplicates elements as well. Example, `[1,2,3]`, if we add `4` , then the list becomes `[1,2,3,4]`.
+**2. Set**: In set, we can only store unique elements due to this collection displays unordered representation of elements. Example, `{1,2,3,4}` , if we add `4` , then the final result set may be any unordered elements `{2,4,3,1}` or `{3,1,2,4}` etc. But the elements will be unique
+**3. Queue**: Imagine if you are standing to buy your movie tickets in queue, the first person to entered gets the first ticket, the last person gets the last ticket. So queue is one way of list where the elements are added at the tail of the list and remove from the front of the list. Thus in queue, Elements are added and removed in a FIFO (First-In-First-Out) order. Example `[1,2,3,4]`, adding `5`, the final queue become `[1,2,3,4,5]` , lets say we need to remove an element, so `1` which was is at the front of the list will be removed , so the final queue will be `[2,3,4,5]`.
+**4. Map**: Lets take an example, each mobile number has a person or company name, now to store such type of data we require a collection which gonna perform some mapping like `{123456:"ABC",559450:"XYZ"}`. So such element collections is called Map.
+- Now we got some idea how we will be storing our data. On it we can perform several operations like adding a new element, removing a new element, replacing a new element and so on. So there should be a standardize way to perform such operations on the **List**,**Set**,**Queue** and **Map**. These standardize way are define under an interface called Collections.
+
+### Collection (Interface)
+
+- The Collection interface acts like a blueprint or theory that defines what operations a collection should be able to perform. It specifies methods like `add()`, `remove()`, `size()`, but doesn't say how to implement these operations.
+
+![alt text](image-7.png)
+
+### List
+
+- In Java, a List is an ordered collection of objects. This means that elements in a List have a specific sequence and can be accessed by their position (index).
+- It can hold duplicate elements.
+- Lets explore the **List.class** in java.
+
+<video controls src="20240922-1502-58.5039501.mp4" title="Title"></video>
+
+- List is an interface which extends **SequencedCollection** , **SequencedCollection** extends **Collection** interface. If we checkout methods inside the list interface, it consist of method of SequencedCollection and Collection interface along with additional methods.
+- SequencedCollection interface methods
+
+![alt text](image-8.png)
+
+- List interface methods
+
+![alt text](image-9.png)
+
+- Now list is an interface, we cannot work with interface we require classes to work with. Lets see the implementation of List.
+
+![alt text](image-10.png)
+
+>[!NOTE]
+> - We will not explore all its implementation, we will only explore the widely used implementation of list.
+
+#### ArrayList
+
+- We know what arrays are fixed size collections of elements. An ArrayList in Java is a dynamic array-based data structure that implements the List interface. It's resizable, meaning its size can grow or shrink as needed. It's efficient for random access of elements and provides methods for various operations.
+- Lets see an example
+
+```
+import java.util.ArrayList;
+
+public class AboutArrayList {
+    public static void main(String[] args) {
+        // 1. Create an ArrayList
+        ArrayList<String> fruits = new ArrayList<>();
+
+        // 2. Add elements to the ArrayList
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Orange");
+        fruits.add("Grapes");
+        System.out.println("Fruits: " + fruits);
+
+        // 3. Get element by index
+        String firstFruit = fruits.get(0);
+        System.out.println("First Fruit: " + firstFruit);
+
+        // 4. Update (set) an element at a particular index
+        fruits.set(1, "Mango");
+        System.out.println("Updated Fruits: " + fruits);
+
+        // 5. Remove an element by index
+        fruits.remove(2);
+        System.out.println("Fruits after removing index 2: " + fruits);
+
+        // 6. Check the size of the ArrayList
+        int size = fruits.size();
+        System.out.println("Size of the ArrayList: " + size);
+
+        // 7. Iterate over the ArrayList
+        System.out.println("Iterating over the ArrayList:");
+        for (String fruit : fruits) {
+            System.out.println(fruit);
+        }
+
+        System.out.println("Does list contain 'Mango'? " + fruits.contains("Mango"));
+
+
+        // 8. Clear the ArrayList
+        fruits.clear();
+        System.out.println("Fruits after clearing: " + fruits);
+    }
+}
+
+
+Output:
+Fruits: [Apple, Banana, Orange, Grapes]
+First Fruit: Apple
+Updated Fruits: [Apple, Mango, Orange, Grapes]
+Fruits after removing index 2: [Apple, Mango, Grapes]
+Size of the ArrayList: 3
+Iterating over the ArrayList:
+Apple
+Mango
+Grapes
+Does list contain 'Mango'? true
+Fruits after clearing: []
+```
+
+##### Generics in ArrayList
+
+- Consider the below code.
+
+```
+        ArrayList a1 = new ArrayList();
+        a1.add("123");
+        a1.add(123);
+        a1.add(1.23);
+        //Not Type Safe Array because manual casting is required
+        String var=a1.get(0).toString();
+```
+
+- This declares a variable `a1` of type `ArrayList`. You are specifically using the `ArrayList` class to reference your list. Since you haven't specified a type within `< >,` this means you're using a raw type, which is not type-safe. You can add any type of object (like `String`, `Integer`, etc.), leading to potential issues at runtime.
+- You might later try to retrieve an object assuming it's a String but encounter a `ClassCastException`.
+- Thats why when we initialize an array list we need to declare the object type it gonna hold. Thus making it type safe.
+
+```
+ArrayList<String> a = new ArrayList<>();  // Type-safe, only allows Strings
+a.add("Apple");  // This is valid
+// a.add(100);   // Compile-time error! Can't add an integer
+```
+
+- Consider below code.
+
+```
+List<String> fruits = new ArrayList<>();
+fruits.add("Apple");
+fruits.add("Banana");
+// fruits.add(100);  // Compile-time error, type safety enforced
+```
+
+- Here, you are declaring `fruits` as a `List` (the interface), but the actual implementation is still an `ArrayList`. This is good practice because you are programming to the interface (List), making your code more flexible (e.g., you could later switch to other implementation of list like `LinkedList` without changing the variable type). This is similar concept of dynamic method dispatch.
+
+##### Internal Working of ArrayList
+
+- Initial Capacity: When an ArrayList is created, it has a default capacity (usually 10).
+- Growth: When you add elements beyond the current capacity, the ArrayList automatically increases its size by creating a new array (usually with 1.5 times the original size) and copying the old elements into the new array. The old array is discarded, and the new array becomes the underlying array of the ArrayList.
+- Shrinking: While ArrayLists can grow dynamically, they don't automatically shrink when elements are removed. However, you can manually call the `trimToSize()` method to reduce the capacity of the ArrayList to the exact size of its current elements. This can be useful to optimize memory usage in cases where you know the final size of the list.
+
+```
+import java.util.ArrayList;
+
+public class ArrayListExample {
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+
+        // Add elements
+        for (int i = 0; i < 10; i++) {
+            list.add(i);
+        }
+        
+        System.out.println("Before Trim Capacity is: " + list.size());
+
+        // Remove some elements
+        list.remove(5);
+        list.remove(7);
+        
+        // Shrink the array
+        list.trimToSize();
+
+        // Now the array capacity is exactly 8
+        System.out.println("After Trim Capacity is: " + list.size());
+    }
+}
+
+Output:
+Before Trim Capacity is: 10
+After Trim Capacity is: 8
+```
+
+##### Memory Representation
+
+![alt text](image-11.png)
+
+- Internally, an `ArrayList` uses a regular array (of type `Object[]`) to store the elements. The elements are placed in contiguous memory locations within this array.When an ArrayList is created, it allocates a continuous block of memory with a default initial capacity (usually 10). This means the memory for 10 elements is reserved, even if fewer elements are added initially.
+- When the ArrayList exceeds its capacity (i.e., more than 10 elements), a new larger array is created, and the existing elements are copied into the new array. The new size is generally 1.5 times the previous size.
+- The old array is discarded, and the new array occupies a new block of contiguous memory. The process of copying elements from the old array to the new one is known as "array resizing".
+- The resizing operation involves memory allocation and copying, which can impact performance if it happens frequently. After resizing, there may be unused space (null slots) to accommodate future elements without resizing immediately. If the elements are not added then the space will be wasted.
+- **If you are sure that there won't be more additions of element in future in your array list then go for `trimToSize()`, which will save your memory**.
+- f you know the approximate number of elements you'll be adding to the ArrayList, you can use the `ensureCapacity()` method to improve performance by reducing the number of resize operations. This pre-allocates space to avoid frequent resizing.
+
+```
+ArrayList<Integer> numbers = new ArrayList<>();
+numbers.ensureCapacity(100); // Pre-allocate space for 100 elements
+```
+
+#### LinkedList
+
+- In Java, a `LinkedList` is a collection that implements the `List` interface and stores elements in a linear fashion. Unlike an `ArrayList`, which uses a dynamic array, a `LinkedList` uses a series of interconnected nodes to store its elements. Each node contains the data and references (or links) to the next nodes in the list.
+
+![alt text](image-12.png)
+
+- **Node Structure**:
+    - Data: The actual element being stored.
+    - References: Pointers to the next node.
+- Lets see an example
+
+```
+import java.util.LinkedList;
+import java.util.List;
+
+public class AboutLinkedList {
+    public static void main(String[] args) {
+        // Create a LinkedList of Strings
+        LinkedList<String> list = new LinkedList<>();
+
+        // 1. Adding elements to the LinkedList
+        list.add("Apple");           // Add at the end
+        list.addFirst("Banana");      // Add at the beginning
+        list.addLast("Cherry");       // Add at the end
+        list.add(2, "Date");          // Add at specific index
+
+        System.out.println("Initial LinkedList: " + list);
+
+        // 2. Accessing elements
+        String firstElement = list.getFirst();     // Get first element
+        String lastElement = list.getLast();       // Get last element
+        String elementAtIndex = list.get(2);       // Get element at specific index
+
+        System.out.println("First element: " + firstElement);
+        System.out.println("Last element: " + lastElement);
+        System.out.println("Element at index 2: " + elementAtIndex);
+
+        // 3. Removing elements
+        list.removeFirst();            // Remove first element
+        list.removeLast();             // Remove last element
+        list.remove(1);                // Remove element at index 1
+        list.remove("Apple");          // Remove specific element
+
+        System.out.println("After removals: " + list);
+
+        // 4. Checking size of LinkedList
+        int size = list.size();
+        System.out.println("Size of LinkedList: " + size);
+
+        // 5. Checking if an element exists
+        boolean containsCherry = list.contains("Cherry");
+        System.out.println("Contains 'Cherry'? " + containsCherry);
+
+        // 6. Adding elements in bulk (using another List)
+        List<String> newFruits = new LinkedList<>();
+        newFruits.add("Elderberry");
+        newFruits.add("Fig");
+
+        list.addAll(newFruits);  // Add all elements from newFruits list
+        System.out.println("After adding new fruits: " + list);
+
+        // 7. Cloning the LinkedList
+        LinkedList<String> clonedList = (LinkedList<String>) list.clone();
+        System.out.println("Cloned LinkedList: " + clonedList);
+
+        // 8. Iterating through LinkedList
+        System.out.print("Iterating through LinkedList: ");
+        for (String fruit : list) {
+            System.out.print(fruit + " ");
+        }
+        System.out.println();
+
+        // 9. Clearing the LinkedList
+        list.clear();  // Remove all elements
+        System.out.println("After clearing: " + list);
+
+        // 10. Checking if LinkedList is empty
+        boolean isEmpty = list.isEmpty();
+        System.out.println("Is the LinkedList empty? " + isEmpty);
+    }
+}
+
+
+Output:
+Initial LinkedList: [Banana, Apple, Date, Cherry]
+First element: Banana
+Last element: Cherry
+Element at index 2: Date
+After removals: []
+Size of LinkedList: 0
+Contains 'Cherry'? false
+After adding new fruits: [Elderberry, Fig]
+Cloned LinkedList: [Elderberry, Fig]
+Iterating through LinkedList: Elderberry Fig
+After clearing: []
+Is the LinkedList empty? true
+```
+
+- Just like in `ArrayList`, we can use generic concept to ensure type safety.
+
+>[!NOTE]
+> - When you want to use specific methods that are unique to `LinkedList`, it's best to declare your variables with their respective types instead of using the `List` interface. 
+> - `LinkedList` provide additional methods compare to `List` interface, so if you wanna use those additional method then declare your variable type as `LinkedList`.
+
+##### Internal Memory Representation
+
+- Memory space is a shared resource among all programs. In a complex system environment, available memory can be dispersed throughout the memory space. We understand that the memory allocated for an array must be continuous. However, for very large arrays, finding a sufficiently large contiguous memory space might be challenging. This is where the flexible advantage of linked lists becomes evident.
+- **Non-contiguous Memory**: Unlike an ArrayList, a LinkedList does not allocate a contiguous block of memory. Each node can be located anywhere in memory, and the nodes are linked using pointers.
+
+![alt text](image-13.png)
+
+- Since `LinkedList` nodes are allocated as needed, the overall size of the list can grow or shrink dynamically based on the number of elements.
+
+##### Internal Working of LinkedList
+
+- When new elements are added to a `LinkedList`, new nodes are created and linked to the existing nodes. This can happen at either the head, tail, or any position in the list, depending on where you want to insert the new node.
+
+```
+LinkedList<String> list = new LinkedList<>();
+list.addFirst("Apple");  // Adds "Apple" at the head
+```
+
+- When elements are removed, the corresponding nodes are unlinked and can be garbage collected if there are no references to them. The `LinkedList` dynamically shrinks as nodes are removed.
+
+```
+list.remove("Apple");  // Removes "Apple" from the list
+```
+
+#### Vector
+
+- A `Vector` class implements the `List` interface.
+- `Vector` is essentially a synchronized version of `ArrayList`. It provides the same functionality as `ArrayList` but is thread-safe, making it suitable for multi-threaded environments where multiple threads might access and modify the collection simultaneously.
+- Lets see an example
+
+```
+import java.util.Vector;
+
+public class AboutVector {
+    public static void main(String[] args) {
+        // Create a Vector
+        Vector<String> vector = new Vector<>();
+
+        // 1. Adding elements
+        vector.add("Apple");           // Add at the end
+        vector.add("Banana");          // Add at the end
+        vector.add("Cherry");          // Add at the end
+        vector.add(1, "Mango");        // Add at specific index
+        System.out.println("Initial Vector: " + vector);
+
+        // 2. Accessing elements
+        String firstElement = vector.firstElement();  // Get first element
+        String lastElement = vector.lastElement();    // Get last element
+        String elementAtIndex = vector.get(2);        // Get element at index 2
+
+        System.out.println("First element: " + firstElement);
+        System.out.println("Last element: " + lastElement);
+        System.out.println("Element at index 2: " + elementAtIndex);
+
+        // 3. Checking size and capacity
+        int size = vector.size();           // Get the size
+        int capacity = vector.capacity();   // Get the capacity
+
+        System.out.println("Size: " + size);
+        System.out.println("Capacity: " + capacity);
+
+        // 4. Removing elements
+        vector.remove("Mango");            // Remove specific element
+        vector.remove(1);                   // Remove element at index 1
+        System.out.println("After removals: " + vector);
+
+        // 5. Checking if an element exists
+        boolean containsCherry = vector.contains("Cherry");
+        System.out.println("Contains 'Cherry'? " + containsCherry);
+
+        // 6. Index of elements
+        int index = vector.indexOf("Banana");  // Get index of element
+        System.out.println("Index of 'Banana': " + index);
+
+        // 7. Cloning the Vector
+        Vector<String> clonedVector = (Vector<String>) vector.clone();
+        System.out.println("Cloned Vector: " + clonedVector);
+
+        // 8. Iterating through the Vector
+        System.out.print("Iterating through Vector: ");
+        for (String fruit : vector) {
+            System.out.print(fruit + " ");
+        }
+        System.out.println();
+
+        // 9. Clearing the Vector
+        vector.clear();  // Remove all elements
+        System.out.println("After clearing: " + vector);
+
+        // 10. Checking if Vector is empty
+        boolean isEmpty = vector.isEmpty();
+        System.out.println("Is the Vector empty? " + isEmpty);
+
+        // 11. Adding all elements from another collection
+        Vector<String> newFruits = new Vector<>();
+        newFruits.add("Orange");
+        newFruits.add("Grapes");
+
+        vector.addAll(newFruits);  // Add all elements from newFruits
+        System.out.println("After adding new fruits: " + vector);
+
+        // 12. Replacing an element
+        vector.set(0, "Kiwi");  // Replace element at index 0
+        System.out.println("After replacing first element: " + vector);
+
+        // 13. Trimming the capacity
+        vector.trimToSize();  // Reduce capacity to current size
+        System.out.println("Capacity after trim: " + vector.capacity());
+    }
+}
+
+
+Output:
+Initial Vector: [Apple, Mango, Banana, Cherry]
+First element: Apple
+Last element: Cherry
+Element at index 2: Banana
+Size: 4
+Capacity: 10
+After removals: [Apple, Cherry]
+Contains 'Cherry'? true
+Index of 'Banana': -1
+Cloned Vector: [Apple, Cherry]
+Iterating through Vector: Apple Cherry
+After clearing: []
+Is the Vector empty? true
+After adding new fruits: [Orange, Grapes]
+After replacing first element: [Kiwi, Grapes]
+Capacity after trim: 2
+```
+
+- When we open `add()` method in `Vector` class we can see it uses **synchronized**. Not only `add()` all other method uses **synchronized**. Thus making it thread-safety.
+
+![alt text](image-14.png)
+
+![alt text](image-15.png)
+
+
+
+>[!NOTE]
+> - When you want to use specific methods that are unique to `Vector`, it's best to declare your variables with their respective types instead of using the `List` interface. 
+> - `Vector` provide additional methods compare to `List` interface, so if you wanna use those additional method then declare your variable type as `Vector`.
+
+- Since `Vector` is a synchronized version of `ArrayList` so its internal memory representation as well as internal working is same as `ArrayList`.
+- `Vector` methods are synchronized, making it thread-safe. This means that multiple threads can safely interact with a Vector without causing data inconsistency. `ArrayList` is not synchronized, so it is faster in single-threaded scenarios but requires external synchronization if accessed by multiple threads.
+- Due to synchronization, `Vector` may have a performance overhead compared to `ArrayList` in scenarios where thread safety is not a concern.
+
+##### Stack
+
+![alt text](image-16.png)
+
+- A Stack in Java is a data structure that follows the Last-In-First-Out (LIFO) principle, meaning that the last element added to the stack is the first one to be removed. Imagine a cylinder closed at one end. So when you fill the cylinder will elements, once the cylinder is filled, and if you want to make it empty, you need to remove that element which was inserted at the last.
+- It is implemented as a subclass of `Vector`.
+
+![alt text](image-17.png)
+
+- Stack Operations: The primary operations of a stack include:
+    - Push: Add an element to the top of the stack.
+    - Pop: Remove and return the top element of the stack.
+    - Peek: Return the top element without removing it.
+    - isEmpty: Check if the stack is empty.
+
+- Lets see an example.
+
+```
+import java.util.Stack;
+
+public class StackExample {
+    public static void main(String[] args) {
+        // Create a Stack
+        Stack<String> stack = new Stack<>();
+
+        // 1. Push elements onto the stack
+        stack.push("Apple");
+        stack.push("Banana");
+        stack.push("Cherry");
+        System.out.println("Stack after pushes: " + stack);
+
+        // 2. Peek at the top element
+        String topElement = stack.peek();
+        System.out.println("Top element (Peek): " + topElement);
+
+        // 3. Pop an element from the stack
+        String poppedElement = stack.pop();
+        System.out.println("Popped element: " + poppedElement);
+        System.out.println("Stack after pop: " + stack);
+
+        // 4. Check if the stack is empty
+        boolean isEmpty = stack.isEmpty();
+        System.out.println("Is the stack empty? " + isEmpty);
+
+        // 5. Get the size of the stack
+        int size = stack.size();
+        System.out.println("Size of the stack: " + size);
+
+        // 6. Search for an element
+        int position = stack.search("Banana");  // Returns 1-based index
+        System.out.println("Position of 'Banana': " + position);
+
+        // 7. Clear the stack
+        stack.clear();
+        System.out.println("Stack after clearing: " + stack);
+    }
+}
+
+Output:
+Stack after pushes: [Apple, Banana, Cherry]
+Top element (Peek): Cherry
+Popped element: Cherry
+Stack after pop: [Apple, Banana]
+Is the stack empty? false
+Size of the stack: 2
+Position of 'Banana': 1
+Stack after clearing: []
+```
+
+- The `Stack` class extends the `Vector` class, which means it inherits all the properties and methods of `Vector`, including its dynamic array behavior. Since `Vector` is synchronized, Stack also inherits this synchronization.
+- If multiple threads are accessing a `Stack` at the same time (e.g., one thread pushing elements while another thread is popping elements), there is a risk of data inconsistency or corruption. For example, if two threads try to pop from an empty stack simultaneously, one thread might cause an exception or corrupt the state of the stack.
+- Synchronization ensures that the operations on the stack (like push, pop, and peek) are atomic. This means that once a thread starts an operation, it will complete that operation without interruption from other threads. This is crucial to maintain the integrity of the stack's state. When a thread is executing a synchronized method, other threads attempting to access the same method will be blocked until the first thread finishes, which can affect the responsiveness of the application.
+- Lets consider a scenario where the stack will be full by inserting one element, and two threads are trying to push the data simultaneously. This would lead to data inconsistency.
+- While you can use an `ArrayList` to implement a stack (by adding and removing elements from the end of the list), using a `Stack` provides a clearer semantic meaning of LIFO behavior. The Stack class explicitly provides stack operations, making the code more readable and intuitive.
+
+
+### Set
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Reflection
 
