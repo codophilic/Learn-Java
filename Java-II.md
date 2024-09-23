@@ -1286,6 +1286,52 @@ Stack after clearing: []
 - While you can use an `ArrayList` to implement a stack (by adding and removing elements from the end of the list), using a `Stack` provides a clearer semantic meaning of LIFO behavior. The Stack class explicitly provides stack operations, making the code more readable and intuitive.
 
 
+| **Feature**   | **ArrayList** | **LinkedList**  |**Vector**   |
+|-----------------------------|---------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| Implementation | Resizable array (dynamic array)                                                 | linked list (dynamic bases on nodes in memory)                                                                     | Resizable array (like `ArrayList`)                                   |
+| Performance (Access)        | Fast random access (O(1))                                                       | Slower random access (O(n))                                                                | Fast random access (O(1))                                          |
+| Performance (Insert/Remove) | Slower when inserting/removing elements in the middle (O(n))                    | Efficient insert/remove at the beginning or middle (O(1) if node is known, O(n) otherwise) | Slower when inserting/removing in the middle (O(n))                |
+| Memory Usage                | Less memory overhead than LinkedList (only stores data)                         | More memory (stores data and links to previous/next nodes)                                 | Similar to `ArrayList`, uses a dynamic array                         |
+| Thread Safety               | Not synchronized                                                                | Not synchronized                                                                           | Synchronized by default (thread-safe)                              |
+| Grow Policy                 | Increases by 50% when full                                                      | Not applicable                                                                             | Increases by 100% (doubles size when full)                         |
+| Iterator Type               | Fail-fast (throws `ConcurrentModificationException` if modified during iteration) | Fail-fast                                                                                  | Fail-safe (since it's synchronized)                                |
+| Best Use Case               | When you need fast access to elements                                           | When you frequently insert/remove elements at both ends                                    | When you need thread-safe collection (legacy code)                 |
+
+
+>[!NOTE]
+> - Fail-fast is a mechanism in Java collections where an operation fails immediately if the structure of the collection is modified while it is being iterated. This is done to prevent unpredictable behavior during concurrent modifications.
+> - Example consider below code, during iteration we are removing elements from `ArrayList`
+> ```
+> import java.util.ArrayList;
+> public class FailFastExample {
+>    public static void main(String[] args) {
+>        ArrayList<String> list = new ArrayList<>();
+>        list.add("A");
+>        list.add("B");
+>        list.add("C");
+>
+>        // Using enhanced for-loop
+>        for (String element : list) {
+>                // Directly modifying the list while iterating
+>                list.remove(element);  // This will trigger a ConcurrentModificationException
+>        }
+>    }
+> }
+> 
+> Output:
+> ERROR!
+> Exception in thread "main" java.util.ConcurrentModificationException
+>	at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1043)
+>	at java.base/java.util.ArrayList$Itr.next(ArrayList.java:997)
+>	at FailFastExampleWithoutIterator.main(FailFastExampleWithoutIterator.java:11)
+>```
+
+
+>[!TIP]
+> - Lets say there is company who has a storage system and has a application which is used by customer world wide, the storage system has huge memory space, the company wants to give a zero latency experience to their customer while accessing their information from the storage, you as a java developer wanted to use collection, so which collections class you will prefer? , note the company has a huge budget when if memory is completely exhausted then the company will increase it size without checking out memory prices? option give you is `ArrayList` or `LinkedList`?
+> - `ArrayList` as it provides constant-time access (O(1)) to elements by index because it uses a dynamic array internally. This is ideal for scenarios where users access data frequently and expect minimal delay in retrieving information.
+
+
 ### Set
 
 
