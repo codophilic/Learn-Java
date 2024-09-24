@@ -274,3 +274,4 @@ where is interfaces present in memory management? abstract class ? static variab
 - singleton class in java
 - iterator and iterable
 - logging
+

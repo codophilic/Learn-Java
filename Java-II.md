@@ -771,8 +771,14 @@ Output:
 - How these collections of data will be stored? , there are many ways to store or organize these data but below are the most prominent ways used by developers to store the elements.
 
 **1. List**: In list, we can store elements in sequentially way in which they are added in the list. It can hold duplicates elements as well. Example, `[1,2,3]`, if we add `4` , then the list becomes `[1,2,3,4]`.
+
+
 **2. Set**: In set, we can only store unique elements due to this collection displays unordered representation of elements. Example, `{1,2,3,4}` , if we add `4` , then the final result set may be any unordered elements `{2,4,3,1}` or `{3,1,2,4}` etc. But the elements will be unique
+
+
 **3. Queue**: Imagine if you are standing to buy your movie tickets in queue, the first person to entered gets the first ticket, the last person gets the last ticket. So queue is one way of list where the elements are added at the tail of the list and remove from the front of the list. Thus in queue, Elements are added and removed in a FIFO (First-In-First-Out) order. Example `[1,2,3,4]`, adding `5`, the final queue become `[1,2,3,4,5]` , lets say we need to remove an element, so `1` which was is at the front of the list will be removed , so the final queue will be `[2,3,4,5]`.
+
+
 **4. Map**: Lets take an example, each mobile number has a person or company name, now to store such type of data we require a collection which gonna perform some mapping like `{123456:"ABC",559450:"XYZ"}`. So such element collections is called Map.
 - Now we got some idea how we will be storing our data. On it we can perform several operations like adding a new element, removing a new element, replacing a new element and so on. So there should be a standardize way to perform such operations on the **List**,**Set**,**Queue** and **Map**. These standardize way are define under an interface called Collections.
 
@@ -790,7 +796,7 @@ Output:
 
 <video controls src="20240922-1502-58.5039501.mp4" title="Title"></video>
 
-- List is an interface which extends **SequencedCollection** , **SequencedCollection** extends **Collection** interface. If we checkout methods inside the list interface, it consist of method of SequencedCollection and Collection interface along with additional methods.
+- **List is an interface** which extends **SequencedCollection** , **SequencedCollection** extends **Collection** interface. If we checkout methods inside the list interface, it consist of method of SequencedCollection and Collection interface along with additional methods.
 - SequencedCollection interface methods
 
 ![alt text](image-8.png)
@@ -1332,9 +1338,38 @@ Stack after clearing: []
 > - `ArrayList` as it provides constant-time access (O(1)) to elements by index because it uses a dynamic array internally. This is ideal for scenarios where users access data frequently and expect minimal delay in retrieving information.
 
 
-### Set
+### Queue
 
+- A `Queue` is a collection designed to hold elements prior to processing. It typically orders elements in a FIFO (First-In-First-Out) manner.
 
+![alt text](image-18.png)
+
+- Lets explore **Queue.class** in java.
+
+![alt text](image-19.png)
+
+- If you see, `Queue` is an interface which extends another interface called `Collection`. Lets checkout implementations of `Queue`.
+
+![alt text](image-20.png)
+
+- Lets see method define for `Queue` interface.
+
+![alt text](image-21.png)
+
+- Main operations:
+    - `add(element)`: Adds an element to the rear of the queue. If the queue is full, it throws an exception.
+    - `offer(element)`: Adds an element to the rear of the queue. If the queue is full, it returns false.
+    - `remove()`: Removes and returns the element at the front of the queue. If the queue is empty, it throws an exception.
+    - `poll()`: Removes and returns the element at the front of the queue. If the queue is empty, it returns null.
+    - `element()`: Returns the element at the front of the queue without removing it. If the queue is empty, it throws an exception.
+    - `peek()`: Returns the element at the front of the queue without removing it. If the queue is empty, it returns null.
+
+>[!NOTE]
+> - We will not explore all its implementation, we will only explore the widely used implementation of list.
+
+#### Priori
+
+![alt text](image-22.png)
 
 
 
