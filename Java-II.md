@@ -1366,7 +1366,7 @@ Stack after clearing: []
     - `peek()`: Returns the element at the front of the queue without removing it. If the queue is empty, it returns null.
 
 >[!NOTE]
-> - We will not explore all its implementation, we will only explore the widely used implementation of list.
+> - We will not explore all its implementation, we will only explore the widely used implementation of Queue.
 
 #### PriorityQueue
 
@@ -1489,7 +1489,8 @@ Is queue empty after clear? true
 > - `PriorityQueue` does not allow `null` elements. If you try to add null, it will throw a `NullPointerException`.
 > - By default, `PriorityQueue` orders its elements using natural ordering (numbers by ascending value, strings lexicographically). You can customize the order by providing a `Comparator` when creating the queue.
 > - `PriorityQueue` is unbounded, meaning it can grow dynamically as more elements are added. However, the underlying array can be resized when needed.
-> - `PriorityQueue` does not have trimming methods, there's no method to shrink their internal structures.
+> - **Random access is not available in a `PriorityQueue` in Java**. Like in `ArrayList` we have `getIndex()` method there is no such method for `PriorityQueue` as `Queue` are designed to specifically retrieve elements based on FIFO or priority principles and not for random access.
+> - `PriorityQueue` does not have trimming methods, there's no method to shrink their internal structures. It can be handle explicitly by manually create a new `PriorityQueue` and copy elements into it.
 > - `PriorityQueue` is not thread-safe. Java provides `PriorityBlockingQueue`, which is a thread-safe variant of `PriorityQueue`.
 > - Duplicate elements are allowed in `PriorityQueue`. If two elements are equal in priority, they can both exist in the queue.
 > - `PriorityQueue` does not guarantee ordering stability. This means that if two elements are considered "equal" in priority, their relative order in the queue may not be maintained. The internal **heap** structure decides the relative order of equal-priority elements. If you insert two elements with the same priority, there is no guarantee which of them will be retrieved first, as `FIFO` is not a property of `PriorityQueue` for elements of equal priority.
@@ -1595,13 +1596,262 @@ Polled last element (pollLast): 20
 Deque after polling: []
 ```
 
+- Just like `ArrayList`, we can use generic concept for `ArrayDeque` as well , `Deque deque = new ArrayDeque();`.
+
+
 >[!IMPORTANT]
 > - No `null` elements are allowed , it will throw `java.lang.NullPointerException`.
+> - `ArrayDeque` is unbounded, so its size grows as needed. It dynamically resizes to accommodate additional elements.
+> - It provides constant-time performance for adding and removing elements at both ends.
+> - It is not Thread-Safe.
+> - `ArrayDeque` in Java does not have any explicit `trim()` methods to shrink its internal array. Once the array grows, it does not automatically shrink when elements are removed. It can be handle explicitly by manually create a new `ArrayDeque` and copy elements into it.
+> - **No Random Access is not supported by `ArrayDeque`**. Like in `ArrayList` we have `getIndex()` method there is no such method for `ArrayDeque` as `Queue` are designed to specifically retrieve elements based on FIFO or priority principles and not for random access.
+
+###### Internal Working of ArrayDeque
+
+- `ArrayDeque` uses an internal array to store elements, but it **does not use `ArrayList`**. It maintains a **circular buffer** to efficiently manage both ends of the deque.
+- It maintains two pointers, `head` and `tail`, to track the front and rear of the deque, respectively.
+- Lets visualize that referring below images, when we declare a `ArrayDeque` , internally it maintains an array of 16 elements.
+
+```
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+```
+
+- Initially, `head` and `tail` points to the start of the array.
+
+```
+head
+  |
+  v
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+  ^
+  |
+ tail
+```
+
+- Lets add one element using `addFirst()` at the front of the `ArrayDeque`.
+
+```
+                                                             head
+                                                              |
+                                                              v
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+  ^
+  |
+ tail
+```
+
+- Let add one element at rear of the `ArrayDeque` using `addLast()`.
+
+```
+                                                            head
+                                                              |
+                                                              v
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+| X |   |   |   |   |   |   |   |   |   |   |   |   |   |   | X |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+      ^
+      |
+     tail
+```
+
+- Lets add some more elements on the front and rear of `ArrayDeque`.
+
+```
+                                                    head
+                                                      |
+                                                      v
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+| X |   |   |   |   |   |   |   |   |   |   |   |   | X | X | X |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+      ^
+      |
+     tail
 
 
+                                                    head
+                                                      |
+                                                      v
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+| X | X | X |   |   |   |   |   |   |   |   |   |   | X | X | X |
++---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
+              ^
+              |
+            tail
+```
+
+- Eventually, the two pointers will meet in the middle. When that happens, we create a brand-new array that's larger than the original one (usually, **150%** bigger), then copy the elements over into the new array to free up some space.
+
+
+###### Memory Management
+
+- `ArrayDeque` allocates memory dynamically. The default initial size is **16**. When the internal array becomes full, a new array with 1.5 times the capacity is allocated, and elements are copied to it.
+- The array does not shrink unless explicitly handled by creating a new deque with fewer elements (no automatic shrinking).
+
+#### BlockingQueue
+
+- A `BlockingQueue` in Java is a type of queue that supports thread-safe operations and provides blocking operations for adding and retrieving elements. It is an interface which extends `Queue` interface.
+
+![alt text](image-28.png)
+
+- Lets take a simple analogy of `BlockingQueue`.
+- Imagine a mailbox where:
+    - People (producers) come to put letters in the mailbox.
+    - Mail carriers (consumers) come to take letters from the mailbox.
+- But there's a rule:
+    - The mailbox has limited space (e.g., can hold only 2 letters).
+    - If the mailbox is full, the next person who wants to put a letter has to wait until a mail carrier comes and takes one out.
+    - If the mailbox is empty, the mail carrier has to wait until someone drops a letter in.
+- The blocking operations ensure that producers and consumers don’t overwhelm each other. Producers block when the queue is full, and consumers block when it’s empty.
+- **Key Concepts**:
+    - **Producer**: People who drop letters (items) in the mailbox (queue).
+    - **Consumer**: The mail carrier who picks up letters from the mailbox (queue).
+    - **Blocking**: If a producer comes when the mailbox is full, they have to wait (they are blocked from adding more letters). If the mail carrier comes when the mailbox is empty, they have to wait too (they are blocked from picking up letters).
+- So in scenario of concurrent or parallel programming, a producer-consumer scenario, multiple threads may be producing items (tasks, messages, data) while other threads are consuming them. The BlockingQueue helps manage this situation efficiently by:
+    - **Preventing overflow**: If the producer is too fast, it waits for the consumer to catch up.
+    - **Preventing unnecessary CPU usage**: Instead of constantly checking, threads block until they can act (e.g., waiting to put or take an item).
+
+![alt text](image-27.png)
+
+- In multi-threaded programs, threads need to safely communicate and coordinate when sharing data, like tasks or messages.  `BlockingQueue` ensures that multiple threads can safely add and remove elements without corrupting the data structure.
+- It provides mechanisms to block the producer thread if the queue is full or the consumer thread if the queue is empty, which prevents busy waiting (where threads keep checking the queue in a loop, consuming CPU unnecessarily).
+
+<details>
+
+<summary> Difference between wait state and busy waiting and how they impact CPU usage </summary>
+
+
+1.  **Wait State (Blocking/Non-CPU-consuming)**:
+    - Wait state is when a thread is blocked and not actively using the CPU. It happens when a thread calls a method like `wait()`, `take()` on a `BlockingQueue`, or `sleep()`, or is waiting for a condition to be met.
+    - In this state, the operating system puts the thread to sleep, meaning the thread is essentially paused, and no CPU cycles are used by this thread while it waits for something to happen (e.g., an element added to a queue or a lock to be released).
+    - CPU is free to perform other tasks while this thread is blocked.
+
+2. **Busy Waiting (CPU-consuming)**:
+    - In busy waiting, a thread continuously checks a condition in a loop. The thread is active and consumes CPU cycles while repeatedly checking whether the condition has changed.
+    - Busy waiting wastes CPU resources because the thread is doing unnecessary work, checking for a condition (like polling a queue to see if it's empty) instead of waiting for the condition to change.
+
+</details>
+
+- All queuing methods are atomic in nature and use internal locks or other forms of concurrency control.
+1. `put(E e)`: This method is used to insert elements to the queue. If the queue is full, it waits for the space to be available.
+
+![alt text](image-29.png)
+
+2. `E take()`: This method retrieves and remove the element from the head of the queue. If queue is empty it waits for the element to be available.
+
+![alt text](image-30.png)
+
+##### ArrayBlockingQueue
+
+- `ArrayBlockingQueue` class is a bounded blocking queue backed by an array. By bounded, it means that the size of the Queue is fixed. Once created, the capacity cannot be changed.
+- It's useful in producer-consumer scenarios where a fixed buffer size is required.
+- Lets see an example.
+
+```
+import java.util.concurrent.ArrayBlockingQueue;
+
+public class AboutArrayBlockingQueue {
+    public static void main(String[] args) throws InterruptedException {
+        // Create a fixed size ArrayBlockingQueue with capacity of 3
+        ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(3);
+        
+        // Add elements to the queue
+        System.out.println("Adding elements:");
+        queue.add("A");  // Successful add
+        queue.offer("B"); // Successful offer
+        queue.put("C");   // Successful put (blocks if full)
+        
+        System.out.println("Queue after adding: " + queue);  // [A, B, C]
+        
+        // Attempting to add more elements (queue is full)
+        System.out.println("Trying to add when queue is full:");
+        try {
+            queue.add("D");  // Throws IllegalStateException (queue is full)
+        } catch (IllegalStateException e) {
+            System.out.println("Exception in add(): " + e.getMessage());
+        }
+        
+        boolean offerSuccess = queue.offer("E"); // Returns false (queue is full)
+        System.out.println("Offer result: " + offerSuccess);
+        
+        // Removing elements from the queue
+        System.out.println("Removing elements:");
+        System.out.println("Removed: " + queue.remove());  // Removes "A"
+        System.out.println("Polled: " + queue.poll());      // Removes "B"
+        
+        // Blocking call - takes an element (will block if empty)
+        String takenElement = queue.take();  // Removes "C"
+        System.out.println("Taken: " + takenElement);
+        
+        // Attempting to remove when queue is empty
+        System.out.println("\nTrying to remove when queue is empty:");
+        System.out.println("Polled: " + queue.poll());  // Returns null (queue is empty)
+        
+        // Checking size and remaining capacity
+        System.out.println("\nSize: " + queue.size());  // 0 (since it's empty)
+        System.out.println("Remaining Capacity: " + queue.remainingCapacity());  // 3 (max capacity - current size)
+        
+        // Peeking at the head (will return null since queue is empty)
+        System.out.println("\nPeek: " + queue.peek());  // Returns null
+        
+        // Add again and see fairness in action (Optional feature)
+        queue.put("X");
+        queue.put("Y");
+        System.out.println("Queue after adding more elements: " + queue);  // [X, Y]
+    }
+}
+
+
+Output:
+Adding elements:
+Queue after adding: [A, B, C]
+
+Trying to add when queue is full:
+Exception in add(): Queue full
+Offer result: false
+
+Removing elements:
+Removed: A
+Polled: B
+Taken: C
+
+Trying to remove when queue is empty:
+Polled: null
+
+Size: 0
+Remaining Capacity: 3
+
+Peek: null
+Queue after adding more elements: [X, Y]
+```
+
+- **Key Characteristics**:
+    - **Fixed capacity**: You define the maximum size when creating the queue. It can't grow beyond this.
+    - **Blocking behavior**: Threads are blocked when trying to add to a full queue or remove from an empty one.
+    - **Optional fairness**: When multiple threads are waiting, fairness ensures they are served in the order they arrived (first-come, first-served).
+
+- Just like `ArrayList`, we can use generic concept for `ArrayBlockingQueue` as well , `ArrayBlockingQueue queue = new ArrayBlockingQueue(3);`.
+
+>[!IMPORTANT]
+> - `ArrayBlockingQueue` does not allow null elements. If you try to add a null element, a `NullPointerException` will be thrown.
+> - `ArrayBlockingQueue` is a fixed-size queue. You define its capacity when you create the queue. For example, if you initialize it with a capacity of 10, the queue can hold up to 10 elements. The size doesn't grow or shrink dynamically, unlike some other data structures. If you attempt to add elements beyond this capacity, the operation will block or return false (for `offer()`), or throw an exception (for `add()`).
+> - `ArrayBlockingQueue` has an optional fairness policy. When multiple threads are waiting to either add or remove elements, fairness ensures that threads are served in the order they requested access (first-in-first-out for waiting threads). You can specify fairness when you create the queue by passing true for the fairness parameter:` new ArrayBlockingQueue<>(10, true)`. If fairness is set to false (the default), threads are scheduled in an unpredictable order, which could provide better throughput but might result in starvation for some threads. (Starvation occurs when a thread is perpetually delayed or prevented from accessing a resource it needs because other threads are continuously given priority, even though the starving thread is ready to proceed.)
+
+https://medium.com/@reetesh043/blockingqueue-in-java-36ed1ee8e9f5
+
+When to Use Deque vs. Queue:
+Use Queue when you only need to process elements in a strict FIFO manner.
+Use Deque when you need the flexibility of adding/removing elements from both ends or implementing stack-like behavior along with queue operations
+
+![alt text](image-26.png)
 
 ![alt text](image-22.png)
-
 
 
 
