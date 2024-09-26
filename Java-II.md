@@ -949,7 +949,7 @@ Before Trim Capacity is: 10
 After Trim Capacity is: 8
 ```
 
-##### Memory Representation
+##### Memory Management
 
 ![alt text](image-11.png)
 
@@ -958,7 +958,7 @@ After Trim Capacity is: 8
 - The old array is discarded, and the new array occupies a new block of contiguous memory. The process of copying elements from the old array to the new one is known as "array resizing".
 - The resizing operation involves memory allocation and copying, which can impact performance if it happens frequently. After resizing, there may be unused space (null slots) to accommodate future elements without resizing immediately. If the elements are not added then the space will be wasted.
 - **If you are sure that there won't be more additions of element in future in your array list then go for `trimToSize()`, which will save your memory**.
-- f you know the approximate number of elements you'll be adding to the ArrayList, you can use the `ensureCapacity()` method to improve performance by reducing the number of resize operations. This pre-allocates space to avoid frequent resizing.
+- If you know the approximate number of elements you'll be adding to the ArrayList, you can use the `ensureCapacity()` method to improve performance by reducing the number of resize operations. This pre-allocates space to avoid frequent resizing.
 
 ```
 ArrayList<Integer> numbers = new ArrayList<>();
@@ -1069,7 +1069,8 @@ Is the LinkedList empty? true
 > - When you want to use specific methods that are unique to `LinkedList`, it's best to declare your variables with their respective types instead of using the `List` interface. 
 > - `LinkedList` provide additional methods compare to `List` interface, so if you wanna use those additional method then declare your variable type as `LinkedList`.
 
-##### Internal Memory Representation
+
+##### Memory Management
 
 - Memory space is a shared resource among all programs. In a complex system environment, available memory can be dispersed throughout the memory space. We understand that the memory allocated for an array must be continuous. However, for very large arrays, finding a sufficiently large contiguous memory space might be challenging. This is where the flexible advantage of linked lists becomes evident.
 - **Non-contiguous Memory**: Unlike an ArrayList, a LinkedList does not allocate a contiguous block of memory. Each node can be located anywhere in memory, and the nodes are linked using pointers.
@@ -1384,9 +1385,218 @@ Stack after clearing: []
     - Example:
         - In a PriorityQueue containing these numbers: `[7, 2, 5]`. 2 has the highest priority because it's the smallest number.
 
-- Lets see a code example
+- Lets see a code example.
+
+```
+import java.util.PriorityQueue;
+
+public class AboutPriorityQueue {
+    public static void main(String[] args) {
+        // Creating a PriorityQueue for Integers (natural ordering: smallest value has the highest priority)
+        PriorityQueue<Integer> intQueue = new PriorityQueue<>();
+
+        // offer() / add() - Adding elements
+        intQueue.offer(10);
+        intQueue.add(20);
+        intQueue.offer(30);
+        intQueue.add(5);  // Highest priority since 5 is the smallest
+
+        // peek() - Checking the front or head (element with highest priority)
+        System.out.println("Peek (highest priority): " + intQueue.peek());  // Output: 5
+
+        // poll() - Retrieving and removing the front or head
+        System.out.println("Poll (removed): " + intQueue.poll());  // Output: 5 (smallest)
+        
+        // Check remaining elements in queue
+        System.out.println("Peek (after poll): " + intQueue.peek());  // Output: 10
+
+        // remove() - Removing a specific element
+        intQueue.remove(10);
+        System.out.println("After removing 10, Peek: " + intQueue.peek());  // Output: 20
+
+        // contains() - Check if an element is present
+        System.out.println("Contains 20? " + intQueue.contains(20));  // Output: true
+
+        // size() - Get the size of the queue
+        System.out.println("Size: " + intQueue.size());  // Output: 1
+
+        // isEmpty() - Check if the queue is empty
+        System.out.println("Is queue empty? " + intQueue.isEmpty());  // Output: false
+
+        // clear() - Clear the queue
+        intQueue.clear();
+        System.out.println("Is queue empty after clear? " + intQueue.isEmpty());  // Output: true
 
 
+        // Creating a PriorityQueue for Strings (natural ordering: lexicographical, alphabetically ordering)
+        PriorityQueue<String> stringQueue = new PriorityQueue<>();
+
+        // offer() - Adding elements
+        stringQueue.offer("banana");
+        stringQueue.offer("apple");  // This will have the highest priority (alphabetically smallest)
+        stringQueue.offer("cherry");
+
+        // peek() - Checking the head
+        System.out.println("Peek (highest priority): " + stringQueue.peek());  // Output: apple
+
+        // poll() - Retrieving and removing the head
+        System.out.println("Poll (removed): " + stringQueue.poll());  // Output: apple
+
+        // Check remaining elements in queue
+        System.out.println("Peek (after poll): " + stringQueue.peek());  // Output: banana
+
+        // remove() - Removing a specific element, returns true of false if element found was removed or not
+        stringQueue.remove("banana");
+        System.out.println("After removing 'banana', Peek: " + stringQueue.peek());  // Output: cherry
+
+        // contains() - Check if an element is present
+        System.out.println("Contains 'cherry'? " + stringQueue.contains("cherry"));  // Output: true
+
+        // size() - Get the size of the queue
+        System.out.println("Size: " + stringQueue.size());  // Output: 1
+
+        // isEmpty() - Check if the queue is empty
+        System.out.println("Is queue empty? " + stringQueue.isEmpty());  // Output: false
+
+        // clear() - Clear the queue
+        stringQueue.clear();
+        System.out.println("Is queue empty after clear? " + stringQueue.isEmpty());  // Output: true
+    }
+}
+
+
+Output:
+Peek (highest priority): 5
+Poll (removed): 5
+Peek (after poll): 10
+After removing 10, Peek: 20
+Contains 20? true
+Size: 2
+Is queue empty? false
+Is queue empty after clear? true
+Peek (highest priority): apple
+Poll (removed): apple
+Peek (after poll): banana
+After removing 'banana', Peek: cherry
+Contains 'cherry'? true
+Size: 1
+Is queue empty? false
+Is queue empty after clear? true
+```
+
+
+>[!IMPORTANT]
+> - `PriorityQueue` does not allow `null` elements. If you try to add null, it will throw a `NullPointerException`.
+> - By default, `PriorityQueue` orders its elements using natural ordering (numbers by ascending value, strings lexicographically). You can customize the order by providing a `Comparator` when creating the queue.
+> - `PriorityQueue` is unbounded, meaning it can grow dynamically as more elements are added. However, the underlying array can be resized when needed.
+> - `PriorityQueue` does not have trimming methods, there's no method to shrink their internal structures.
+> - `PriorityQueue` is not thread-safe. Java provides `PriorityBlockingQueue`, which is a thread-safe variant of `PriorityQueue`.
+> - Duplicate elements are allowed in `PriorityQueue`. If two elements are equal in priority, they can both exist in the queue.
+> - `PriorityQueue` does not guarantee ordering stability. This means that if two elements are considered "equal" in priority, their relative order in the queue may not be maintained. The internal **heap** structure decides the relative order of equal-priority elements. If you insert two elements with the same priority, there is no guarantee which of them will be retrieved first, as `FIFO` is not a property of `PriorityQueue` for elements of equal priority.
+> - To give custom priorities we can use `comparator` (we will see this later).
+
+
+- Just like `ArrayList`, we can use generic concept for `PriorityQueue` as well , `PriorityQueue intQueue = new PriorityQueue();`.
+
+
+##### Internal Working of PriorityQueue
+
+- Internally, `PriorityQueue` uses a **heap (binary heap)**, which allows efficient insertion (`O(log n)`) and removal of the element with the highest priority.
+- The elements are stored in an array-based structure where the smallest element (according to natural ordering or a custom comparator) is always at the root.
+- Time complexity:
+    - Insertion: `O(log n)`
+    - Removal (`poll`): `O(log n)`
+    - Peek: `O(1)`
+- A heap is a specialized tree-based data structure that satisfies the heap property. `PriorityQueue` default uses **min-heap** property which is the smallest element is always at the root of the tree (or at index 0 of the internal array) and for any parent node, its children will always have larger or equal values.
+- **To be specific `PriorityQueue` uses balanced binary heap**.
+
+##### Memory Management
+
+- When you create a `PriorityQueue` in Java without specifying an initial capacity, it creates an internal array with a default size of **11**. As elements are added, the queue automatically grows in size to accommodate more elements.
+
+![alt text](image-23.png)
+
+- The internal array would look in memory after several elements are added
+
+```
+[1, 2, 8, 5, 3, null, null, null, null, null, null]
+```
+
+- By default, the internal array has a size of 11. You can also specify a custom initial capacity by passing an integer value in the constructor, `new PriorityQueue<>(capacity)`.
+- When the number of elements exceeds the current capacity, the internal array grows by **50%** (double of current size, similar to `ArrayList` behavior). This ensures that adding new elements remains efficient as the queue grows.
+
+#### Deque (Double Ended Queue)
+
+- A Deque (Double Ended Queue) in Java is a linear data structure that allows insertion and deletion of elements from both ends. Unlike a Queue that only allows operations at one end (FIFO: First-In-First-Out), a Deque supports operations at both the front and rear.
+
+
+![alt text](image-24.png)
+
+- The **interface** called Deque is present in `java.util` package. It is the subtype of the interface queue. The Deque supports the addition as well as the removal of elements from both ends of the data structure. Therefore, a deque can be used as a `Stack` or a `Queue`. We know that the stack supports the Last In First Out (LIFO) operation, and the operation First In First Out is supported by a queue. As a deque supports both, either of the mentioned operations can be performed on it
+
+>[!NOTE]
+> - `LinkedList` implements **`Deque` (`Queue` interface)** to give doubly linked list collection which allows insertion and deletion of elements from both ends (head and tail) of the linked list.
+
+![alt text](image-25.png)
+
+##### ArrayDeque
+
+- `ArrayDeque` is a resizable array implementation of the `Deque` interface. It is part of Java's `java.util` package and is generally more efficient than `LinkedList` for Deque operations.
+- Lets see an example
+
+```
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public class AboutArrayDeque {
+    public static void main(String[] args) {
+        // Creating an ArrayDeque instance
+        Deque<Integer> deque = new ArrayDeque<>();
+
+        // Insertion operations
+        deque.addFirst(10);  // [10]
+        deque.addLast(20);   // [10, 20]
+        deque.offerFirst(5); // [5, 10, 20]
+        deque.offerLast(25); // [5, 10, 20, 25]
+
+        System.out.println("Deque after insertions: " + deque);
+
+        // Access and retrieval operations
+        System.out.println("First element (getFirst): " + deque.getFirst());  // Output: 5
+        System.out.println("Last element (getLast): " + deque.getLast());     // Output: 25
+        System.out.println("First element (peekFirst): " + deque.peekFirst()); // Output: 5
+        System.out.println("Last element (peekLast): " + deque.peekLast());    // Output: 25
+
+        // Removal operations
+        System.out.println("Removed first element (removeFirst): " + deque.removeFirst()); // Removes 5
+        System.out.println("Removed last element (removeLast): " + deque.removeLast());   // Removes 25
+        System.out.println("Deque after removals: " + deque);
+
+        // Polling operations
+        System.out.println("Polled first element (pollFirst): " + deque.pollFirst()); // Removes 10
+        System.out.println("Polled last element (pollLast): " + deque.pollLast());   // Removes 20
+        System.out.println("Deque after polling: " + deque);  // Empty deque
+    }
+}
+
+
+
+Output:
+Deque after insertions: [5, 10, 20, 25]
+First element (getFirst): 5
+Last element (getLast): 25
+First element (peekFirst): 5
+Last element (peekLast): 25
+Removed first element (removeFirst): 5
+Removed last element (removeLast): 25
+Deque after removals: [10, 20]
+Polled first element (pollFirst): 10
+Polled last element (pollLast): 20
+Deque after polling: []
+```
+
+>[!IMPORTANT]
+> - No `null` elements are allowed , it will throw `java.lang.NullPointerException`.
 
 
 
