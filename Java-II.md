@@ -1367,7 +1367,20 @@ Stack after clearing: []
 >[!NOTE]
 > - We will not explore all its implementation, we will only explore the widely used implementation of list.
 
-#### Priori
+#### PriorityQueue
+
+- Imagine you're at an airport where there are two security lines:
+     - **Regular line**: People are processed on a first-come, first-served basis (like a typical queue).
+    - **VIP line (Priority People)**: Here, passengers are processed based on their priority, not necessarily their arrival time. For example, passengers with first-class tickets (higher priority) get to move ahead of economy passengers, even if they arrived later.
+- Likewise in the Priority Queue:
+     - Each passenger (element) has a priority (for example, their class of ticket).
+    - The security agents (queue operations) always serve the highest priority passengers first (the element, based on some criterion), regardless of the order in which they arrived.
+    - So, just like how passengers with higher priority (first-class tickets) go through security first, elements with higher priority are served first in a Priority Queue, no matter the order of insertion.
+- A PriorityQueue is used when the objects are supposed to be processed based on the priority. It is known that a Queue follows the First-In-First-Out algorithm, but sometimes the elements of the queue are needed to be processed according to the priority, that’s when the PriorityQueue comes into play.
+- A PriorityQueue is a type of queue that arranges elements based on their priority values. Elements with higher priority values are typically retrieved or removed before elements with lower priority values. Each element has a priority value associated with it.
+- What are the pre-defined priorities values?
+    - In a PriorityQueue, the priority values is a way to decide the importance of each element.
+    - 
 
 ![alt text](image-22.png)
 
