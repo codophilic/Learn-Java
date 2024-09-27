@@ -6406,6 +6406,7 @@ Thread has finished execution (TERMINATED state).
 ##### Time-slicing scheduling:
 
 - Usually, the First Come First Serve algorithm is non-preemptive, which is bad as it may lead to infinite blocking (also known as starvation). To avoid that, some time-slices are provided to the threads so that after some time, the running thread has to give up the CPU. Thus, the other waiting threads also get time to run their job.
+- Starvation occurs when a thread is perpetually delayed or prevented from accessing a resource it needs because other threads are continuously given priority, even though the starving thread is ready to proceed.
 
 ![alt text](Images/java-1/image-68.png)
 
