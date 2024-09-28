@@ -1609,7 +1609,7 @@ Deque after polling: []
 
 ###### Internal Working of ArrayDeque
 
-- `ArrayDeque` uses an internal array to store elements, but it **does not use `ArrayList`**. It maintains a **circular buffer** to efficiently manage both ends of the deque.
+- `ArrayDeque` uses an internal array to store elements, but it **does not use `ArrayList`**. It maintains a **circular buffer or ring buffer** to efficiently manage both ends of the deque.
 - It maintains two pointers, `head` and `tail`, to track the front and rear of the deque, respectively.
 - Lets visualize that referring below images, when we declare a `ArrayDeque` , internally it maintains an array of 16 elements.
 
@@ -1844,7 +1844,178 @@ Queue after adding more elements: [X, Y]
 > - BlockingQueue is mainly used in producer-consumer scenarios, where one set of threads (producers) adds elements to the queue, and another set (consumers) removes them. But, since BlockingQueue also follows the Java Collection interface, it supports other operations like: `remove(x)`: To remove a specific element. However, such operations are not the primary purpose of BlockingQueue and may not be executed as efficiently. They are intended for occasional use, such as cancelling a previously queued task.
 > - `ArrayBlockingQueue` has an optional fairness policy. When multiple threads are waiting to either add or remove elements, fairness ensures that threads are served in the order they requested access (first-in-first-out for waiting threads). You can specify fairness when you create the queue by passing true for the fairness parameter:` new ArrayBlockingQueue<>(10, true)`. If fairness is set to false (the default), threads are scheduled in an unpredictable order, which could provide better throughput but might result in starvation for some threads. (Starvation occurs when a thread is perpetually delayed or prevented from accessing a resource it needs because other threads are continuously given priority, even though the starving thread is ready to proceed.)
 > - `BlockingQueue` is thread-safe, meaning it ensures that multiple threads can add or remove elements without any issues. It uses locks or other mechanisms to make sure that when one thread is adding or removing an element, no other thread can interfere at that moment. However, operations that involve multiple elements (like `addAll`, `removeAll`) may not be atomic. This means if something goes wrong during those operations, they might be partially completed. For example, `addAll(c)` might add some elements but fail to add the rest if an exception occurs.
-> - Unlike many other concurrent collections, BlockingQueue does not have a built-in mechanism to signal that no more items will be added, effectively “closing” the queue. The approach to handling such scenarios is often left to the specific implementation or usage pattern. A common strategy involves the insertion of distinct end-of-stream or “poison” objects, which consumers recognize as signals to stop processing further elements. Basically adding `-1` or `INTEGER.MIN_VALUE` (for Integer based queue) giving indication to the consumer that there won't be more items added by the producer.
+> - Unlike many other concurrent collections, `BlockingQueue` does not have a built-in mechanism to signal that no more items will be added, effectively “closing” the queue. The approach to handling such scenarios is often left to the specific implementation or usage pattern. A common strategy involves the insertion of distinct end-of-stream or “poison” objects, which consumers recognize as signals to stop processing further elements. Basically adding `-1` or `INTEGER.MIN_VALUE` (for Integer based queue) giving indication to the consumer that there won't be more items added by the producer.
+
+###### Internal Working of ArrayBlockingQueue
+
+- The internal implementation of `ArrayBlockingQueue` in Java uses a **circular buffer**, which is also known as a **ring buffer**. The size of circular buffer is fixed array size. The queue maintains two pointers:
+    - `takeIndex`: This pointer points to the next element to be removed from the queue.
+    - `putIndex`: This pointer points to the next position where an element can be inserted into the queue.
+- During `put()` and `take()` operations in `ArrayBlockingQueue`, locks are applied to ensure thread safety. Internally, the queue uses a single **ReentrantLock** to control access to the circular buffer. When adding (`put()`) or removing (`take()`) elements, irrespective of queue is completely filled or not, the lock ensures that only one thread can modify the queue at a time, preventing concurrent access issues.
+
+![alt text](image-31.png)
+
+![alt text](image-32.png)
+
+- Lets see an example how does it works internally. Lets consider a a `ArrayBlockingQueue` of size 8 , initially it is empty. So **`putIndex`** = 0 and **`takeIndex`** = 0.
+
+```
+index is starting with 0
+  0   1   2   3   4   5   6   7
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   |   |  (Empty slots)
++---+---+---+---+---+---+---+---+
+```
+
+- Lets add 1 element into it using `put()` method. So **`putIndex`** = 1 (points to next index) and **`takeIndex`** = 0. (Since no request for removing elements).
+
+```
++---+---+---+---+---+---+---+---+
+| A |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+```
+
+- Now lets add more 2 element into it using `put()` method. So **`putIndex`** = 4 (points to next index) and **`takeIndex`** = 0. (Since no request for removing elements).
+
+```
++---+---+---+---+---+---+---+---+
+| A | B | C | D |   |   |   |   |
++---+---+---+---+---+---+---+---+
+```
+
+- Lets remove 1 element from the queue using `take()` method. So currently **`takeIndex`** = 0 points at 0th index , means element `A` will be removed from the queue. Post removing the **`takeIndex`** will point to `B` element which has 1st index, so **`takeIndex`** = 1. **`putIndex`** = 4 as not request for adding elements.
+
+```
++---+---+---+---+---+---+---+---+
+|   | B | C | D |   |   |   |   |
++---+---+---+---+---+---+---+---+
+```
+
+- Lets remove 1 more element from the queue using `take()` method. So **`takeIndex`** = 2 and **`putIndex`** = 4.
+
+```
++---+---+---+---+---+---+---+---+
+|   |   | C | D |   |   |   |   |
++---+---+---+---+---+---+---+---+
+```
+
+- Lets consider the scenario where the queue is filled with all elements. The **`takeIndex`** and **`putIndex`** will wrap around and thus return to initial position. So **`putIndex`** = 0 and **`takeIndex`** = 0.
+
+```
++---+---+---+---+---+---+---+---+
+| X | Y | Z | P | Q | R | S | T |
++---+---+---+---+---+---+---+---+
+```
+
+- If the queue is full, the `put()` method will block until space becomes available (an element is removed). If the queue is empty, the `take()` method will block until an element becomes available (an element is added).
+- This circular buffer allows for efficient use of the array, ensuring that space is reused instead of constantly shifting elements.
+
+###### Memory Management
+
+- **Fixed Memory Allocation**:
+    - When an `ArrayBlockingQueue` is created, the array backing the queue is allocated a fixed size. This means the memory for the array is allocated upfront based on the specified capacity.
+    - There is no dynamic resizing of the internal array (unlike `ArrayList` or `PriorityQueue`), so the memory usage is fixed throughout the queue's lifetime.
+    - If you need to change the size of the queue, you'll have to create a new `ArrayBlockingQueue` instance with the desired capacity you required. This involves copying the elements from the old queue to the new one.
+- By using a circular buffer, `ArrayBlockingQueue` ensures that the array is efficiently utilized, reusing space as items are added and removed. However, the overall memory consumption does not grow or shrink since the array size is fixed.
+
+##### LinkedBlockingQueue
+
+- `LinkedBlockingQueue` is another implementation of a bounded blocking queue in Java, similar to `ArrayBlockingQueue`. However, unlike `ArrayBlockingQueue` which uses a fixed-size array, `LinkedBlockingQueue` uses a linked list to store elements. This allows for more flexibility in terms of resizing and performance characteristics.
+- `LinkedBlockingQueue` uses a linked-list structure, which allows it to grow dynamically. `LinkedBlockingQueue` are thread-safe and support concurrent access.
+- `LinkedBlockingQueue` can be bounded (if you set a maximum size) or unbounded (The capacity, if unspecified, is equal to `Integer.MAX_VALUE`).
+- Lets see an example.
+
+```
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class AboutLinkedBlockingQueue {
+    public static void main(String[] args) throws InterruptedException {
+        
+        // Create a LinkedBlockingQueue with capacity 5
+        LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>(5);
+
+        // Adding elements using offer (uses ReentrantLock)
+        queue.offer("Apple");
+        queue.offer("Banana");
+        queue.offer("Cherry");
+        
+        // Adding elements using put (uses ReentrantLock)
+        queue.put("Date");
+        queue.put("Elderberry");
+
+        System.out.println(queue);
+
+        // offer
+        boolean isAdded = queue.offer("Fig");  // Will fail as queue is full
+        System.out.println("Was Fig added? " + isAdded);
+        System.out.println(queue);
+
+        // Retrieve elements from the queue
+        System.out.println("Head of the queue (using peek): " + queue.peek());  // Non-blocking
+        
+        // Removing elements using take (blocking if empty)
+        System.out.println("Removed element: " + queue.take());  // Removes "Apple"
+        
+        // Removing elements using poll (non-blocking)
+        System.out.println("Removed element: " + queue.poll());  // Removes "Banana"
+        
+        // poll
+        String removedElement = queue.poll();  // Removes "Cherry"
+        System.out.println("Removed: " + removedElement);
+        
+        // Remaining queue size
+        System.out.println("Queue size: " + queue.size());
+
+        // Check if queue contains an element
+        System.out.println("Does queue contain 'Date'? " + queue.contains("Date"));
+
+        // Add multiple elements at once
+        queue.addAll(java.util.Arrays.asList("Grapes", "Honeydew"));
+
+        // Remove specific element
+        queue.remove("Honeydew");
+
+        // Drain all elements into another collection
+        java.util.List<String> drainedElements = new java.util.ArrayList<>();
+        queue.drainTo(drainedElements);
+        System.out.println("Drained elements: " + drainedElements);
+
+        // Final queue size after draining
+        System.out.println("Queue size after draining: " + queue.size());
+    }
+}
+
+
+Output:
+[Apple, Banana, Cherry, Date, Elderberry]
+Was Fig added? false
+[Apple, Banana, Cherry, Date, Elderberry]
+Head of the queue (using peek): Apple
+Removed element: Apple
+Removed element: Banana
+Removed: Cherry
+Queue size: 2
+Does queue contain 'Date'? true
+Drained elements: [Date, Elderberry, Grapes]
+Queue size after draining: 0
+```
+
+>[!IMPORTANT]
+> - `ArrayBlockingQueue` generally has better performance for small queues, while `LinkedBlockingQueue` can be more efficient for larger queues or when frequent insertions and removals are expected.
+> - If you need to dynamically increase or decrease the capacity of the queue, `LinkedBlockingQueue` is a better choice.
+> - If you need an unbounded queue that can grow to accommodate any number of elements, `LinkedBlockingQueue` can be used.
+> - When fetching or removing an element, the queue always traverses from the head of the queue. There's no random access to elements. To fetch or remove an element, it starts at the head and follows the pointers to the next nodes.
+>
+> ![alt text](image-33.png)
+
+###### Internal Working of LinkedBlockingQueue
+
+- `LinkedBlockingQueue` internally uses a linked list data structure rather than an array, which is why its behavior differs from `ArrayBlockingQueue`.
+- Since its follows a linked list data structure, each element in the `LinkedBlockingQueue` is wrapped inside a **Node** object.
+These Node objects are linked together, forming a **singly linked list**. It maintains two pointers
+    - **Head**: Points to the node that contains the first (oldest) element.
+    - **Tail**: Points to the node where the next element will be added (the last element).
+
 
 https://medium.com/@reetesh043/blockingqueue-in-java-36ed1ee8e9f5
 

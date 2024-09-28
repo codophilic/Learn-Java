@@ -6853,7 +6853,7 @@ class SharedResource {
 
 - In Java, threads sometimes need to communicate with each other to work together efficiently. This is where the concept of cooperation comes in. It mainly revolves around methods like `wait()`, `notify()`, and `notifyAll()`, which help in thread communication and coordination. Types of Cooperation:
 
-1. Wait and Notify (Inter-thread Communication):
+**1. Wait and Notify (Inter-thread Communication)**:
 
 - Imagine two workers sharing a task. Worker A can't proceed until Worker B finishes the first step. Worker A pauses (waits), and when Worker B is done, it lets Worker A know (notifies) to continue.
 - The `wait()` and `notify()` methods are used for inter-thread communication. A thread that is waiting for a condition to be met can pause its execution using `wait()`, and another thread can resume its execution by calling `notify()`.
@@ -6947,7 +6947,7 @@ Produced: 5
 Consumed: 5
 ```
 
-2. Reentrant Lock:
+**2. Reentrant Lock**:
 -  Imagine you are in an office building, and you have a key (lock) to a specific meeting room. If you enter the room and lock it behind you, no one else can enter until you unlock the door.
 - Now, if you leave the room to grab something and come back, you don't need to request the key again; you can use the same key to unlock the room multiple times while you're in control of it. This is because you already have access and are allowed to "re-enter" the room.
 - This is similar to a Reentrant Lock: if a thread already holds the lock, it can enter the same lock-protected code again without needing to wait for the lock to be released and re-acquired.
