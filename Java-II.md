@@ -2014,14 +2014,55 @@ Queue size after draining: 0
 - Since its follows a linked list data structure, each element in the `LinkedBlockingQueue` is wrapped inside a **Node** object.
 These Node objects are linked together, forming a **singly linked list**. It maintains two pointers
     - **Head**: Points to the node that contains the first (oldest) element.
-    - **Tail**: Points to the node where the next element will be added (the last element).
+    - **Tail**: When a new element is added, a new node is created, and the tail pointer moves to point to that new node (the one holding the new element)
+
+>[!NOTE]
+> - It consist of Tail pointer but the it does not follow doubly linked list, as the purpose of tail pointer in `LinkedBlockingQueue` is to point the last element of singly linked list.
+
+- Lets see an example. Lets create a queue of 4 as its bounded size, initially is empty
+
+```
+Head -> Tail (Both point to the same node, representing an empty state)
+```
+
+- When we add first element using `put()`.
+
+```
+Head -> | 1 | -> Tail
+```
+
+- Keep adding elements until it reaches the capacity.
+
+```
+Head -> | 1 | -> | 2 | -> | 3 | -> | 4 | -> Tail (End of List)
+```
+
+- Head points to the node with 1. Tail points to the node with 4.
+
+###### Memory Management
+
+- Each element inserted into the queue is wrapped inside a Node object, which contains a reference to the next node (linked list). Memory is allocated for each new node.
+- When elements are removed, the references are updated, and the unlinked nodes (no longer referenced) become eligible for garbage collection.
+- **Bounded Queue**: If the maximum capacity is reached, no more elements can be added until space becomes available.
+- **Unbounded Queue**: It grows dynamically as new elements are added. It doesn't shrink automatically, so memory consumption will grow as long as elements are added without being removed.
+
+#### When to Use Queue vs Dequeue vs BlockingQueue
+
+- **Key Considerations**
+
+| **Type**          | **Important Considerations**                                                |
+|-------------------|-----------------------------------------------------------------------------|
+| **Queue**         | - `Queue` doesn’t support blocking or thread-safety by default.             |
+| **Deque**         | - Useful for double-ended operations, allowing both queue and stack behaviors.<br>- Provides more flexibility than `Queue` but with similar performance. |
+| **BlockingQueue** | - Thread-safe and avoids busy waiting.<br>- Ideal for producer-consumer patterns.<br>- Can be bounded or unbounded depending on the use case.<br>- Operations like `addAll()`, `containsAll()`, and `removeAll()` might not be atomic. |
+
+- **Examples of When to Use**
+
+    - **Queue**: Use in simple task queues like handling web requests in the order they arrive.
+    - **Deque**: Use when you need the flexibility to work with elements at both ends, such as in navigation history (browser back/forward buttons).
+    - **BlockingQueue**: Use when you have producer-consumer threads where one or more threads produce tasks (like file processing) and others consume tasks (process them). The thread-safe nature avoids race conditions.
 
 
-https://medium.com/@reetesh043/blockingqueue-in-java-36ed1ee8e9f5
-
-When to Use Deque vs. Queue:
-Use Queue when you only need to process elements in a strict FIFO manner.
-Use Deque when you need the flexibility of adding/removing elements from both ends or implementing stack-like behavior along with queue operations
 
 ![alt text](image-26.png)
 
