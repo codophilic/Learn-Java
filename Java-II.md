@@ -2060,11 +2060,15 @@ Head -> | 1 | -> | 2 | -> | 3 | -> | 4 | -> Tail (End of List)
 
     - **Queue**: Use in simple task queues like handling web requests in the order they arrive.
     - **Deque**: Use when you need the flexibility to work with elements at both ends, such as in navigation history (browser back/forward buttons).
-    - **BlockingQueue**: Use when you have producer-consumer threads where one or more threads produce tasks (like file processing) and others consume tasks (process them). The thread-safe nature avoids race conditions.
-
+    - **BlockingQueue**: Use when you have producer-consumer threads where one or more threads produce tasks (like file processing) and others consume tasks (process them). The thread-safe nature avoids race conditions. Example like Multi-user Gaming Server , the server processes gamer actions in the order they are received. If the action queue is full (too many simultaneous actions), new actions from players will block until space is available, maintaining game integrity.
 
 
 ![alt text](image-26.png)
+
+
+### Set
+
+
 
 ![alt text](image-22.png)
 
