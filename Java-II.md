@@ -764,6 +764,7 @@ Output:
 > - Lower bounds (`<? super Something>`) are only valid with wildcards and are typically used in method parameters, not in class declarations.
 > - Java doesn't allow `T super Something` in the type parameter definition in class or method.
 
+
 ## All About Collection
 
 - Consider the example of a piggy bank. We all had it during our childhood where we used to store our coins. This piggy bank is called a Collection and the coins are nothing but objects.
@@ -2391,6 +2392,16 @@ If the element is unique, it is added to the hash table (as a key in the `HashMa
 
 #### Sorted Set
 
+- `SortedSet` is an interface in the Java Collections Framework that extends the `Set` interface and ensures that the elements are stored in a sorted order. It guarantees that the elements in the set are arranged either in their natural ordering or by a custom comparator (if provided).
+
+![alt text](image-44.png)
+
+##### TreeSet
+
+- `TreeSet` is a concrete implementation of the `SortedSet` interface.
+
+
+
 
 https://javaconceptoftheday.com/how-linkedhashset-works-internally-in-java/#:~:text=HashSet%20internally%20uses%20HashMap%20to,you%20enter%20in%20the%20HashSet.
 
@@ -2437,6 +2448,13 @@ https://javaconceptoftheday.com/how-linkedhashset-works-internally-in-java/#:~:t
 
 
 
+## Comparable & Comparator
+
+- Imagine the library there are two sections,
+    **1. Comparable:** - In this section the books are always sorted in the default order i.e by the book title names, so alphabetically the names of these books are added.
+    **2. Comparator:** - In this section, some of the books are sorted based on title names, some of the books are sorted based on page number wise, some of the books are sorted based on author names. So here the default criteria of sorting the books i.e based on title name is not necessary, a custom sorting approach is used.
+- Comparable is like the book having a built-in, default sorting rule – "I should always be sorted by title." and Comparator is providing a new sorting rule when you need to order books in a different way.
+- Comparable is for when you have a default, natural ordering for an object (e.g., sorting books by title). Comparator is for when you need flexibility, so you can sort the same object in different ways (e.g., by author, by page number, etc.), without changing the original sorting rule.
 
 
 ## Reflection
