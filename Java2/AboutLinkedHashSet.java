@@ -10,6 +10,9 @@ public class AboutLinkedHashSet {
         lhs.add("Grapes");
         lhs.add("Orange");
 
+        // Adding duplicate value
+        lhs.add("Apple");
+        
         System.out.println("LinkedHashSet: " + lhs);  // Preserves insertion order
         
         // Checking if element exists

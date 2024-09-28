@@ -2264,7 +2264,135 @@ New array (size 32):
 
 ![alt text](image-42.png)
 
+- In short:
+    - `HashSet` is unordered.
+    - `LinkedHashSet` is ordered based on insertion order.
+- Like all sets, `LinkedHashSet` does not allow duplicate elements.
+- Lets see an example
 
+```
+import java.util.LinkedHashSet;
+
+public class AboutLinkedHashSet {
+    public static void main(String[] args) {
+        LinkedHashSet<String> lhs = new LinkedHashSet<>();
+        
+        // Adding elements
+        lhs.add("Apple");
+        lhs.add("Banana");
+        lhs.add("Grapes");
+        lhs.add("Orange");
+
+        // Adding duplicate value
+        lhs.add("Apple");
+        
+        System.out.println("LinkedHashSet: " + lhs);  // Preserves insertion order
+        
+        // Checking if element exists
+        System.out.println("Contains Banana? " + lhs.contains("Banana"));
+
+        // Removing an element
+        lhs.remove("Grapes");
+        System.out.println("After removal: " + lhs);
+
+        // Iterating over LinkedHashSet
+        System.out.println("Iterating:");
+        for (String fruit : lhs) {
+            System.out.println(fruit);
+        }
+        
+        // Getting size
+        System.out.println("Size of LinkedHashSet: " + lhs.size());
+
+        // Clearing the LinkedHashSet
+        lhs.clear();
+        System.out.println("After clearing: " + lhs);
+    }
+}
+
+
+Output:
+LinkedHashSet: [Apple, Banana, Grapes, Orange]
+Contains Banana? true
+After removal: [Apple, Banana, Orange]
+Iterating:
+Apple
+Banana
+Orange
+Size of LinkedHashSet: 3
+After clearing: []
+```
+
+- Just like in `ArrayList`, we can use generic concept to ensure type safety in `LinkedHashSet`.
+
+>[!IMPORTANT]
+> - `LinkedHashSet` preserves the order in which elements are added. When iterating, elements are retrieved in the order they were inserted.
+> - `LinkedHashSet` allows one `null` element. This is similar to HashSet, which also allows `null`.
+> - The performance for basic operations (add, remove, contains) is generally **O(1)**, similar to `HashSet`, but slightly slower due to the overhead of maintaining the linked list.
+> - `LinkedHashSet` is not synchronized.
+
+##### Internal Working of LinkedHashSet
+
+- `LinkedHashSet` combines the features of a `HashSet` and a **doubly linked list** to maintain both uniqueness and insertion order. `LinkedHashSet` is backed by a HashMap where the elements are stored as keys. Each key maps to a constant dummy value (`true`).
+
+![alt text](image-43.png)
+
+- In addition to the hash table structure, `LinkedHashSet` maintains a doubly linked list that keeps track of the insertion order of the elements. Each node in the doubly linked list contains a reference to the next and previous nodes, allowing efficient iteration in the order of insertion.
+
+
+![alt text](doublylinkedlist.gif)
+
+
+
+- When an element is added, it is first checked for uniqueness (using the hash code and equality check via the `HashMap`).
+If the element is unique, it is added to the hash table (as a key in the `HashMap`) and also inserted into the doubly linked list at the end. When an element is removed, it is removed from both the hash table and the linked list. The references in the doubly linked list are updated to maintain the order.
+- Doubly linked list structure
+
+```
+[Apple] <-> [Banana] <-> [Grapes]
+```
+
+- `HashMap` structure with bucket concept similarly in `HashSet`.
+
+```
+|--- Bucket[0] ---|--- Bucket[1] ---|--- Bucket[2] ---|...|--- Bucket[15] ---|
+| "Apple" -> "Grapes" | "Banana"    | "Cherry"        |...|                  |
+```
+
+- `LinkedHashSet` efficiently combines the strengths of a `HashSet` (for fast lookups and uniqueness) and a **doubly linked list** (for maintaining insertion order). The two structures work together to provide a unique, ordered collection with O(1) average time complexity for basic operations. `LinkedHashSet`, the buckets and the doubly linked list are maintained separately, but they work together to provide the functionalities of both a HashSet and an ordered collection.
+- Buckets (Array of HashMap):
+    - The `LinkedHashSet` uses an underlying HashMap to store its elements. This is where the buckets come into play. Each bucket corresponds to an index in an array, which is calculated based on the hash code of the elements.
+    - Buckets are used for:
+        - Storage: Holding the actual elements (as keys) along with their dummy values.
+        - Fast Access: Providing **O(1)** average time complexity for operations like add, remove, and contains.
+- Doubly Linked List:
+    - The doubly linked list is used to maintain the order of the elements based on the sequence they were added. Each element in the linked list points to the next and previous elements, allowing for easy traversal in both directions.
+
+##### Memory Management
+
+- The memory management of a `LinkedHashSet` is closely tied to its underlying data structure, which consists of a HashMap for storing elements and a doubly linked list for maintaining the order of insertion.
+
+**1. Initial Capacity and Load Factor**
+    - Initial Capacity: When you create a `LinkedHashSet`, it has a default initial capacity of **16**. This is the number of buckets in the underlying HashMap.
+    - Load Factor: The default load factor is **0.75**, which means that when **75%** of the current capacity is filled (in this case, after 12 elements), the `LinkedHashSet` will resize itself.
+
+
+**2. Growth Mechanism**
+    - Rehashing: When the number of elements in the LinkedHashSet exceeds the threshold (calculated as capacity * load factor), a rehash occurs:
+        - A new internal array of buckets is created with double the size of the original.
+        - All existing elements from the old buckets are rehashed and placed into the new buckets based on the new size.
+        - The doubly linked list structure remains unchanged, preserving the insertion order.
+
+
+**3. Shrinking Mechanism**
+    - `LinkedHashSet` does not automatically shrink its size when elements are removed. This means that once the capacity has increased due to rehashing, it stays at the larger size even if many elements are removed.
+    - When an element is removed from the `LinkedHashSet`, the corresponding node in the doubly linked list is removed. The links (pointers) of the neighboring nodes are updated to maintain the list’s integrity. The memory occupied by the removed node is released. The memory that was being used by the removed node is freed, so it is no longer occupying space.
+
+
+#### Sorted Set
+
+
+https://javaconceptoftheday.com/how-linkedhashset-works-internally-in-java/#:~:text=HashSet%20internally%20uses%20HashMap%20to,you%20enter%20in%20the%20HashSet.
 
 ![alt text](image-22.png)
 
