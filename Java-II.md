@@ -1365,6 +1365,10 @@ Stack after clearing: []
     - `element()`: Returns the element at the front of the queue without removing it. If the queue is empty, it throws an exception.
     - `peek()`: Returns the element at the front of the queue without removing it. If the queue is empty, it returns null.
 
+- Now Queue is an interface, we cannot work with interface we require classes to work with. Lets see the implementation of Queue.
+
+![alt text](image-36.png)
+
 >[!NOTE]
 > - We will not explore all its implementation, we will only explore the widely used implementation of Queue.
 
@@ -2067,6 +2071,198 @@ Head -> | 1 | -> | 2 | -> | 3 | -> | 4 | -> Tail (End of List)
 
 
 ### Set
+
+- Set is a collection of elements (Or objects) that contains no duplicate elements. Java Set is an **interface** that extends **Collection interface**. Unlike List, Java Set is NOT an ordered collection, it’s elements does NOT have a particular order.
+
+![alt text](image-34.png)
+
+- Now Set is an interface, we cannot work with interface we require classes to work with. Lets see the implementation of set.
+
+![alt text](image-35.png)
+
+>[!NOTE]
+> - We will not explore all its implementation, we will only explore the widely used implementation of set.
+
+#### HashSet
+
+- In Java, `HashSet` is part of the Set interface and is used to store unique elements. It doesn't allow duplicate entries, and the order of elements is not guaranteed.
+- Lets see an example
+
+```
+import java.util.HashSet;
+import java.util.Iterator;
+
+public class AboutHashSet {
+    public static void main(String[] args) {
+        // Creating a HashSet
+        HashSet<String> set = new HashSet<>();
+
+        // Adding elements
+        set.add("Apple");
+        set.add("Banana");
+        set.add("Cherry");
+        set.add("Date");
+        
+        // Duplicate elements are ignored
+        set.add("Apple");
+
+        //Adding null elements.
+        set.add(null);
+
+        // Displaying the HashSet
+        System.out.println("HashSet: " + set); // Elements may not be in insertion order
+
+        // Checking for an element
+        System.out.println("Contains 'Banana': " + set.contains("Banana"));
+
+        // Removing an element
+        set.remove("Date");
+        System.out.println("After removing 'Date': " + set);
+
+        // Iterating over the elements
+        System.out.println("Iterating over HashSet:");
+        Iterator<String> it = set.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
+
+        // Checking size
+        System.out.println("Size of HashSet: " + set.size());
+
+        // Checking if empty
+        System.out.println("Is HashSet empty? " + set.isEmpty());
+
+        // Cloning the HashSet
+        HashSet<String> clonedSet = (HashSet<String>) set.clone();
+        System.out.println("Cloned HashSet: " + clonedSet);
+
+        // Clearing the HashSet
+        set.clear();
+        System.out.println("HashSet after clearing: " + set);
+    }
+}
+
+Output:
+HashSet: [null, Apple, Cherry, Date, Banana]
+Contains 'Banana': true
+After removing 'Date': [null, Apple, Cherry, Banana]
+Iterating over HashSet:
+null
+Apple
+Cherry
+Banana
+Size of HashSet: 4
+Is HashSet empty? false
+Cloned HashSet: [null, Apple, Cherry, Banana]
+HashSet after clearing: []
+```
+
+- Just like in `ArrayList`, we can use generic concept to ensure type safety in `HashSet`.
+
+>[!IMPORTANT]
+> - `HashSet` allows a single `null` element. If you try to add more than one `null`, the subsequent additions will be ignored.
+> - Unlike List and arrays, Set does NOT support indexes or positions of it’s elements.
+> - The elements in a `HashSet` are not stored in any particular order. The order of insertion or retrieval may change over time, and `HashSet` does not guarantee any consistent iteration order.
+> - The basic operations like `add()`, `remove()`, `contains()`, and `size()` have an average time complexity of **O(1)**. (assuming the hash function disperses elements properly among the buckets)
+> - `HashSet` is **not synchronized**, meaning it is not thread-safe for concurrent access. If multiple threads are accessing a `HashSet` simultaneously, you should manually synchronize or consider using `ConcurrentHashMap`.
+> - `HashSet` can grow or shrink based on the number of elements.
+
+##### Internal Working of HashSet
+
+- `HashSet` in Java internally uses a `HashMap` to store its elements.
+
+![alt text](image-37.png)
+
+- Whenever you create a `HashSet` object, one `HashMap` object associated with it is also created. This `HashMap` object is used to store the elements you enter in the `HashSet`.
+- When you add an element to a HashSet, it first computes a hash code (a unique integer) using the element’s `hashCode()` method.
+- The elements you add into `HashSet` are stored as keys of this `HashMap` object. The value associated with those keys will be a constant object called `PRESENT` (since a `HashSet` doesn't need values). This is why `HashSet` provides fast lookups, additions, and deletions—because it’s leveraging `HashMap`.
+
+![alt text](image-38.png)
+
+![alt text](image-39.png)
+
+- Consider the below image, which shows how `HashSet` internally uses `HashMap`.
+
+![alt text](image-40.png)
+
+- In `HashMap`, which backs the `HashSet`, a bucket or array concept is used. The number of buckets (the size of the array) is determined by the capacity of the `HashMap`. `HashMap` (and therefore `HashSet`) starts with **16** buckets. This initial capacity is the default, but it can increase dynamically as more elements are added (this process is called **rehashing**).
+- The capacity of the bucket array is always a power of two (16, 32, 64, etc.) for efficient indexing and memory management.
+
+![alt text](image-41.png)
+
+- These buckets are basically array based, so it will have indexes starting from 0-15 initially, so how does the elements of set is placed inside these buckets? this is by using a simple mathematical hashing algorithm (`hashCode()`% capacity (16)). Every object in Java inherits the `hashCode()` method from the `Object` class. Once the `hashCode()` is generated, `HashMap` further processes it using a hashing function to distribute the hash values evenly across the buckets. The typical operation involves **bit manipulation** to ensure a more uniform distribution across buckets.
+- Lets see an example. Suppose you need to add 3 elements in your `HashSet`.
+- Each element is passed through a hash function to generate a hash code (a number). Consider below a sample hashCode for the elements.
+    - "Apple" -> hashCode: 1024
+    - "Banana" -> hashCode: 1025
+    - "Cherry" -> hashCode: 1026
+- Initially , there are 16 buckets or the array size is 16.
+
+```
+|--- Bucket[0] ---|--- Bucket[1] ---|--- Bucket[2] ---|...|--- Bucket[15] ---|
+|                 |                 |                 |...|                  |
+```
+
+- Now based on the hashing algorithm , each hashCode is divided by the capacity, 
+    - "Apple" -> hashCode: 1024 % 16 = 0th index - goes to Bucket[0]
+    - "Banana" -> hashCode: 1025 % 16 = 1st index - goes to Bucket[1]
+    - "Cherry" -> hashCode: 1026 % 16 = 2nd index - goes to Bucket[2]
+
+```
+|--- Bucket[0] ---|--- Bucket[1] ---|--- Bucket[2] ---|...|--- Bucket[15] ---|
+|   "Apple"       |   "Banana"      |   "Cherry"      |...|                  |
+```
+
+- Before adding an element, `HashSet` checks if there is already an element with the same hash code and equal content using the `equals()` method. If so, the element won’t be added, ensuring no duplicates.
+- Suppose , another element lets say "Grapes" has a same hashCode which is 1024, so again post applying hash algorithm using capacity, it will get again get the same Bucket[0], now already inside the Bucket[0] there is an element "Apple", now "Apple" and "Grapes" are putted together in **LinkedList**.
+
+
+```
+|--- Bucket[0] ---|--- Bucket[1] ---|--- Bucket[2] ---|...|--- Bucket[15] ---|
+| "Apple" -> "Grapes" | "Banana"    | "Cherry"        |...|                  |
+```
+
+- When two or more elements has same hashCode , this is called a **hashing collision**. This will happens sometimes and such elements will end up in the same bucket.
+
+>[!NOTE]
+> - Before Java 8: It used a simple linked list in each bucket to handle collisions.
+> - From Java 8 Onward: When the number of elements in a bucket exceeds a certain threshold (8 elements), the linked list is converted into a balanced tree to improve search efficiency from **O(n)** to **O(log n)**.
+
+- So when you search for an element like "Grapes", Java first uses the `hashCode()` to find the bucket (e.g., Bucket[0]), then traverses the linked list inside that bucket. It checks each node (like "Apple") using the `equals()` method to find the correct element.
+
+######  Why is the HashSet is Unordered?
+
+- The order in a HashSet is based on the hash codes and the bucket index they map to, not the insertion order of the elements. Elements are placed in a bucket depending on their hash code. Since different elements may have different hash codes, they are stored in different buckets. For example, "Apple" might go into Bucket[0], "Banana" into Bucket[1], "Cherry" into Bucket[2]. Their order depends on how their hash codes map to the available buckets. Hence, the iteration order when retrieving elements from the `HashSet` will appear unordered.
+
+##### Memory Management
+
+- Capacity refers to the size of the bucket array (i.e., the number of available slots for elements). By default, a `HashSet` starts with an initial capacity of **16** buckets. This means that when you create a `HashSet` and begin adding elements, they are initially distributed across these 16 slots.
+- The load factor determines when the `HashSet` (or `HashMap`) will grow to avoid too many collisions. The default load factor is **0.75**, which means the `HashSet` will resize itself when the number of elements exceeds **75%** of the total capacity. In a default `HashSet` with 16 buckets, 0.75 * 16 = 12. So, when the 13th element is added, the `HashSet` will automatically resize (double its capacity).
+- When the `HashSet` reaches the threshold defined by the load factor (e.g., 12 elements in a set with 16 buckets), it triggers a **rehashing operation** to grow the bucket array. The size of the bucket array is doubled to reduce collisions and distribute the elements more evenly.
+- In this rehashing operation:
+    - It creates a new larger array of size 32 (if the earlier size was of 16).
+    - After the new array is created, the existing elements from the old array are rehashed (i.e., their hash codes are recalculated (**`hashCode()`%32**) relative to the new array size). The elements are then reinserted into the new array, with the proper bucket index based on the new capacity.
+    - This new array is allocated in memory, and it will replace the old one as the primary storage for the `HashSet` elements. The old array, which was smaller, is no longer referenced and becomes eligible for garbage collection.
+
+```
+Initial array (size 16):
+|--- Bucket[0] ---|--- Bucket[1] ---|--- Bucket[2] ---| ... |--- Bucket[15] ---|
+| Element1        |                 | Element2        |     | Element3         |
+
+
+New array (size 32):
+|--- Bucket[0] ---|--- Bucket[1] ---|--- Bucket[2] ---| ... |--- Bucket[31] ---|
+|      Element1   |                 |      Element2   |     |   Element3       |
+```
+
+
+- If any elements remove, the size gets shrink in `HashSet`? No, Unlike `ArrayList`, `HashSet` does not shrink automatically when elements are removed. Once the bucket array grows, it stays that size until the `HashSet` is discarded. This is because shrinking the array could result in too many collisions again, making the performance inefficient. To avoid frequent resizing (both up and down), `HashSet` only grows when necessary and does not shrink by itself.
+
+#### LinkedHashSet 
+
+- `LinkedHashSet` is a subclass of `HashSet` in Java that maintains a linked list of the entries in the set. This means it preserves the insertion order of the elements, unlike `HashSet`, which does not guarantee any order.
+
+![alt text](image-42.png)
 
 
 
