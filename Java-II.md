@@ -2398,8 +2398,20 @@ If the element is unique, it is added to the hash table (as a key in the `HashMa
 
 ##### TreeSet
 
-- `TreeSet` is a concrete implementation of the `SortedSet` interface.
+- `TreeSet` is a concrete implementation of the `SortedSet` interface. 
+- By default, `TreeSet` uses natural ordering to sort the elements. This means elements are sorted based on their natural comparison like numbers are sorted in ascending order and string are sorted alphabetically. This is done using `Comparable` interface.
+- You can also provide a custom comparator when creating the `TreeSet`. This allows you to define your own sorting logic. This is done using `Comparator` interface.
 
+*We will learn about Comparable and Comparator interfaces later*
+
+- `TreeSet` implements the `NavigableSet` interface, so you can perform these navigation operations efficiently. These methods are helpful when you want to traverse the set or find elements based on proximity to a given value. `NavigableSet` is a sub interface of `SortedSet` that provides navigation methods to return elements relative to a given value. It extends the capabilities of SortedSet by allowing for efficient searching, retrieving, and manipulating of elements in the set.
+- Lets see an example how does `TreeSet` does sorting.
+
+
+
+
+
+It stores elements in a sorted order and is backed by a `TreeMap`.
 
 
 
