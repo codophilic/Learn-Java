@@ -65,5 +65,18 @@ public class AboutHashMap {
         //14. Adding Null key
         map.put(null, -1);
         System.out.println("Added null key: "+map);
+
+        // Creating a HashMap with initial capacity 32 and load factor 0.5
+        HashMap<String, Integer> map1 = new HashMap<>(32, 0.5f);
+
+        // Adding elements to the HashMap
+        map1.put("Apple", 1);
+        map1.put("Banana", 2);
+        map1.put("Orange", 3);
+
+        // Iterating over the elements
+        for (String key : map1.keySet()) {
+            System.out.println(key + " => " + map1.get(key));
+        }
     }
 }

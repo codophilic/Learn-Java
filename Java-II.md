@@ -1097,7 +1097,44 @@ list.remove("Apple");  // Removes "Apple" from the list
 
 #### Vector
 
-- A `Vector` class implements the `List` interface.
+- A `Vector` class implements the `List` interface. It is a legacy class.
+
+<details> 
+
+<summary> What is legacy class ? </summary>
+
+- In simple terms, legacy classes are classes that were part of Java's earlier versions (before Java 2 or Java 1.2) and have since been replaced or updated by more modern and efficient alternatives introduced in the Java Collections Framework (JCF). These legacy classes were part of Java 1.0 and Java 1.1 and were used for data structures like lists, maps, sets, and vectors before Java's collections framework was introduced.
+- Examples of Legacy Classes:
+    - `Hashtable`
+    - `Vector`
+    - `Stack`
+    - `Enumeration`
+
+- **Why Were They Called Legacy**?
+    - When Java 2 (Java 1.2) introduced the Java Collections Framework, it provided a more structured and flexible way to handle collections (like List, Set, Map). This framework offered better performance, flexibility, and easier ways to work with collections.
+- Legacy classes, on the other hand, had several issues that made them outdated:
+
+**1. Performance Overhead:**
+    - Many legacy classes, such as `Vector` and `HashTable`, are synchronized by default. This means that every method is thread-safe, but this also introduces performance overhead.
+    - In modern single-threaded or low-concurrency applications, this synchronization is unnecessary and slows down operations.
+
+
+**2. Lack of Standard Interfaces:**
+    - Before the Java Collections Framework, the legacy classes were not standardized. For instance, `Hashtable` and `Vector` didn’t implement a common interface like Map or List.
+    - This made it hard to switch between different collection types or write flexible code that works with multiple types of collections.
+
+
+**3. Enumerations:**
+    - Instead of iterators, legacy classes used `Enumeration` for traversing elements. Enumeration was less convenient compared to the Iterator and ListIterator interfaces introduced with the collections framework.
+
+**4. Type Safety:**
+    - Legacy classes lacked `Generics`. This means they could store objects of any type, and you’d often have to cast objects when retrieving them, which could lead to runtime errors. For example:
+
+- When Java introduced the Java Collections Framework in Java 1.2, many legacy classes were re-engineered to implement standard interfaces like `List`, `Set`, and `Map`. This means that the old classes were updated to work within the new collections framework, but without changing their core behavior.
+
+
+</details>
+
 - `Vector` is essentially a synchronized version of `ArrayList`. It provides the same functionality as `ArrayList` but is thread-safe, making it suitable for multi-threaded environments where multiple threads might access and modify the collection simultaneously.
 - Lets see an example
 
@@ -1744,6 +1781,7 @@ head
 </details>
 
 - `BlockingQueue` is part of `java.util.concurrent` package. All queuing methods are atomic in nature and use internal locks or other forms of concurrency control.
+
 1. `put(E e)`: This method is used to insert elements to the queue. If the queue is full, it waits for the space to be available.
 
 ![alt text](image-29.png)
@@ -2286,7 +2324,496 @@ New array (size 32):
 ```
 
 - The maximum capacity of a `HashMap` depends on memory availability and the JVM. There's no explicit maximum size, but it resizes when it grows beyond a certain point.  Unlike `ArrayList`, `HashMap` does not shrink automatically when entries are removed. There is no `trimToSize()` method in `HashMap` (unlike `ArrayList`). However, you can create a new smaller `HashMap` and transfer the entries if you want to reduce memory usage.
+- You can also provide your own capacity and load factor while initializing `HashMap`.
 
+```
+import java.util.HashMap;
+
+public class HashMapExample {
+    public static void main(String[] args) {
+        // Creating a HashMap with initial capacity 32 and load factor 0.5
+        HashMap<String, Integer> map = new HashMap<>(32, 0.5f);
+
+        // Adding elements to the HashMap
+        map.put("Apple", 1);
+        map.put("Banana", 2);
+        map.put("Orange", 3);
+
+        // Iterating over the elements
+        for (String key : map.keySet()) {
+            System.out.println(key + " => " + map.get(key));
+        }
+    }
+}
+```
+
+- When elements are removed from a `HashMap`, the capacity of the internal bucket array does not change automatically. The bucket array maintains its capacity even if the number of elements decreases. The load factor threshold determines when to resize (grow) the bucket array, but it does not shrink.
+- If the element is part of a linked list (in a bucket with fewer than 8 elements), it is removed from the linked list without changing the structure of the bucket.
+- If the element is part of a tree (in a bucket with 8 or more elements), it is removed from the tree.
+- If the number of elements in that bucket falls below the threshold (i.e., less than 6 after a removal), the structure will revert from a tree back to a linked list. This maintains efficiency and prevents excessive memory usage.
+- This design helps `HashMap` maintain efficient performance while managing memory effectively.
+
+
+#### LinkedHashMap
+
+
+![alt text](image-49.png)
+
+- As the name suggested it uses the implementation of `HashMap`. Then whats the difference? `LinkedHashMap` is a subclass of `HashMap` in Java, but with an important difference—it maintains the insertion order of elements. This means that when you iterate over a `LinkedHashMap`, the elements are returned in the order they were inserted, unlike `HashMap`, which does not guarantee any specific order.
+- Lets see an example.
+
+```
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class AboutLinkedHashMap {
+    public static void main(String[] args) {
+        // Creating LinkedHashMap with initial capacity 4 and load factor 0.75
+        LinkedHashMap<String, Integer> map = new LinkedHashMap<>(4, 0.75f);
+        
+        // Adding elements to LinkedHashMap (Insertion order maintained)
+        map.put("Apple", 1);
+        map.put("Banana", 2);
+        map.put("Grapes", 3);
+        map.put("Orange", 4);
+
+        System.out.println(map);
+
+        // Accessing the elements using key (Order remains the same)
+        System.out.println("Value for 'Banana': " + map.get("Banana"));
+
+        // Iterating over the LinkedHashMap
+        System.out.println("Original Order:");
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue());
+        }
+
+        // Removing an element
+        map.remove("Grapes");
+        System.out.println("\nAfter Removing 'Grapes':");
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue());
+        }
+
+        // Replacing a value
+        map.replace("Apple", 5);
+        System.out.println("\nAfter Replacing 'Apple' value:");
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue());
+        }
+
+        // Check if a key exists
+        if (map.containsKey("Orange")) {
+            System.out.println("\nLinkedHashMap contains 'Orange'");
+        }
+
+        // Check if a value exists
+        if (map.containsValue(4)) {
+            System.out.println("LinkedHashMap contains value 4");
+        }
+
+        // Clearing all elements
+        map.clear();
+        System.out.println("\nAfter Clearing LinkedHashMap: " + map);
+    }
+}
+
+
+Output:
+{Apple=1, Banana=2, Grapes=3, Orange=4}
+Value for 'Banana': 2
+Original Order:
+Apple => 1
+Banana => 2
+Grapes => 3
+Orange => 4
+
+After Removing 'Grapes':
+Apple => 1
+Banana => 2
+Orange => 4
+
+After Replacing 'Apple' value:
+Apple => 5
+Banana => 2
+Orange => 4
+
+LinkedHashMap contains 'Orange'
+LinkedHashMap contains value 4
+
+After Clearing LinkedHashMap: {}
+```
+
+- Just like in `ArrayList`, we can use generic concept to ensure type safety in `LinkedHashMap`.
+
+>[!IMPORTANT]
+> - By default, maintains insertion order.
+> - Works similarly to `HashMap` in terms of initial capacity and load factor. The default capacity is **16**, and the default load factor is **0.75**.
+> - Allows one `null` key and multiple `null` values, just like `HashMap`.
+> - It is not thread-safe. You must manually synchronize it.
+> - Uses extra memory compared to `HashMap` because each entry maintains references to both next and previous elements in the doubly-linked list.
+> - Slightly slower than `HashMap` due to the overhead of maintaining order in the doubly-linked list.
+
+###### Internal Working of LinkedHashMap
+
+- The internal working of `LinkedHashMap` is largely the same as `HashMap`, meaning it still uses the bucket array, hashing, and linked list (or tree in case of collisions). The key difference is that `LinkedHashMap` maintains a doubly linked list that keeps track of the insertion order (or access order if configured).
+- The doubly linked list in `LinkedHashMap` stores both the key-value pairs (entries). Each node in the doubly linked list has pointers to the next and previous entries, which allows for maintaining the order of elements.
+
+
+![alt text](doublylinkedlist.gif)
+
+- Both Data Structures (`HashMap` and doubly linked list) Work Together:
+    - The bucket array handles the normal HashMap functionality (finding, inserting, and removing key-value pairs based on the hash).
+    - The doubly linked list maintains the order of these entries, either by insertion order or access order (if configured).
+- Since `LinkedHashMap` uses a doubly linked list, each entry in the `LinkedHashMap` contains:
+    - Key (from `HashMap`).
+    - Value (from `HashMap`).
+    - Pointers to the next and previous nodes in the doubly linked list.
+- This results in higher memory consumption compared to `HashMap`. So, `LinkedHashMap` needs additional memory for maintaining the doubly linked list pointers
+- The presence of the doubly linked list adds a slight overhead in terms of performance because the map must also update the pointers in the doubly linked list each time a new entry is inserted, accessed (in access-order mode), or removed.
+- The operations (like `put()`, `get()`, `remove()`) are still **O(1)** on average, but due to the additional pointer management in the doubly linked list, it’s slower than `HashMap`.
+- Like `HashMap`, `LinkedHashMap` also rehashes its bucket array when the number of elements exceeds the threshold determined by the load factor. This ensures that the time complexity of operations remains **O(1)** on average.
+
+
+###### Memory Management
+
+- `LinkedHashMap` grows dynamically like `HashMap` when the number of entries exceeds the threshold set by the load factor. It continues to grow until the JVM runs out of memory (leading to an `OutOfMemoryError`).
+- You can remove entries from `LinkedHashMap`, and the size will decrease (just like in `HashMap`). However, the capacity of the underlying bucket array remains the same. If you remove a lot of elements, the doubly linked list size will shrink, but the bucket array won’t shrink automatically.
+- Unlike `ArrayList`, there is no trim method to reduce the capacity of the internal bucket array. However, the doubly linked list is adjusted as elements are removed.
+- The bucket array’s capacity in `LinkedHashMap` (just like `HashMap`) is not fixed; it dynamically increases (resizes) when needed. The initial capacity can be set, and rehashing occurs when the load factor threshold is met, leading to an increase in capacity.
+- However, the bucket array does not shrink automatically. Once it grows, it stays the same size even if many entries are removed. Only the doubly linked list size decreases as entries are removed.
+
+#### HashTable
+
+- `HashTable` is same as `HashMap`, its internal working and memory management is same as `HashMap`. It is a legacy class.
+- Below are the difference between `HashTable` and `HashMap`.
+
+**1. Synchronized:** 
+    - `HashTable` is thread-safe, meaning that multiple threads can access it without corrupting its state. However, this comes with a performance cost due to the overhead of synchronization.
+    - `HashMap` is not thread-safe, making it faster in single-threaded scenarios. If you need thread safety, you should use `ConcurrentHashMap`.
+
+**2. Null Keys and Values:**
+    - `Hashtable` does not allow null keys or null values. Attempting to add a null key or value will throw a `NullPointerException`.
+    - `HashMap` allows one `null` key and multiple `null` values.
+
+**3. Performance:**
+    - Due to synchronized nature, `HashTable` tends to be slower than HashMap.
+    - Because of unsynchronized, `HashMap` typically provides better performance.
+
+**4. Iteration:**
+    - `Hashtable` uses an `Enumerator` to iterate through the keys and values, which is considered legacy.
+    - `HashMap` uses an iterator for iteration, which is more modern and preferable in Java.
+
+**5. Legacy Status:**
+    - `Hashtable` has been part of Java since version 1.0 and is considered a legacy class. It is generally recommended to use newer classes from the Java Collections Framework, like `HashMap`.
+    - `HashMap` is part of the Java Collections Framework introduced in Java 2 (Java 1.2) and is the preferred implementation for a hash table.
+
+**6. Default Capacity and Load Factor:**
+    - `Hashtable` default capacity is 11, with a load factor of 0.75.
+    - `HashMap` default capacity is 16, with a load factor of 0.75.
+- Lets see an example code for `HashTable`.
+
+```
+import java.util.Hashtable;
+
+public class AboutHashTable {
+    public static void main(String[] args) {
+        // Creating a Hashtable
+        Hashtable<String, Integer> hashtable = new Hashtable<>();
+
+        // Adding key-value pairs
+        hashtable.put("Apple", 1);
+        hashtable.put("Banana", 2);
+        hashtable.put("Grapes", 3);
+
+        // Displaying the Hashtable
+        System.out.println("Hashtable: " + hashtable);
+
+        // Accessing a value
+        int value = hashtable.get("Banana");
+        System.out.println("Value for key 'Banana': " + value);
+
+        // Removing a key-value pair
+        hashtable.remove("Grapes");
+        System.out.println("Hashtable after removing 'Grapes': " + hashtable);
+
+        // Checking if a key exists
+        boolean hasKey = hashtable.containsKey("Apple");
+        System.out.println("Does 'Apple' exist? " + hasKey);
+
+        // Displaying the size of the Hashtable
+        int size = hashtable.size();
+        System.out.println("Size of Hashtable: " + size);
+    }
+}
+
+
+Output:
+Hashtable: {Grapes=3, Apple=1, Banana=2}
+Value for key 'Banana': 2
+Hashtable after removing 'Grapes': {Apple=1, Banana=2}
+Does 'Apple' exist? true
+Size of Hashtable: 2
+```
+
+
+#### SortedMap
+
+- A `SortedMap` is a subtype of the `Map` interface in Java that maintains its entries in a sorted order based on the keys. The ordering is either the natural order of the keys (if they implement `Comparable`) or a custom order defined by a `Comparator` provided at map creation.
+
+*We will learn about Comparable and Comparator interfaces later*
+
+- Unlike a regular `HashMap`, which doesn't guarantee the order of its keys, a `SortedMap` ensures that keys are always in sorted ordered.
+- Some additional methods, like getting subsets (`subMap`, `headMap`, `tailMap`), can be used to navigate through the map.
+
+##### TreeMap
+
+- `TreeMap` is the most common implementation of the `SortedMap` interface in Java.
+- The keys in a `TreeMap` are always sorted, either in their natural order (if keys are numeric) or alphabetically (if keys are in String format) or according to a custom `Comparator` which is a custom sorting logic defined.
+- Lets see a simple `TreeMap` example.
+
+```
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+public class AboutTreeMap {
+    public static void main(String[] args) {
+        // Creating a TreeMap instance
+        TreeMap<Integer, String> treeMap = new TreeMap<>();
+
+        // Adding key-value pairs to the TreeMap
+        treeMap.put(3, "Apple");
+        treeMap.put(1, "Banana");
+        treeMap.put(4, "Cherry");
+        treeMap.put(2, "Date");
+
+        // Displaying the TreeMap
+        System.out.println("TreeMap: " + treeMap);
+
+        // Accessing entries
+        /**
+         * Returns the smallest (first) and largest (last) key in the map
+         */
+        System.out.println("First Key: " + treeMap.firstKey());
+        System.out.println("Last Key: " + treeMap.lastKey());
+        
+        /**
+         * Returns the entry (key-value pair) with the smallest and largest key.
+         */
+        System.out.println("First Entry: " + treeMap.firstEntry());
+        System.out.println("Last Entry: " + treeMap.lastEntry());
+
+        // Navigating through the TreeMap
+        System.out.println("Lower Key (less than 3): " + treeMap.lowerKey(3));
+        System.out.println("Higher Key (greater than 3): " + treeMap.higherKey(3));
+
+        // SubMap example
+        /**
+         * Returns a view of the portion of the map whose keys range from fromKey (inclusive) to toKey (exclusive).
+         */
+        SortedMap<Integer, String> subMap = treeMap.subMap(2, 4);
+        System.out.println("SubMap (from key 2 to 4): " + subMap);
+
+        // HeadMap and TailMap
+        /**
+         * Returns a view of the portion of the map whose keys are strictly less than (headMap) or greater than or equal to (tailMap) the specified key.
+         */
+        System.out.println("HeadMap (keys < 3): " + treeMap.headMap(3));
+        System.out.println("TailMap (keys >= 3): " + treeMap.tailMap(3));
+
+        // Removing an entry
+        treeMap.remove(2);
+        System.out.println("After Removing Key 2: " + treeMap);
+
+        // Updating a value
+        treeMap.put(3, "Apricot");
+        System.out.println("After Updating Key 3: " + treeMap);
+
+        //Inserting Null
+        /**
+         * Throws java.lang.NullPointerException
+         */
+        //treeMap.put(null,null);
+    }
+}
+
+
+
+Output:
+TreeMap: {1=Banana, 2=Date, 3=Apple, 4=Cherry}
+First Key: 1
+Last Key: 4
+First Entry: 1=Banana
+Last Entry: 4=Cherry
+Lower Key (less than 3): 2
+Higher Key (greater than 3): 4
+SubMap (from key 2 to 4): {2=Date, 3=Apple}
+HeadMap (keys < 3): {1=Banana, 2=Date}
+TailMap (keys >= 3): {3=Apple, 4=Cherry}
+After Removing Key 2: {1=Banana, 3=Apple, 4=Cherry}
+After Updating Key 3: {1=Banana, 3=Apricot, 4=Cherry}
+```
+
+- Lets say you wanna do some custom sorting, you can do it using `Comparator` interface.
+
+```
+import java.util.*;
+
+public class TreeMapExample {
+    public static void main(String[] args) {
+        // Custom comparator to sort keys in descending order
+        TreeMap<Integer, String> treeMap = new TreeMap<>(Comparator.reverseOrder());
+
+        treeMap.put(1, "Banana");
+        treeMap.put(2, "Apple");
+        treeMap.put(3, "Cherry");
+
+        // Display TreeMap
+        System.out.println("TreeMap: " + treeMap);
+
+        // Checking if null keys can be inserted
+        try {
+            treeMap.put(null, "Grapes");
+        } catch (NullPointerException e) {
+            System.out.println("Null keys are not allowed in TreeMap.");
+        }
+
+        // Navigating the TreeMap
+        System.out.println("First Entry: " + treeMap.firstEntry());
+        System.out.println("Last Entry: " + treeMap.lastEntry());
+    }
+}
+
+
+Output:
+TreeMap: {3=Cherry, 2=Apple, 1=Banana}
+Null keys are not allowed in TreeMap.
+First Entry: 3=Cherry
+Last Entry: 1=Banana
+```
+
+- Lets define our own sorting logic using `Comparator`. Here we will sort based on string length.
+
+```
+import java.util.*;
+
+class LengthComparator implements Comparator<String> {
+    @Override
+    public int compare(String str1, String str2) {
+        // Sort strings by length. If lengths are equal, sort by natural order (alphabetical).
+        int lenCompare = Integer.compare(str1.length(), str2.length());
+        return (lenCompare != 0) ? lenCompare : str1.compareTo(str2);
+    }
+}
+
+public class CustomTreeMapSorting {
+    public static void main(String[] args) {
+        // Create a TreeMap with a custom comparator
+        TreeMap<String, Integer> treeMap = new TreeMap<>(new LengthComparator());
+
+        // Add elements to TreeMap
+        treeMap.put("Banana", 1);
+        treeMap.put("Apple", 2);
+        treeMap.put("Cherry", 3);
+        treeMap.put("Date", 4);
+
+        // Display TreeMap sorted by the custom comparator (by length of the string)
+        System.out.println("TreeMap sorted by custom comparator (length of keys):");
+        for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
+            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
+    }
+}
+
+
+Output:
+TreeMap sorted by custom comparator (length of keys):
+Key: Date, Value: 4
+Key: Apple, Value: 2
+Key: Banana, Value: 1
+Key: Cherry, Value: 3
+```
+
+- `TreeMap` requires that all keys be `Comparable`, meaning they must either implement the `Comparable` interface or be comparable using a custom `Comparator`. If the keys are not comparable, `TreeMap` will throw a `ClassCastException` at runtime.
+
+```
+import java.util.*;
+
+public class ClassCastExceptionExample {
+    public static void main(String[] args) {
+        TreeMap<Object, String> treeMap = new TreeMap<>();
+
+        // Adding keys of different types (Integer and String), which are not comparable
+        try {
+            treeMap.put(1, "One");
+            treeMap.put("Two", "Two");  // This will throw ClassCastException
+        } catch (ClassCastException e) {
+            System.out.println("ClassCastException: Cannot compare keys of different types (Integer and String).");
+        }
+    }
+}
+
+Output:
+ClassCastException: Cannot compare keys of different types (Integer and String).
+```
+
+- Just like in `ArrayList`, we can use generic concept to ensure type safety in `TreeMap`.
+
+>[!IMPORTANT]
+> - `TreeMap` does not allow `null` keys. If you try to insert a `null` key, it will throw a `NullPointerException`. It allows `null` values, meaning the values in the map can be `null`, but the keys cannot be `null`.
+> - `TreeMap` is not thread-safe by default. You need to manually synchronized it. Alternatively, use `ConcurrentSkipListMap` for a thread-safe sorted map implementation.
+> - `TreeMap` throws a `ClassCastException` if the keys are not comparable, i.e., if you insert keys of different types that do not follow a common comparison rule.
+> - `TreeMap` implements the `NavigableMap` interface, which provides additional methods to navigate through the map like `lowerKey()`, `higherKey()`, `firstKey()`, `lastKey()`.
+> - Internally, `TreeMap` is backed by a Red-Black Tree, which is a self-balancing binary search tree. This ensures that all operations such as insertions, deletions, and lookups have a time complexity of **O(log n)**.
+
+###### Internal Working of TreeMap
+
+- `TreeMap` is a self-balancing binary search tree that maintains its elements (key-value pairs) in sorted order. Internally, it is **implemented using a Red-Black Tree**, which ensures the tree remains balanced, so that basic operations (insertion, deletion, search) take **O(log n)** time.
+- It uses a binary search tree (Red-Black Tree) where each node contains a key-value pair.
+- The nodes are organized based on the natural order of keys or a custom comparator.
+- Unlike a hash-based structure, TreeMap grows dynamically as elements are added. There is no predefined capacity, but the number of nodes grows as the tree grows.
+- The tree is kept balanced using coloring rules (Red-Black Tree properties) to prevent it from becoming a skewed tree, ensuring efficient performance.
+- When elements are removed, the size of the tree is reduced, and nodes can be rebalanced as necessary.
+- Lets see an example when we add elements inside the `TreeMap`.
+
+```
+Initial TreeMap after inserting [10]:
+        [10]
+------------------------------------
+After inserting [20]:
+        [10]
+          \
+          [20]
+------------------------------------
+After inserting [30], tree re-balances:
+        [20]
+       /    \
+     [10]  [30]
+------------------------------------
+After inserting [40]:
+        [20]
+       /    \
+     [10]  [30]
+              \
+              [40]
+------------------------------------
+After inserting [50]:
+        [20]
+       /    \
+     [10]  [30]
+              \
+              [40]
+                \
+                [50]
+```
+
+###### Memory Management
+
+- Unlike `HashMap`, `TreeMap` doesn't use an internal array that expands or shrinks in size. Instead, as more nodes (key-value pairs) are added to the tree, the tree grows by adding new nodes, which results in more memory usage.
+- `TreeMap` grows dynamically with no predefined capacity. As more elements are added, the number of nodes increases.
+- When elements are removed, the nodes are deleted, and the size decreases accordingly.
+- After insertions or deletions, if the tree becomes unbalanced, it re-balances itself using Red-Black tree properties (rotations).
+- This makes `TreeMap` ideal for scenarios where you need sorted data but are okay with a bit of overhead compared to hash-based maps.
 
 ### Set
 
@@ -2858,8 +3385,11 @@ TreeSet with Comparator: [Cat, Dog, Elephant]
 ```
 
 1. The root node is 50.
+
 2. 30 is smaller than 50, so it goes to the left.
+
 3. 70 is larger than 50, so it goes to the right.
+
 4. 20 is smaller than both 50 and 30, so it goes to the left of 30, and so on.
 
 - But where are the corresponding values of the keys are maintained? , itself in the node of the red-black tree.
@@ -2937,7 +3467,9 @@ TreeSet with Comparator: [Cat, Dog, Elephant]
 ## Comparable & Comparator
 
 - Imagine the library there are two sections,
+
     **1. Comparable:** - In this section the books are always sorted in the default order i.e by the book title names, so alphabetically the names of these books are added.
+
     **2. Comparator:** - In this section, some of the books are sorted based on title names, some of the books are sorted based on page number wise, some of the books are sorted based on author names. So here the default criteria of sorting the books i.e based on title name is not necessary, a custom sorting approach is used.
 - Comparable is like the book having a built-in, default sorting rule – "I should always be sorted by title." and Comparator is providing a new sorting rule when you need to order books in a different way.
 - Comparable is for when you have a default, natural ordering for an object (e.g., sorting books by title). Comparator is for when you need flexibility, so you can sort the same object in different ways (e.g., by author, by page number, etc.), without changing the original sorting rule.
