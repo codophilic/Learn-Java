@@ -2070,6 +2070,223 @@ Head -> | 1 | -> | 2 | -> | 3 | -> | 4 | -> Tail (End of List)
 
 ![alt text](image-26.png)
 
+### Map
+
+- In a classroom, each students has a unique roll number. All the roll numbers are mapped against the student name. Thats where we use **Map**.
+- Each entry in the map store the data in a key and its corresponding value. The `Map` interface in java is present under `java.util` package.
+- A key can only appear once in a map (no duplicate keys). However, multiple keys can map to the same value.
+- Maps provide fast access to elements based on their keys. This is especially useful when you need to retrieve an element quickly given a unique identifier.
+- Maps are perfect for storing data where each element has a corresponding value.
+- Each key in a map must be unique, ensuring that you can always find the corresponding value without ambiguity.
+- A key is an object that you use to access the value later, it is associated with a single value. A map is used when you need to search, edit, or remove elements based on a key.
+- Now `Map` is an interface, we cannot work with interface we require classes to work with. Lets see the implementation of map.
+
+![alt text](image-47.png)
+
+>[!NOTE]
+> - We will not explore all its implementation, we will only explore the widely used implementation of map.
+
+#### HashMap
+
+- It is a widely used implementation of the `Map` interface.
+- A `HashMap` is a data structure in Java used to store key-value pairs, where each key maps to a specific value. Think of it like a dictionary where you have words (keys) and their meanings (values).
+- Lets see a code example.
+
+```
+import java.util.HashMap;
+import java.util.Map;
+
+public class AboutHashMap {
+    public static void main(String[] args) {
+        // Creating a HashMap
+        HashMap<String, Integer> map = new HashMap<>();
+
+        // 1. put() - Adding key-value pairs (fruits-price)
+        map.put("Apple", 10);
+        map.put("Banana", 20);
+        map.put("Orange", 30);
+
+        // 2. get() - Retrieving value by key
+        System.out.println("Apple Count: " + map.get("Apple")); // Output: 10
+
+        // 3. containsKey() - Check if a key exists, returns true or false
+        if (map.containsKey("Banana")) {
+            System.out.println("Banana exists in the map.");
+        }
+
+        // 4. containsValue() - Check if a value exists, returns true or false
+        if (map.containsValue(30)) {
+            System.out.println("A value of 30 exists in the map.");
+        }
+
+        // 5. remove() - Remove an entry by key
+        map.remove("Banana");
+        System.out.println("After removing Banana: " + map);
+
+        // 6. size() - Get the number of entries in the map
+        System.out.println("Map Size: " + map.size()); // Output: 2
+
+        // 7. isEmpty() - Check if the map is empty
+        if (map.isEmpty()) {
+            System.out.println("Map is empty.");
+        } else {
+            System.out.println("Map is not empty.");
+        }
+
+        // 8. keySet() - Get all the keys
+        System.out.println("Keys: " + map.keySet());
+
+        // 9. values() - Get all the values
+        System.out.println("Values: " + map.values());
+
+        // 10. entrySet() - Iterate over key-value pairs
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+        }
+
+        // 11. putIfAbsent() - Adds the key-value pair if the key does not already exist
+        map.putIfAbsent("Orange", 40); // Won't add since "Orange" already exists
+        map.putIfAbsent("Grapes", 50); // Adds because "Grapes" doesn't exist
+        System.out.println("After putIfAbsent: " + map);
+
+        // 12. replace() - Replace a value for a specific key
+        map.replace("Apple", 100);
+        System.out.println("After replacing Apple: " + map);
+
+        // 13. clear() - Remove all entries
+        map.clear();
+        System.out.println("Map after clearing: " + map);
+
+        //14. Adding Null key
+        map.put(null, -1);
+        System.out.println("Added null key: "+map);
+    }
+}
+
+
+Output:
+Apple Count: 10
+Banana exists in the map.
+A value of 30 exists in the map.
+After removing Banana: {Apple=10, Orange=30}
+Map Size: 2
+Map is not empty.
+Keys: [Apple, Orange]
+Values: [10, 30]
+Key: Apple, Value: 10
+Key: Orange, Value: 30
+After putIfAbsent: {Apple=10, Grapes=50, Orange=30}
+After replacing Apple: {Apple=100, Grapes=50, Orange=30}
+Map after clearing: {}
+Added null key: {null=-1}
+```
+
+- Just like in `ArrayList`, we can use generic concept to ensure type safety in `HashMap`.
+
+>[!IMPORTANT]
+> - `HashMap` allows one null key and multiple null values. Example: You can put `(null, "value")` in the map, but there can be only one null key.
+> - `HashMap` is not thread-safe. If multiple threads access a `HashMap` concurrently and at least one thread modifies it, it must be synchronized externally. For thread-safe alternatives, use `ConcurrentHashMap`.
+> - `HashMap` does not guarantee the order of its elements (insertion order is not preserved).
+> - Time complexity for basic operations like `get()`, `put()`, `remove()` is **O(1)** on average, assuming proper distribution of keys (due to hashing).
+
+##### Internal Working of HashMap
+
+- `HashMap` works on the principle of hashing. It uses an internal data structure called a bucket array (an array of linked lists or tree nodes) to store key-value pairs.
+- **Hashing Technique**:
+    - Hashing is the process of converting an object (key) into a fixed-size integer using a hash function. The resulting hash code determines where the key-value pair will be stored in the bucket array.
+    - The method `hashCode()` is called on the key to generate the hash, and this hash is used to calculate the index in the bucket array.
+
+```
+class HashCodeExample {
+    public static void main(String[] args) {
+        System.out.println("Apple".hashCode());
+        System.out.println("apple".hashCode());
+        System.out.println("APPLE".hashCode());
+    }
+}
+
+Output:
+63476538
+93029210
+62491450
+```
+
+- Internally, it uses an array of these buckets (a bucket is either null, an entry key-pair, a linked list, or a balanced tree).
+- Lets see an example to understand how `HashMap` works internally. Let’s say you are inserting these key-value pairs:
+    - "Apple", 1
+    - "Banana", 2
+    - "Grapes", 3
+
+
+![alt text](image-48.png)
+
+
+- When we create a `HashMap`, the default initial capacity of a `HashMap` is 16. So an bucket array of 16 size is created.
+
+```
+Index in Bucket Array:     0         1         2         3         4            15
+                      |---------|---------|---------|---------|---------|...|---------|
+Bucket Array          |   null  |   null  |   null  |   null  |   null  |      null   |
+                      |---------|---------|---------|---------|---------|...|---------|
+```
+
+- Hashing technique is used using `hashCode()`. So each keys ("Apple","Banana","Grapes") hashCode is computed. For time being lets consider below hashCodes
+    - "Apple", HashCode=1024
+    - "Banana", HashCode=1025
+    - "Grapes", HashCode=1026
+- Using hashing technique, a hashing algorithm is applied where the hashCode is divided by the bucket capacity and the output result becomes the index in bucket array. (HashCode%BucketCapacity)
+    - "Apple" , 1024%16=0th index
+    - "Banana", 1025%16=1st index
+    - "Grapes", 1026%16=2nd index
+
+```
+Index in Bucket Array:     0             1            2         3         4            15
+                      |-----------|------------|------------|---------|---------|...|---------|
+Bucket Array          |("Apple",1)|("Banana",2)|("Grapes",3)|   null  |   null  |      null   |
+                      |-----------|------------|------------|---------|---------|...|---------|
+```
+- **Hashing Collision**: When multiple keys map to the same bucket index (due to the nature of hashing), it's called a hash collision. To handle this, `HashMap` uses linked lists or trees within buckets.
+- Lets say we wanted to insert ("Orange",4), the hashCode computed is 1024 which is same hashCode of "Apple". So now as per hashing algorithm (1024%16=0) "Orange" will be stored at 0th index but using linked list. So ("Apple",1) becomes a node value which will point another node ("Orange",4) using linked list.
+
+```
+Index in Bucket Array:     0                             1            2         3         4            15
+                      |---------------------------|------------|------------|---------|---------|...|---------|
+Bucket Array          |("Apple",1) -> ("Orange",4)|("Banana",2)|("Grapes",3)|   null  |   null  |      null   |
+                      |---------------------------|------------|------------|---------|---------|...|---------|
+```
+
+- Suppose the hashing collision increases, then the length of the linked list will also increase. If the number of elements in a bucket exceeds a threshold (typically 8), `HashMap` converts the linked list into a balanced tree (a Red-Black Tree) to improve search efficiency from **O(n)** to **O(log n)**.
+- A linked list search is **O(n)**, meaning the search time increases linearly with the number of elements in the list. Converting the list into a balanced tree ensures that the search time remains efficient (**O(log n)**).
+
+>[!NOTE]
+> - Before Java 8: It used a simple linked list in each bucket to handle collisions.
+> - From Java 8 Onward: When the number of elements in a bucket exceeds a certain threshold (8 elements), the linked list is converted into a balanced tree to improve search efficiency from **O(n)** to **O(log n)**.
+
+##### Memory Management
+
+![alt text](image-48.png)
+
+- The default capacity of `HashMap` is 16. So it creates a bucket array of 16 size. Each `HashMap` has a load factor which is **0.75 or 75%**. 
+- The load factor determines when the `HashMap` will grow to avoid too many collisions. The default load factor is **0.75**, which means the `HashMap` will resize itself when the number of elements exceeds **75%** of the total capacity. In a default `HashMap` with 16 buckets, 0.75 * 16 = 12. So, when the 13th element is added, the `HashMap` will automatically resize (double its capacity).
+- When the `HashMap` reaches the threshold defined by the load factor (e.g., 12 elements in a set with 16 buckets), it triggers a **rehashing operation** to grow the bucket array. The size of the bucket array is doubled to reduce collisions and distribute the elements more evenly.
+- In this rehashing operation:
+    - It creates a new larger array of size 32 (if the earlier size was of 16).
+    - After the new array is created, the existing elements from the old array are rehashed (i.e., their hash codes are recalculated (**`hashCode()`%32**) relative to the new array size). The elements are then reinserted into the new array, with the proper bucket index based on the new capacity.
+    - This new array is allocated in memory, and it will replace the old one as the primary storage for the `HashMap` elements. The old array, which was smaller, is no longer referenced and becomes eligible for garbage collection.
+
+```
+Initial array (size 16):
+|--- Bucket[0] ---|--- Bucket[1] ---|--- Bucket[2] ---| ... |--- Bucket[15] ---|
+| Element1        |                 | Element2        |     | Element3         |
+
+
+New array (size 32):
+|--- Bucket[0] ---|--- Bucket[1] ---|--- Bucket[2] ---| ... |--- Bucket[31] ---|
+|      Element1   |                 |      Element2   |     |   Element3       |
+```
+
+- The maximum capacity of a `HashMap` depends on memory availability and the JVM. There's no explicit maximum size, but it resizes when it grows beyond a certain point.  Unlike `ArrayList`, `HashMap` does not shrink automatically when entries are removed. There is no `trimToSize()` method in `HashMap` (unlike `ArrayList`). However, you can create a new smaller `HashMap` and transfer the entries if you want to reduce memory usage.
+
 
 ### Set
 
@@ -2407,15 +2624,272 @@ If the element is unique, it is added to the hash table (as a key in the `HashMa
 - `TreeSet` implements the `NavigableSet` interface, so you can perform these navigation operations efficiently. These methods are helpful when you want to traverse the set or find elements based on proximity to a given value. `NavigableSet` is a sub interface of `SortedSet` that provides navigation methods to return elements relative to a given value. It extends the capabilities of SortedSet by allowing for efficient searching, retrieving, and manipulating of elements in the set.
 - Lets see an example how does `TreeSet` does sorting.
 
+```
+import java.util.Comparator;
+import java.util.TreeSet;
+
+public class AboutTreeSet {
+
+    // Custom Comparator to sort integers based on sum of digits
+    static class SumOfDigitsComparator implements Comparator<Integer> {
+        @Override
+        public int compare(Integer num1, Integer num2) {
+            int sum1 = getDigitSum(num1);
+            int sum2 = getDigitSum(num2);
+            
+            if (sum1 != sum2) {
+                return sum1 - sum2; // Compare by digit sum
+            } else {
+                return num1 - num2; // If digit sums are equal, compare naturally
+            }
+        }
+        
+        // Helper method to calculate the sum of digits
+        private int getDigitSum(int num) {
+            int sum = 0;
+            while (num != 0) {
+                sum += num % 10;
+                num /= 10;
+            }
+            return sum;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Natural sorting (default)
+        TreeSet<Integer> naturalSortSet = new TreeSet<>();
+        naturalSortSet.add(10);
+        naturalSortSet.add(5);
+        naturalSortSet.add(20);
+        naturalSortSet.add(15);
+        System.out.println("Natural Sorting: " + naturalSortSet);
+
+        // Custom sorting (descending order)
+        TreeSet<Integer> customSortSet = new TreeSet<>(Comparator.reverseOrder());
+        customSortSet.add(10);
+        customSortSet.add(5);
+        customSortSet.add(20);
+        customSortSet.add(15);
+        System.out.println("Custom Sorting (Descending): " + customSortSet);
+
+        //Define Custom Sorting method using Comparator
+        /**
+         * sort integers based on the sum of their digits. 
+         * If two integers have the same digit sum, they are ordered in natural order.
+         */
+        // TreeSet with custom sorting logic (based on sum of digits)
+        TreeSet<Integer> customSortedSet = new TreeSet<>(new SumOfDigitsComparator());
+        customSortedSet.add(45);
+        customSortedSet.add(12);
+        customSortedSet.add(102);
+        customSortedSet.add(56);
+        customSortedSet.add(93);
+
+        // Display the TreeSet with custom sorting logic
+        System.out.println("TreeSet with Custom Sorting (Sum of Digits): " + customSortedSet);
+        
+        // Using TreeSet Methods:
+        System.out.println("First Element: " + customSortedSet.first()); // First element in set
+        System.out.println("Last Element: " + customSortedSet.last());   // Last element in set
+        
+        // Using NavigableSet Methods
+        System.out.println("Lower than 56: " + customSortedSet.lower(56));   // Element just below 56
+        System.out.println("Floor of 57: " + customSortedSet.floor(57));     // Element less than or equal to 57
+        System.out.println("Ceiling of 12: " + customSortedSet.ceiling(12)); // Element greater than or equal to 12
+        System.out.println("Higher than 56: " + customSortedSet.higher(56)); // Element just above 56
+
+        // Polling Methods (removes first and last elements)
+        System.out.println("Poll First Element: " + customSortedSet.pollFirst()); // Removes first element
+        System.out.println("Poll Last Element: " + customSortedSet.pollLast());   // Removes last element
+        
+        // Remaining elements after polling
+        System.out.println("TreeSet After Polling: " + customSortedSet);
+    }
+}
+
+
+Output:
+Natural Sorting: [5, 10, 15, 20]
+Custom Sorting (Descending): [20, 15, 10, 5]
+TreeSet with Custom Sorting (Sum of Digits): [12, 102, 45, 56, 93]
+First Element: 12
+Last Element: 93
+Lower than 56: 45
+Floor of 57: 56
+Ceiling of 12: 12
+Higher than 56: 93
+Poll First Element: 12
+Poll Last Element: 93
+TreeSet After Polling: [102, 45, 56]
+```
+
+- Just like in `ArrayList`, we can use generic concept to ensure type safety in `TreeSet`.
+- Consider below code.
+
+```
+import java.util.TreeSet;
+
+class Animal {
+    String name;
+
+    Animal(String name) {
+        this.name = name;
+    }
+}
+
+public class TreeSetClassCastExceptionExample {
+    public static void main(String[] args) {
+        // Attempt to create a TreeSet without providing a Comparator
+        TreeSet<Animal> animalsSet = new TreeSet<>();
+        animalsSet.add(new Animal("Cat"));
+        animalsSet.add(new Animal("Dog"));
+        
+        // This will throw a ClassCastException because Animal does not implement Comparable
+    }
+}
+
+Output:
+Exception in thread "main" java.lang.ClassCastException: Animal cannot be cast to Comparable
+```
+
+- The `Animal` class doesn't implement `Comparable`, and no `Comparator` is provided, so the `TreeSet` cannot determine how to order the `Animal` objects. To fix this, you either need to make `Animal` implement `Comparable` or provide a `Comparator` when creating the `TreeSet`. 
+
+```
+Using Comparable
+class Animal implements Comparable<Animal> {
+    String name;
+
+    Animal(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public int compareTo(Animal other) {
+        return this.name.compareTo(other.name); // Natural sorting based on name
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
+}
+
+public class TreeSetComparableExample {
+    public static void main(String[] args) {
+        TreeSet<Animal> animalsSet = new TreeSet<>();
+        animalsSet.add(new Animal("Cat"));
+        animalsSet.add(new Animal("Dog"));
+        animalsSet.add(new Animal("Elephant"));
+
+        System.out.println("TreeSet with Comparable: " + animalsSet);
+    }
+}
+
+Output:
+TreeSet with Comparable: [Cat, Dog, Elephant]
 
 
 
+Using Comparator
+import java.util.Comparator;
+import java.util.TreeSet;
 
-It stores elements in a sorted order and is backed by a `TreeMap`.
+class Animal {
+    String name;
 
+    Animal(String name) {
+        this.name = name;
+    }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+}
 
-https://javaconceptoftheday.com/how-linkedhashset-works-internally-in-java/#:~:text=HashSet%20internally%20uses%20HashMap%20to,you%20enter%20in%20the%20HashSet.
+public class TreeSetComparatorExample {
+    public static void main(String[] args) {
+        // Providing a custom Comparator for Animal class
+        TreeSet<Animal> animalsSet = new TreeSet<>(new Comparator<Animal>() {
+            @Override
+            public int compare(Animal a1, Animal a2) {
+                return a1.name.compareTo(a2.name); // Sorting by name
+            }
+        });
+        
+        animalsSet.add(new Animal("Cat"));
+        animalsSet.add(new Animal("Dog"));
+        animalsSet.add(new Animal("Elephant"));
+
+        System.out.println("TreeSet with Comparator: " + animalsSet);
+    }
+}
+
+Output:
+TreeSet with Comparator: [Cat, Dog, Elephant]
+```
+
+- **In a `TreeSet`, elements must be comparable to each other because the `TreeSet` relies on comparisons to sort the elements. If you attempt to insert elements that do not implement the `Comparable` interface and also don't provide a `Comparator`, the `TreeSet` won't know how to order the elements, and it will throw a `ClassCastException`**.
+
+>[!IMPORTANT]
+> - `Null` elements are not allowed in a TreeSet. If you try to insert a null element, it will throw a `NullPointerException` at runtime.
+> - The default sorting order is natural for elements implementing `Comparable`. You can use a custom `Comparator` for your own sorting logic.
+> - Like other Set implementations, `TreeSet` does not allow duplicate elements.
+> - `TreeSet` implements the `NavigableSet` interface, which provides methods to navigate through the set like `higher()`, `lower()`, `ceiling()`, and `floor()`.
+> - If you try to create a `TreeSet` with elements that are not comparable, you’ll get a `ClassCastException` unless you provide a comparator.
+> - `TreeSet` is **not thread-safe**. It is not synchronized, which means that if multiple threads access a `TreeSet` concurrently, and at least one of them modifies the set, you must manually synchronize the access to avoid race conditions.
+> - The time complexity for basic operations like `add()`, `remove()`, and `contains()` in a `TreeSet` is **O(log n)** because it is implemented using a Red-Black tree (a balanced binary search tree).
+
+###### Internal Working of TreeSet
+
+- The `TreeSet` is much similar to the `HashSet` class. The major difference between both classes is used data structure between them. The `HashSet` uses a Hashtable, and the `TreeSet` uses a self-balancing tree.
+
+![alt text](image-45.png)
+
+- The `TreeSet` in Java is implemented internally using a `TreeMap`, which is a **Red-Black Tree**. A **Red-Black Tree** is a type of **self-balancing binary search tree**, ensuring that all basic operations like insertion, deletion, and search take **O(log n)** time. The key feature of a `TreeSet` is that it automatically sorts the elements in natural order or based on a custom comparator.
+- Imagine each element as a node in a binary tree, where smaller elements go to the left, and larger elements go to the right. Here's how a `TreeSet` might look internally when elements are added. For example, adding the elements 50, 30, 70, 20, 40, 60, and 80 to a `TreeSet`.
+
+```
+           50
+          /  \
+        30    70
+       /  \   /  \
+      20  40 60  80
+```
+
+1. The root node is 50.
+2. 30 is smaller than 50, so it goes to the left.
+3. 70 is larger than 50, so it goes to the right.
+4. 20 is smaller than both 50 and 30, so it goes to the left of 30, and so on.
+
+- But where are the corresponding values of the keys are maintained? , itself in the node of the red-black tree.
+
+![alt text](image-46.png)
+
+- Lets say you are inserting fruit names like "apple", "mango", and "date" into a `TreeSet`.
+    - The keys are the strings: "apple", "mango", "date".
+    - The values are a dummy object (e.g., `PRESENT`).
+
+```
+           "date" (PRESENT)
+          /                \
+   "apple" (PRESENT)     "mango" (PRESENT)
+```
+
+- "apple", "date", and "mango" are the keys (the fruit names). `PRESENT` is the dummy value for each key, just a placeholder object that `TreeSet` doesn't care about, but `TreeMap` needs for its key-value pair structure.
+-  Since `TreeMap` does not allow duplicate keys, `TreeSet` ensures that no duplicate fruit names (or elements) can be added. The fruit names will be stored in sorted order (alphabetically in this case) because the `TreeSet` is backed by the Red-Black Tree structure from `TreeMap`.
+- This key-value pair is stored in every node, and the tree organizes itself based on the key for sorting.
+- `TreeSet` does not rely on hashing mechanism and does not have a bucket concept just like in `HashSet`, it purely relies on binary search tree concept.
+
+###### Memory Management
+
+- Memory management in TreeSet is handled by the Red-Black Tree structure. Each element in the `TreeSet` is stored as a node in the tree. Each node stores:
+    - The element (key) itself and a dummy value (`PRESENT`)
+    - Pointers to the left and right child nodes.
+    - A color (Red or Black) to maintain the balance of the tree (since it's a Red-Black Tree).
+- As elements are added or removed, the tree is rebalanced automatically to maintain its self-balancing property, ensuring that no branch of the tree becomes too long, which would slow down operations.
+- Memory usage in a `TreeSet` increases as the number of elements grows. Each element takes additional memory because the tree has to store references to child nodes and color information. However, this structure ensures efficient sorting and searching with a time complexity of **O(log n)**.
+
 
 ![alt text](image-22.png)
 

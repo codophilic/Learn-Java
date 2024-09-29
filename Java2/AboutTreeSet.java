@@ -67,8 +67,8 @@ public class AboutTreeSet {
         
         // Using NavigableSet Methods
         System.out.println("Lower than 56: " + customSortedSet.lower(56));   // Element just below 56
-        System.out.println("Floor of 56: " + customSortedSet.floor(57));     // Element less than or equal to 57
-        System.out.println("Ceiling of 56: " + customSortedSet.ceiling(12)); // Element greater than or equal to 12
+        System.out.println("Floor of 57: " + customSortedSet.floor(57));     // Element less than or equal to 57
+        System.out.println("Ceiling of 12: " + customSortedSet.ceiling(12)); // Element greater than or equal to 12
         System.out.println("Higher than 56: " + customSortedSet.higher(56)); // Element just above 56
 
         // Polling Methods (removes first and last elements)
