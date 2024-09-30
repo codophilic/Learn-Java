@@ -7592,6 +7592,68 @@ Main Int method
 3
 ```
 
+- Consider below code
+
+```
+public class AboutMainMethodPSVM {
+    public static void main(String[] args) {
+        System.out.println("Main String method");
+        for(String i:args){
+            System.out.println(i);
+        }
+
+        // Explicitly calling the overloaded main method with an int array
+        int[] intArgs = {1, 2, 3};
+        main(intArgs);  // Call to overloaded main method
+        
+        childClass.main();
+        
+    }
+
+    public static void main(int[] args) {
+        System.out.println("Main Int method");
+        for(int i:args){
+            System.out.println(i);
+        }
+    }
+}
+
+/**
+ * This is not method overriding , it is method hiding
+ */
+class childClass extends AboutMainMethodPSVM{
+    public static void main() {
+        System.out.println("Child main");
+    }
+}
+
+
+Output:
+Main String method
+Main Int method
+1
+2
+3
+Child main
+```
+
+- The above code is not an example of **method overriding**, it is an example of **method hiding**. Overriding happens when you provide a different implementation for a non-static (instance) method in a subclass, which is called based on the actual runtime type of the object. Static methods like `main` are class-level methods, not instance-level. When a subclass defines a static method with the same signature as in its superclass, the method in the subclass hides the superclass method. This is called **method hiding**.
+- When you call `childClass.main();` this is just a simple normal calling of static fields using class name , it is not dynamic method dispatch or polymorphism.
+- Can we use **final** over the main method? lets see
+
+```
+public class AboutMainMethodPSVM {
+    public final static void main(String[] args) {
+        System.out.println("Main String method");
+    }
+}
+
+Output:
+Main String method
+```
+
+- The purpose of `final` keyword on a method it to prevent overridden of method in subclasses. Since the `main` method is static, it cannot be overridden anyway (static methods belong to the class, not instances). Therefore, adding `final` to the main method is redundant.
+- While it's technically allowed, using final in the main method doesn't provide any meaningful benefits. It's best to keep the main method signature simple and follow the standard conventions.
 - Different ways to write the main method.
 1. Changing Order of Modifiers
 
