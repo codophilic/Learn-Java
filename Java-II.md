@@ -2460,7 +2460,7 @@ After Clearing LinkedHashMap: {}
 - The doubly linked list in `LinkedHashMap` stores both the key-value pairs (entries). Each node in the doubly linked list has pointers to the next and previous entries, which allows for maintaining the order of elements.
 
 
-![alt text](doublylinkedlist.gif)
+![alt text](image-56.gif)
 
 - Both Data Structures (`HashMap` and doubly linked list) Work Together:
     - The bucket array handles the normal HashMap functionality (finding, inserting, and removing key-value pairs based on the hash).
@@ -3085,7 +3085,7 @@ After clearing: []
 - In addition to the hash table structure, `LinkedHashSet` maintains a doubly linked list that keeps track of the insertion order of the elements. Each node in the doubly linked list contains a reference to the next and previous nodes, allowing efficient iteration in the order of insertion.
 
 
-![alt text](doublylinkedlist.gif)
+![alt text](image-56.gif)
 
 
 
@@ -3472,6 +3472,11 @@ Item: -20
 
 ![alt text](image-22.png)
 
+
+#### Iterable Interface
+
+![alt text](image-50.png)
+
 - If you see `Collection` interface **extends Iterable** interface. What is it ? and why does the `Collection` interface extends `Iterable` interface? , if you remember about the enhanced for loop we learned
 
 ```
@@ -3488,10 +3493,475 @@ Output:
 10
 ```
 
-- The `Iterable` interface in java represent 
+- The enhanced for-loop (also known as the "for-each" loop) is part of the `Iterable` interface.
 
-- If you see `Map` is not a part of 
+![alt text](image-51.png)
 
+
+- You won't be able to see the enhanced for-loop directly in the interface, because the enhanced for-loop (`for (ElementType element : collection)`) is a syntactic construct introduced in Java 5 to simplify iteration over collections or arrays. It doesn't directly correspond to any method in the `Iterable` interface, but it implicitly uses the `iterator()` method to perform the iteration.
+-  Extending `Iterable` allows any collection (like `List`, `Set`, etc.) to be traversed. This simplifies iteration and makes the code more readable. It provides a standardized way for traversing collections. By implementing `Iterable`, any collection class can provide its own custom logic for how the elements should be iterated over.
+- There are three ways in which elements can be iterated in Java, the enhanced for loop, the `forEach()` method, and the `iterator()` method.
+
+##### forEach
+
+- Lets see the `forEach()` method.
+
+![alt text](image-52.png)
+
+- The `forEach()` method requires input as `Consumer`. What is it? lets open `Consumer`.
+
+![alt text](image-53.png)
+
+- It a generic interface, which requires a type parameter (`T`). So lets implement this interface and use `forEach()` for iteration.
+
+```
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer; 
+
+class MyConsumer implements Consumer<String>{
+
+    @Override
+    public void accept(String t) {
+        System.out.println("City Name - "+t);
+    }
+    
+}
+
+public class AboutForEach {
+    public static void main(String[] args) {
+        List<String> data = new ArrayList<>(); 
+        data.add("New Delhi"); 
+        data.add("New York"); 
+        data.add("Mumbai"); 
+        data.add("London");
+
+
+        MyConsumer con = new MyConsumer();
+        data.forEach(con);
+    }
+}
+
+Output:
+City Name - New Delhi
+City Name - New York
+City Name - Mumbai
+City Name - London
+```
+
+- Since we are using `MyConsumer` class only once, we can modified our code and make `MyConsumer` class as anonymous class.
+
+```
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer; 
+
+public class AboutForEach {
+    public static void main(String[] args) {
+        List<String> data = new ArrayList<>(); 
+        data.add("New Delhi"); 
+        data.add("New York"); 
+        data.add("Mumbai"); 
+        data.add("London");
+
+        /**
+        * Anonymous class
+        */
+        data.forEach(new Consumer<String>() {
+            @Override
+            public void accept(String t)
+            { 
+                System.out.println("City Name - "+t);
+            }
+     } );
+    }
+}
+
+
+Output:
+City Name - New Delhi
+City Name - New York
+City Name - Mumbai
+City Name - London
+```
+
+- Now when we learned about **lambda** expression, when there is one class we can simplify our code more like below
+
+```
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer; 
+
+class MyConsumer implements Consumer<String>{
+
+    @Override
+    public void accept(String t) {
+        System.out.println("City Name - "+t);
+    }
+    
+}
+
+public class AboutForEach {
+    public static void main(String[] args) {
+
+        List<String> data = new ArrayList<>(); 
+        data.add("New Delhi"); 
+        data.add("New York"); 
+        data.add("Mumbai"); 
+        data.add("London");
+
+        /**
+         * Lambda Expression
+         */
+        data.forEach(i -> System.out.println("City Name - "+i));
+    }
+}
+
+
+Output:
+City Name - New Delhi
+City Name - New York
+City Name - Mumbai
+City Name - London
+```
+
+- This is how we can use `forEach()` method with lambda expression to iterate over elements.
+- Lets see some more ways to use `forEach()`.
+
+```
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer; 
+
+class MyConsumer implements Consumer<String>{
+
+    @Override
+    public void accept(String t) {
+        System.out.println("City Name - "+t);
+    }
+    
+}
+
+public class AboutForEach {
+    public static void main(String[] args) {
+        List<String> data = new ArrayList<>(); 
+        data.add("New Delhi"); 
+        data.add("New York"); 
+        data.add("Mumbai"); 
+        data.add("London");
+
+         // Using forEach() with a method reference
+         System.out.println("\nUsing forEach with method reference:");
+         data.forEach(System.out::println);
+ 
+         // Using forEach() with a custom Consumer
+         System.out.println("\nUsing forEach with custom Consumer:");
+         Consumer<String> consumer = item -> System.out.println("City Name: " + item);
+         data.forEach(consumer);
+    }
+}
+
+
+
+Output:
+Using forEach with method reference:
+New Delhi
+New York
+Mumbai
+London
+
+Using forEach with custom Consumer:
+City Name: New Delhi
+City Name: New York
+City Name: Mumbai
+City Name: London
+```
+
+- The lambda expression works with functional interface, so **Consumer** is a functional interface. But if you notice there is one default method with name `andThen()`.
+
+![alt text](image-53.png)
+
+- A functional interface in Java is an interface that contains **exactly one abstract method**. **The presence of default and static methods does not change the fact that an interface is a functional interface**. As long as the interface has exactly one abstract method, it qualifies as a functional interface.
+- What the purpose of `andThen()` method?
+
+```
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer; 
+
+public class AboutForEach {
+    public static void main(String[] args) {
+        List<String> data = new ArrayList<>(); 
+        data.add("New Delhi"); 
+        data.add("New York"); 
+        data.add("Mumbai"); 
+        data.add("London");
+
+         // First Consumer: Prints the City name
+        Consumer<String> printConsumer = (String item) -> System.out.println("City Name: " + item);
+
+        // Second Consumer: Prints the length of the City name
+        Consumer<String> lengthConsumer = (String item) -> System.out.println("Length: " + item.length());
+
+        // Chain both Consumers using andThen
+        Consumer<String> combinedConsumer = printConsumer.andThen(lengthConsumer);
+
+        // Apply the combined Consumer on each element of the list
+        data.forEach(combinedConsumer);
+    }
+}
+
+
+Output:
+City Name: New Delhi
+Length: 9
+City Name: New York
+Length: 8
+City Name: Mumbai
+Length: 6
+City Name: London
+Length: 6
+```
+
+- The `andThen()` method chains these two consumers together. The first consumer is executed, followed by the second. Finally, we use `forEach()` to apply the combined consumer on each element of the list.
+
+##### Iterator Interface
+
+- The `Iterable` interface represents a collection that can be iterated over. It has a method, `iterator()`, which returns an `Iterator`. This method must be implemented by any class that implements `Iterable` or `Collection` interface.
+- The `Iterator` interface is the actual mechanism used to iterate over elements in a collection, one element at a time. An `Iterator` object provides methods to traverse the collection:
+    - `hasNext()`: Returns true if there are more elements to iterate over.
+    - `next()`: Returns the next element in the iteration.
+    - `remove()`: Removes the current element from the collection (optional operation).
+- Lets see example of `Iterator` interface.
+
+```
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class AboutIterator {
+    public static void main(String[] args) {
+        // Create an ArrayList (which implements the Iterable interface)
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Java");
+        list.add("Python");
+        list.add("C++");
+        list.add("Ruby");
+
+        // Obtain an iterator from the list
+        Iterator<String> iterator = list.iterator();
+
+        System.out.println("Using hasNext() and next() methods:");
+        // Use hasNext() and next() to iterate through the list
+        while (iterator.hasNext()) {
+            // hasNext() checks if there are more elements
+            String element = iterator.next(); // next() retrieves the next element
+            System.out.println(element);
+        }
+
+        // Obtain another iterator to demonstrate remove()
+        iterator = list.iterator();
+        System.out.println("\nRemoving elements using remove():");
+        
+        // Traverse and remove "Python" from the list
+        while (iterator.hasNext()) {
+            String element = iterator.next();
+            if (element.equals("Python")) {
+                iterator.remove(); // remove the current element ("Python")
+                System.out.println("Removed: " + element);
+            }
+        }
+
+        // Verify that "Python" was removed from the list
+        System.out.println("\nFinal list after removal:");
+        for (String language : list) {
+            System.out.println(language);
+        }
+    }
+}
+
+
+Output:
+Using hasNext() and next() methods:
+Java
+Python
+C++
+Ruby
+
+Removing elements using remove():
+Removed: Python
+
+Final list after removal:
+Java
+C++
+Ruby
+```
+
+- If you observed carefully, the `remove()` method , removes the element during the iteration, but still it does not throws `ConcurrentModificationException` why? a `ConcurrentModificationException` is typically thrown when a collection is modified structurally (e.g., adding or removing elements) while iterating over. This happens because the Iterator expects that the collection remains unchanged during the iteration.
+-  `Iterator.remove()` is a safe way to modify the collection while iterating. Since the Iterator keeps track of the iteration process (like the current element and its position in the collection), when you use `remove()`, it updates its internal state accordingly. This prevents inconsistencies that could arise from modifying the collection directly while iterating.
+- The enhanced for-loop internally uses `Iterator` interface. So do you think it won't throw `ConcurrentModificationException`. Lets see the code.
+
+```
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class AboutIterator {
+    public static void main(String[] args) {
+        // Create an ArrayList (which implements the Iterable interface)
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Java");
+        list.add("Python");
+        list.add("C++");
+        list.add("Ruby");
+
+        /**
+         * Enhanced for loop
+         */
+        for(String i: list){
+            System.out.println(i);
+            list.remove(i);
+        }
+    }
+}
+
+
+Output:
+Exception in thread "main" java.util.ConcurrentModificationException
+        at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1095)
+        at java.base/java.util.ArrayList$Itr.next(ArrayList.java:1049)
+        at AboutIterator.main(AboutIterator.java:43)
+```
+
+- when you use the for-each loop in Java (e.g., `for (String item : list)`), Java automatically uses an iterator behind the scenes to traverse the elements of the collection. You don’t explicitly create or manage the Iterator object. You don’t see or control the Iterator, but the Java compiler automatically converts the for-each loop into an iterator-based loop.
+- Then why we got exception? because the for-each loop doesn't allow direct modification of the collection (like removing an element), because it **doesn't give you direct access to the Iterator**. In contrast, when you use an explicit iterator (like the `Iterator<String>` above), you have access to the `remove()` method of the Iterator. That’s why you must use the `Iterator.remove()` method if you want to safely remove elements while iterating.
+- For-each loop uses an implicit iterator, meaning you don’t see or manage the iterator, but it’s there working under the hood. You can’t call `remove()` inside a for-each loop because you don’t have access to the iterator directly.
+
+##### spliterator
+
+- The `Spliterator` is a special type of iterator in Java that is used to split a collection or data structure into multiple parts that can be processed in parallel. It’s most commonly used to improve performance by splitting tasks across multiple threads.
+- In simple terms, think of it as:
+    - An iterator that can split a collection into smaller chunks.
+    - It helps make large tasks more manageable by allowing parallel processing.
+
+```
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+
+public class AboutSpliterator {
+    public static void main(String[] args) {
+        // Creating a list of strings
+        List<String> list = new ArrayList<>();
+        list.add("Java");
+        list.add("Python");
+        list.add("C++");
+        list.add("JavaScript");
+        list.add("Ruby");
+        list.add("Go");
+
+        // Getting a Spliterator from the list
+        /**
+         * A Spliterator is an object that knows how to traverse (iterate over) the elements in the list, 
+         * but it can also split the list for parallel processing.
+         */
+        Spliterator<String> spliterator = list.spliterator();
+
+        // Using tryAdvance() method to process elements one by one
+        /**
+         * This method processes only the next element in the list (starting from the first element) 
+         * and then moves to the next element.
+         * If an element exists, it runs the code in the accept() method (in this case, it prints the element).
+         * only prints the first element because it's designed to move forward one step at a time.
+         */
+        System.out.println("Using tryAdvance():");
+        spliterator.tryAdvance(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                System.out.println(s);
+            }
+        });
+
+        // Using forEachRemaining() to process remaining elements
+        /**
+         * This method processes all remaining elements from where the Spliterator left off. 
+         * It keeps moving through the list and applies the code (here, printing) to every remaining element.
+         */
+        System.out.println("\nUsing forEachRemaining():");
+        spliterator.forEachRemaining(new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+                System.out.println(s);
+            }
+        });
+
+        // Splitting the list into two parts using trySplit()
+        Spliterator<String> spliterator2 = list.spliterator();
+
+        /**
+         * List Size//2 , the list is split roughly in half
+         */
+        Spliterator<String> spliteratorPart = spliterator2.trySplit();
+
+        if (spliteratorPart != null) {
+            System.out.println("\nFirst half:");
+            spliteratorPart.forEachRemaining(System.out::println); // Processing first part
+        }
+
+        System.out.println("\nSecond half:");
+        spliterator2.forEachRemaining(System.out::println); // Processing second part
+    }
+}
+
+
+Output:
+Using tryAdvance():
+Java
+
+Using forEachRemaining():
+Python
+C++
+JavaScript
+Ruby
+Go
+
+First half:
+Java
+Python
+C++
+
+Second half:
+JavaScript
+Ruby
+Go
+```
+
+- When using parallel streams, the `Spliterator` divides a large collection into smaller chunks so that each chunk can be processed by different threads, which improves performance.
+
+### Collections (Utility Class)
+
+
+### Collection API
+
+- 
+
+### Collections Framework
+
+- If you see `Map` is not a part of **Collection**. If we open `Map` interface it does not extends **Collection** interface whereas `List`, `Set` and `Queue` extends **Collection**.
+
+![alt text](image-54.png)
+
+- **Collection (Interface)**
+    - It is a root interface in the Collections Framework that represents a group of objects known as elements. Various data structures like `List`, `Set`, and `Queue` extend this interface. It is part of `java.util` package.
+    - `Collection` is the foundation for `List`, `Set`, and `Queue`, but `Map` is not part of this hierarchy.
+
+![alt text](image-55.png)
+
+https://chatgpt.com/c/66fad0b3-731c-8009-9fdd-85cf3e4ab3ee
 
 
 

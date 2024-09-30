@@ -274,8 +274,7 @@ where is interfaces present in memory management? abstract class ? static variab
 - singleton class in java
 - iterator and iterable and enumerator
 - logging
-
+- method reference out::println;
 comparator and comparable with PriorityQueue for custom ordering
 `comparator` (we will see this later).
 how to use Collections.synchronize to arraylist which are not thread safe. list set queue map for all there are different methods.
-- final in psvm and some more things
