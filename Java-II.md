@@ -3467,12 +3467,30 @@ Item: -20
 
 - If you see **Arrays** can work with primitive datatype as well as with Wrapper classes. **Arrays** are a fundamental part of the Java language itself and have specific optimizations that allow them to store primitive types directly in memory, ensuring efficiency and when you create an array of objects (e.g., `Integer[]`), the array stores references to those objects. This works for wrapper classes or any other object. In contrast, collections are part of the Java Collections Framework, which is designed to work with objects and requires references, so it doesn’t support primitive types directly. Java collections leverage generics, which only work with objects because they rely on type parameters, which need to reference classes (i.e., objects). Primitive types, being lower-level than objects, are not compatible with this generic-based system.
  
-
+### Collection Framework Class Hierarchy
  
-
 
 ![alt text](image-22.png)
 
+- If you see `Collection` interface **extends Iterable** interface. What is it ? and why does the `Collection` interface extends `Iterable` interface? , if you remember about the enhanced for loop we learned
+
+```
+        /**
+         * Enhanced for loop
+         */
+        for(int i: fixedSizeArray){
+            System.out.println(i);
+        }
+
+Output:
+10
+20
+10
+```
+
+- The `Iterable` interface in java represent 
+
+- If you see `Map` is not a part of 
 
 
 
