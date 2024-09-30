@@ -3421,6 +3421,56 @@ TreeSet with Comparator: [Cat, Dog, Elephant]
 - Memory usage in a `TreeSet` increases as the number of elements grows. Each element takes additional memory because the tree has to store references to child nodes and color information. However, this structure ensures efficient sorting and searching with a time complexity of **O(log n)**.
 
 
+
+- If you observer carefully, wherever we defined collections, we always used Wrapper class. When working with collections in Java, you need to use wrapper classes for primitive data types. Java collections like `ArrayList`, `HashMap`, and `HashSet` are designed to store objects, not primitive types like `int`, `double`, or `boolean`. Wrapper classes represent primitives as objects. Wrapper classes like `Integer`, `Double`, and `Boolean` provide a way to encapsulate primitive values within objects, allowing you to store them in collections.
+- You cannot directly work with primitive data types in the Java Collection Framework. The collections framework is designed to work with objects, and primitive types (like `int`, `double`, `boolean`, etc.) are not objects in Java.
+- Now consider below code
+
+```
+public class WrapperExample {
+ 
+    public static void main(String[] args) {
+        
+        /**
+         * Arrays used with primitive datatype
+         */
+        int a[] = new int[5];
+        for(int i=0;i<5;i++){
+            a[i]=i*5;
+            System.out.println("Item: "+a[i]);
+        }
+        
+        /**
+         * Arrays used with Wrapper classes
+         */
+        Integer b[] = new Integer[5];
+        for(int i=0;i<5;i++){
+            b[i]=i*-5;
+            System.out.println("Item: "+b[i]);
+        }
+    }
+
+}
+
+Output:
+Item: 0
+Item: 5
+Item: 10
+Item: 15
+Item: 20
+Item: 0
+Item: -5
+Item: -10
+Item: -15
+Item: -20
+```
+
+- If you see **Arrays** can work with primitive datatype as well as with Wrapper classes. **Arrays** are a fundamental part of the Java language itself and have specific optimizations that allow them to store primitive types directly in memory, ensuring efficiency and when you create an array of objects (e.g., `Integer[]`), the array stores references to those objects. This works for wrapper classes or any other object. In contrast, collections are part of the Java Collections Framework, which is designed to work with objects and requires references, so it doesn’t support primitive types directly. Java collections leverage generics, which only work with objects because they rely on type parameters, which need to reference classes (i.e., objects). Primitive types, being lower-level than objects, are not compatible with this generic-based system.
+ 
+
+ 
+
+
 ![alt text](image-22.png)
 
 
