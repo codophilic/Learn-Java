@@ -3348,6 +3348,29 @@ int primitiveInt = intObject; // Unboxing: Integer to int
 
 ![alt text](Images/java-1/image-30.png)
 
+
+- Consider the below code
+
+```
+public class WrapperMethodExample {
+ 
+    public static void main(String[] args) {
+        Integer result = addNumbers(5, 10);
+        System.out.println("Result: " + result);
+    }
+ 
+    public static Integer addNumbers(int a, int b) {
+        int sum = a + b;
+        return Integer.valueOf(sum); // Wrapping the primitive int into an Integer object
+    }
+}
+
+Output:
+Result: 15
+```
+
+- The method `addNumber()` returns a data type which is of Wrapper class. So you can apply Wrapper class as return type of your methods.
+
 ### Why Wrapper Class is Invented?
 
 - Now the question arise why wrapper class is actually invented when we have primitive data types?
