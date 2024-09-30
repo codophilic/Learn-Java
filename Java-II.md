@@ -3420,7 +3420,7 @@ TreeSet with Comparator: [Cat, Dog, Elephant]
 - As elements are added or removed, the tree is rebalanced automatically to maintain its self-balancing property, ensuring that no branch of the tree becomes too long, which would slow down operations.
 - Memory usage in a `TreeSet` increases as the number of elements grows. Each element takes additional memory because the tree has to store references to child nodes and color information. However, this structure ensures efficient sorting and searching with a time complexity of **O(log n)**.
 
-
+### Collection with Wrapper Classes
 
 - If you observer carefully, wherever we defined collections, we always used Wrapper class. When working with collections in Java, you need to use wrapper classes for primitive data types. Java collections like `ArrayList`, `HashMap`, and `HashSet` are designed to store objects, not primitive types like `int`, `double`, or `boolean`. Wrapper classes represent primitives as objects. Wrapper classes like `Integer`, `Double`, and `Boolean` provide a way to encapsulate primitive values within objects, allowing you to store them in collections.
 - You cannot directly work with primitive data types in the Java Collection Framework. The collections framework is designed to work with objects, and primitive types (like `int`, `double`, `boolean`, etc.) are not objects in Java.
