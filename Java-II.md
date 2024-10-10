@@ -3944,7 +3944,88 @@ Go
 
 ### Collections (Utility Class)
 
+- We have saw about **Collection interface**, now there is a class with name **Collections**.
 
+![alt text](image-56.png)
+
+- If we explore methods inside the **Collections** class. We could all the methods are **static**.
+
+![alt text](image-57.png)
+
+![alt text](image-58.png)
+
+- What is this **Collections** class? , Before understanding it lets consider a example where we wanted to sort elements in an array. You can use a bubble sort algorithm and write down the code from scratch for it.
+
+```
+import java.util.*;
+import java.util.Arrays;
+
+public class AboutCollectionsUtilityClass{
+    public static void main(String[] args) {
+        
+        //Without Collections class Sorting
+        List<Integer> ArraysOfIntegers = new ArrayList<>(Arrays.asList(1000,34,55,77,88, 23,11));
+        for(int i=0;i<ArraysOfIntegers.size();i++){
+            for(int j=i+1;j<ArraysOfIntegers.size();j++){
+                if(ArraysOfIntegers.get(i)>ArraysOfIntegers.get(j)){
+                    int temp =ArraysOfIntegers.get(i);
+                    ArraysOfIntegers.set(i, ArraysOfIntegers.get(j));
+                    ArraysOfIntegers.set(j,temp);
+                }
+            }
+        } 
+       for (int i = 0; i < ArraysOfIntegers.size(); i++)
+        System.out.println(ArraysOfIntegers.get(i));  
+
+    }
+}
+
+Output:
+11
+23
+34
+55
+77
+88
+1000
+```
+
+- The **Collections class** provides a in-built method to sort the array, check below.
+
+```
+import java.util.*;
+import java.util.Arrays;
+
+public class AboutCollectionsUtilityClass{
+    public static void main(String[] args) {
+
+        //With Collections
+        Collections.sort(ArraysOfIntegers);
+        for(int i: ArraysOfIntegers){
+            System.out.println(i);
+        }
+    }
+}
+
+
+Output:
+11
+23
+34
+55
+77
+88
+1000
+```
+
+- The `Collections` class in Java is a utility class in the **java.util** package that provides static methods to operate on or return collections. These methods help in manipulating and working with Collection-type data structures (like `List`, `Set`, `Map`, etc.) by offering functionalities like sorting, searching, synchronizing, and making collections immutable.
+- The purpose of the Collections class is to provide utility methods that perform common operations on collections. Some of these operations include:
+    - Sorting elements in a collection.
+    - Searching for elements in a collection.
+    - Making collections immutable or thread-safe.
+    - Bulk operations like adding multiple elements at once, filling a collection with a specific value, etc.
+
+https://chatgpt.com/c/67081e3f-7c14-8009-bd88-0f52348a2d72
 
 ### Collections Framework
 
@@ -4022,7 +4103,7 @@ Go
     **2. Comparator:** - In this section, some of the books are sorted based on title names, some of the books are sorted based on page number wise, some of the books are sorted based on author names. So here the default criteria of sorting the books i.e based on title name is not necessary, a custom sorting approach is used.
 - Comparable is like the book having a built-in, default sorting rule – "I should always be sorted by title." and Comparator is providing a new sorting rule when you need to order books in a different way.
 - Comparable is for when you have a default, natural ordering for an object (e.g., sorting books by title). Comparator is for when you need flexibility, so you can sort the same object in different ways (e.g., by author, by page number, etc.), without changing the original sorting rule.
-
+https://chatgpt.com/c/66f85640-8a94-8009-87a0-294685e1603b
 
 ## Reflection
 
