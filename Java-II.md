@@ -4362,6 +4362,423 @@ Two: 2
 ![alt text](image-61.png)
 
 - If you see, along with `compare()` method there is an `equals()` method. The `equals()` method is from `Object` class. This means that `equals()` does not count as an abstract method in the `Comparator` interface, and only `compare()` is considered.
+- Comparable and Comparator both are part of **Collection Framework**.
+
+#### Comparable
+
+- Lets see some examples of `Comparable`.
+
+```
+import java.util.Collections;
+import java.util.List;
+import java.util.Arrays;
+
+public class AboutComparable {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(5, 2, 8, 1, 3);
+        Collections.sort(numbers); // Uses the natural ordering (ascending)
+        System.out.println("Sorted Numbers: " + numbers);
+        
+        List<String> strings = Arrays.asList("banana", "apple", "orange");
+        Collections.sort(strings); // Uses the natural ordering (lexicographical)
+        System.out.println("Sorted Strings: " + strings);
+    }
+}
+
+Output:
+Sorted Numbers: [1, 2, 3, 5, 8]
+Sorted Strings: [apple, banana, orange]
+```
+
+- The `Collections.sort()` leverages `Comparable` interface.
+
+![alt text](image-62.png)
+
+- Lets define a `Student` class.
+
+```
+class Student {
+    String name;
+    int grade;
+
+    public Student(String name, int grade) {
+        this.name = name;
+        this.grade = grade;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + grade + ")";
+    }
+}
+```
+
+- Now lets say you wanted to sort based on roll numbers you need to implement `Comparable` interface and define your logic under the `compareTo()` method.
+
+```
+class Student implements Comparable<Student> {
+    String name;
+    int rollNo;
+
+    public Student(String name, int rollNo) {
+        this.name = name;
+        this.rollNo = rollNo;
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        return Integer.compare(this.rollNo, other.rollNo); // Sort by roll number
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Roll No: " + rollNo + ")";
+    }
+}
+```
+
+- Lets try to perform sort operation by adding some students information. Here we will sort students based on roll numbers.
+
+```
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+class Student implements Comparable<Student> {
+    String name;
+    int rollNo;
+
+    public Student(String name, int rollNo) {
+        this.name = name;
+        this.rollNo = rollNo;
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        return Integer.compare(this.rollNo, other.rollNo); // Sort by roll number
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Roll No: " + rollNo + ")";
+    }
+}
+
+public class AboutComparableInterface{
+    public static void main(String[] args) {
+
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("John", 5));
+        students.add(new Student("Alice", 2));
+        students.add(new Student("Bob", 8));
+        System.out.println("Before Sorting Students: " + students);
+
+        Collections.sort(students); // Sorts using the compareTo method
+        System.out.println("Sorted Students: " + students);
+    }
+}
+
+Output:
+Before Sorting Students: [John (Roll No: 5), Alice (Roll No: 2), Bob (Roll No: 8)]
+Sorted Students: [Alice (Roll No: 2), John (Roll No: 5), Bob (Roll No: 8)]
+```
+
+- Lets say you wanna sort the students based on their names alphabetically.
+
+```
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+class Student implements Comparable<Student> {
+    String name;
+    int rollNo;
+
+    public Student(String name, int rollNo) {
+        this.name = name;
+        this.rollNo = rollNo;
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        // return Integer.compare(this.rollNo, other.rollNo); // Sort by roll number
+        return String.CASE_INSENSITIVE_ORDER.compare(this.name,other.name); // Sort by name alphabetically
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Roll No: " + rollNo + ")";
+    }
+}
+
+public class AboutComparableInterface{
+    public static void main(String[] args) {
+
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("John", 5));
+        students.add(new Student("Alice", 2));
+        students.add(new Student("Bob", 8));
+        System.out.println("Before Sorting Students: " + students);
+
+        Collections.sort(students); // Sorts using the compareTo method
+        System.out.println("Sorted Students: " + students);
+    }
+}
+
+
+Output:
+Before Sorting Students: [John (Roll No: 5), Alice (Roll No: 2), Bob (Roll No: 8)]
+Sorted Students: [Alice (Roll No: 2), Bob (Roll No: 8), John (Roll No: 5)]
+```
+
+- Now how this `compareTo()` method , does the sorting? during sorting iteration which elements becomes `this` and which element becomes `other`? the `compareTo()` method is used to compare the current object (`this`) with other object (`other`). It defines the natural ordering of the objects.
+- The `compareTo()` method returns:
+    - **A negative integer** if `this` object is less than `other`.
+    - 0 if `this` object is equal to `other`.
+    - **A positive integer** if `this` object is greater than `other`.
+- Consider below code to understand `this` and `other` reference.
+
+```
+class MyNumber implements Comparable<MyNumber> {
+    int value;
+
+    public MyNumber(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public int compareTo(MyNumber other) {
+        return Integer.compare(this.value, other.value); // Compare based on value
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+}
+
+public class CompareToExample {
+    public static void main(String[] args) {
+        MyNumber num1 = new MyNumber(5);
+        MyNumber num2 = new MyNumber(10);
+        MyNumber num3 = new MyNumber(5);
+
+        System.out.println(num1.compareTo(num2)); 
+        System.out.println(num2.compareTo(num1)); 
+        System.out.println(num1.compareTo(num3));
+    }
+}
+
+Output:
+-1
+1
+0
+```
+- `this` refers to the current object on which the `compareTo` method is called. `other` refers to the object passed as an argument to the `compareTo` method, which is being compared with the current object.
+- When you sort a list of objects using `Collections.sort()`, the sorting algorithm will repeatedly call `compareTo()` to determine the order of the elements. The sorting algorithm will start by comparing the first two elements (`John (Roll No: 5)` and `Alice (Roll No: 2)`), consider the sorting logic is based on roll number , the `compareTo` method will return positive value (`this=5 > other=2`), then it compares the next element (`John (Roll No: 5)` and `Bob (Roll No: 8)`). It will keep iterating and comparing elements based on the result of `compareTo()` until it has ordered all elements.
+- Lets say you wanna sort based on all even roll numbers before all the odd roll numbers for which the ordering of numbers does not matter.
+
+```
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+class Student implements Comparable<Student> {
+    String name;
+    int rollNo;
+
+    public Student(String name, int rollNo) {
+        this.name = name;
+        this.rollNo = rollNo;
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        // return Integer.compare(this.rollNo, other.rollNo); // Sort by roll number
+        // return String.CASE_INSENSITIVE_ORDER.compare(this.name,other.name); // Sort by name alphabetically
+        if(other.rollNo%2==0){ //Sort by Even roll number
+            return 1;
+        }
+        return -1;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Roll No: " + rollNo + ")";
+    }
+}
+
+public class AboutComparableInterface{
+    public static void main(String[] args) {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("John", 5));
+        students.add(new Student("Alice", 2));
+        students.add(new Student("Bob", 8));
+        students.add(new Student("Jane", 7));
+        System.out.println("Before Sorting Students: " + students);
+
+        Collections.sort(students); // Sorts using the compareTo method
+        System.out.println("Sorted Students: " + students);
+    }
+}
+
+
+Output:
+Before Sorting Students: [John (Roll No: 5), Alice (Roll No: 2), Bob (Roll No: 8), Jane (Roll No: 7)]
+Sorted Students: [Alice (Roll No: 2), Bob (Roll No: 8), Jane (Roll No: 7), John (Roll No: 5)]
+```
+
+- If two objects are considered equal (i.e., **`compareTo()` returns 0**), their order in the list remains the same as before sorting. This is known as stability in sorting.
+
+#### Comparator
+
+- Lets see example of `Comparator`.
+
+```
+import java.util.*;
+
+class Student {
+    String name;
+    int rollNo;
+
+    public Student(String name, int rollNo) {
+        this.name = name;
+        this.rollNo = rollNo;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Roll No: " + rollNo + ")";
+    }
+}
+
+class RollNoComparator implements Comparator<Student> {
+    @Override
+    public int compare(Student s1, Student s2) {
+        return Integer.compare(s1.rollNo, s2.rollNo); // Sort by roll number
+    }
+}
+
+class NameComparator implements Comparator<Student> {
+    @Override
+    public int compare(Student s1, Student s2) {
+        return s1.name.compareTo(s2.name); // Sort by name
+    }
+}
+
+public class AboutComparatorInterface {
+    public static void main(String[] args) {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("John", 5));
+        students.add(new Student("Alice", 2));
+        students.add(new Student("Bob", 8));
+
+        System.out.println("Before Sorting: "+students);
+
+        // Sort by roll number using the RollNoComparator
+        Collections.sort(students, new RollNoComparator());
+        System.out.println("Sorted Students by Roll No: " + students);
+
+        // Sort by name using the NameComparator
+        Collections.sort(students, new NameComparator());
+        System.out.println("Sorted Students by Name: " + students);
+    }
+}
+
+
+Output:
+Before Sorting: [John (Roll No: 5), Alice (Roll No: 2), Bob (Roll No: 8)]
+Sorted Students by Roll No: [Alice (Roll No: 2), John (Roll No: 5), Bob (Roll No: 8)]
+Sorted Students by Name: [Alice (Roll No: 2), Bob (Roll No: 8), John (Roll No: 5)]
+```
+
+- Lets say you wanna sort roll numbers as primary sorting and secondary sorting as names alphabetically.
+
+```
+import java.util.*;
+
+class Student {
+    String name;
+    int rollNo;
+
+    public Student(String name, int rollNo) {
+        this.name = name;
+        this.rollNo = rollNo;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (Roll No: " + rollNo + ")";
+    }
+}
+
+
+class RollNoNameComparator implements Comparator<Student>{
+
+
+    @Override
+    public int compare(Student s1, Student s2) {
+        // Primary comparison by roll number
+        int rollComparison = Integer.compare(s1.rollNo, s2.rollNo);
+        // Secondary comparison by name if roll numbers are equal
+        if (rollComparison == 0) {
+            return s1.name.compareTo(s2.name); // Sort by name
+        }
+        return rollComparison;
+    }
+    
+}
+
+public class AboutComparatorInterface {
+    public static void main(String[] args) {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("John", 5));
+        students.add(new Student("Alice", 2));
+        students.add(new Student("Bob", 8));
+        students.add(new Student("Ali", 8));
+
+        System.out.println("Before Sorting: "+students);
+
+        // Sort by roll number first, if numbers are same then sort by name
+        Collections.sort(students, new RollNoNameComparator());
+        System.out.println("Sorted Students by Name: " + students);     
+
+    }
+}
+
+Output:
+Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8), Bob (Roll No: 8)]
+```
+
+- `Comparator` allows you to define custom sorting logic, enabling different sorting criteria. You can define how to handle equal elements, including additional logic for secondary sorting.
+- Even `Comparable` helps to define custom logic, then whats the actual difference between `Comparable` and `Comparator`?
+- When we use `Comparable`
+    - **Natural Ordering:** The object has a natural order that makes sense across your application. For example, numbers have a natural order (1 comes before 2, etc.), and strings can be ordered alphabetically.
+    - **Single Sorting Criteria:** You only need one way to compare objects of that class, and `this` logic is closely tied to the object itself.
+    - **Tight Coupling:** You are okay with embedding the sorting logic inside the class, meaning the class itself knows how to compare its instances.
+- Implementing `Comparable` like `Comparator` will throw you error
+
+![alt text](image-63.png)
+- When we use `Comparator`
+    - **Multiple Sorting Criteria:** You need to compare objects in different ways depending on the situation. For example, sometimes you might want to sort by name, other times by roll number, or even by both.
+    - **External Sorting Logic:** The sorting logic doesn’t belong inside the class. This way, you can keep the class simple and flexible, allowing different ways to sort the same objects.
+    - **Loose Coupling:** You prefer to separate the comparison logic from the class itself, making it more modular.
+
+- **Both Comparator and Comparable interface uses generics**, `Comparable<T>` and `Comparator<T>` where T is a type parameter. This means you can specify the type of objects that the comparator will compare.
+
+
+
+| **Feature**            | **Comparable**                                                     | **Comparator**                                                       |
+|------------------------|--------------------------------------------------------------------|----------------------------------------------------------------------|
+| **Where to Implement** | Inside the class being compared.                                   | In a separate class (outside of the class being compared).           |
+| **Method**             | `compareTo()` (single method). (Different method name)                                    | `compare()` (can be implemented in multiple ways).   (Different method name)                  |
+| **Custom Sorting**     | Defines natural ordering within the class itself.                  | Allows for multiple sorting orders outside the class.                |
+| **Modifiability**      | Can only have one sort logic per class.                            | Can have multiple comparators for different sorting logic.           |
+| **Coupling**           | Tight coupling: The class is responsible for its comparison logic. | Loose coupling: The comparison logic is separated from the class.    |
+| **Usage**              | Used when objects have a natural order (e.g., numbers, strings).   | Used for custom or multiple sorting criteria, external to the class. |
 
 
 
