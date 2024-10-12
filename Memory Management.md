@@ -272,6 +272,5 @@ where is interfaces present in memory management? abstract class ? static variab
 - The Buffer class in Java NIO (New I/O) provides the foundation for working with buffers. It's an abstract class with subclasses for different primitive data types (e.g., ByteBuffer, CharBuffer, IntBuffer).
 - transient
 - singleton class in java
-- iterator and iterable and enumerator
 - logging
 - method reference out::println;

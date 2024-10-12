@@ -4783,11 +4783,6 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
 | **Syntax** |  We can sort the list elements of Comparable type by `Collections.sort(List)` method. | We can sort the list elements of Comparator type by `Collections.sort(List, Comparator)` method. |
 
 
-
-
-
-
-
 ### Collections Framework
 
 - If you see `Map` is not a part of **Collection**. If we open `Map` interface it does not extends **Collection** interface whereas `List`, `Set` and `Queue` extends **Collection**.
