@@ -4779,6 +4779,8 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
 | **Modifiability**      | Can only have one sort logic per class.                            | Can have multiple comparators for different sorting logic.           |
 | **Coupling**           | Tight coupling: The class is responsible for its comparison logic. | Loose coupling: The comparison logic is separated from the class.    |
 | **Usage**              | Used when objects have a natural order (e.g., numbers, strings).   | Used for custom or multiple sorting criteria, external to the class. |
+| **Package** | Comparable is present in `java.lang` package. | A Comparator is present in the `java.util` package. |
+| **Syntax** |  We can sort the list elements of Comparable type by `Collections.sort(List)` method. | We can sort the list elements of Comparator type by `Collections.sort(List, Comparator)` method. |
 
 
 

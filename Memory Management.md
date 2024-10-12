@@ -275,5 +275,3 @@ where is interfaces present in memory management? abstract class ? static variab
 - iterator and iterable and enumerator
 - logging
 - method reference out::println;
-comparator and comparable with PriorityQueue for custom ordering
-`comparator` (we will see this later).
