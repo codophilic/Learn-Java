@@ -169,5 +169,21 @@ public class AboutCollectionsUtilityClass{
         // Add, remove, or modify elements without worrying about synchronization
         synchronizedList.add(3);
         System.out.println("Updated list: " + synchronizedList);
+        
+        // Create a regular HashMap
+        Map<String, Integer> map1 = new HashMap<>();
+        map1.put("One", 1);
+        map1.put("Two", 2);
+
+        // Make the HashMap thread-safe
+        Map<String, Integer> synchronizedMap = Collections.synchronizedMap(map1);
+
+        // Perform thread-safe operations
+        synchronized (synchronizedMap) {
+            for (Map.Entry<String, Integer> entry : synchronizedMap.entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
+
     }
 }

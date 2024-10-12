@@ -4306,8 +4306,40 @@ for (Integer num : synchronizedList) {
         }
 ```
 
-- You ensure that no other thread can modify the list while your thread is iterating through it.
-The entire process of iteration (from start to finish) is protected from interference by other threads, making it safe.
+- You ensure that no other thread can modify the list while your thread is iterating through it. The entire process of iteration (from start to finish) is protected from interference by other threads, making it safe.
+- **Synchronization can be applied to `Map`  Java** using the `Collections.synchronizedMap()`.
+
+```
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+public class SynchronizedMapExample {
+    public static void main(String[] args) {
+        // Create a regular HashMap
+        Map<String, Integer> map = new HashMap<>();
+        map.put("One", 1);
+        map.put("Two", 2);
+
+        // Make the HashMap thread-safe
+        Map<String, Integer> synchronizedMap = Collections.synchronizedMap(map);
+
+        // Perform thread-safe operations
+        synchronized (synchronizedMap) {
+            for (Map.Entry<String, Integer> entry : synchronizedMap.entrySet()) {
+                System.out.println(entry.getKey() + ": " + entry.getValue());
+            }
+        }
+    }
+}
+
+Output:
+One: 1
+Two: 2
+```
+
+- For `Queue` you can use `BlockingQueue` or `ConcurrentLinkedQueue` (A thread-safe non-blocking queue based on linked nodes. Ideal for high-throughput scenarios). For `Map` there is a built-in thread safe **Collection class** called `ConcurrentHashMap`.
+
 
 ### Comparable & Comparator
 
@@ -4318,6 +4350,24 @@ The entire process of iteration (from start to finish) is protected from interfe
     **2. Comparator Section:** - In this section, some of the books are sorted based on title names, some of the books are sorted based on page number wise, some of the books are sorted based on author names. So here the default criteria of sorting the books i.e based on title name is not necessary, a custom sorting approach is used.
 - Comparable is like the book having a built-in, default sorting rule – "I should always be sorted by title." and Comparator is providing a new sorting rule when you need to order books in a different way.
 - Comparable is for when you have a default, natural ordering for an object (e.g., sorting books by title). Comparator is for when you need flexibility, so you can sort the same object in different ways (e.g., by author, by page number, etc.), without changing the original sorting rule.
+- Lets open up `Comparable` and `Comparator` interface.
+
+![alt text](image-59.png)
+
+![alt text](image-60.png)
+
+- Both interfaces are **Functional Interface**. But if you see only `Comparator` interface is annotated with **`@FunctionalInterface`**? why so, `Comparable` was **introduced in Java 1.2**, long before the `@FunctionalInterface` **annotation was added in Java 8**. At that time, the concept of a functional interface didn’t exist in the language. Even though `Comparable` is not annotated with `@FunctionalInterface`, it is still a valid functional interface because, it has only one abstract method `compareTo()`.
+- Under `Comparator` interface there are bunch of default and static methods. A functional interface in Java is an interface that contains exactly one abstract method. **It can have any number of default or static methods or object methods**, but only one method needs to be implemented by any implementing class or lambda expression.
+
+![alt text](image-61.png)
+
+- If you see, along with `compare()` method there is an `equals()` method. The `equals()` method is from `Object` class. This means that `equals()` does not count as an abstract method in the `Comparator` interface, and only `compare()` is considered.
+
+
+
+
+
+
 
 ### Collections Framework
 

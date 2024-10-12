@@ -4286,7 +4286,99 @@ Output:
 Hello, Alice!
 ```
 
+- Now consider below code.
+
+```
+interface A{
+
+    void method1();
+
+    default void method2(){
+        System.out.println("Method2");
+    }
+
+    static int method3(){
+        return 1+2;
+    }
+
+    default int method4(){
+        return 0;
+    }
+
+    static void method5(){
+        System.out.println("Method5");
+    }
+}
+
+public class TestFunctionalInterfaceExample {
+    public static void main(String[] args) {
+
+        A a1= ()->System.out.println("Method 1");
+        a1.method1();
+    }
+}
+
+
+Output:
+Method 1
+```
+
+- A functional interface in Java is an interface that **contains exactly one abstract method**. **It can have any number of default or static methods**, but only one method needs to be implemented by any implementing class or lambda expression.
+
+
 *We will see more about lambda expression*
+
+
+- Now consider below code.
+
+```
+@FunctionalInterface
+interface A{
+
+    void method1();
+
+    boolean equals(Object obj);
+    
+    String toString();
+    
+    default void method2(){
+        System.out.println("Method2");
+    }
+
+    static int method3(){
+        return 1+2;
+    }
+
+    default int method4(){
+        return 0;
+    }
+
+    static void method5(){
+        System.out.println("Method5");
+    }
+}
+
+
+
+public class TestFunctionalInterfaceExample {
+    public static void main(String[] args) {
+
+        A a1= ()->System.out.println("Method 1");
+        a1.method1();
+    }
+}
+
+Output:
+Method 1
+```
+
+- **A functional interface is one that has exactly one abstract method, which can be implemented using a lambda expression or a class. However, the presence of other methods (like `default`, `static`, or methods inherited from `Object`) does not disqualify it from being a functional interface.**
+
+
+![alt text](Images/java-1/image-79.png)
+
+- The `equals()` and `toString()` method you see in the `A` interface is actually inherited from `Object`, and not specific to the Comparator interface itself. Methods like `equals()`, `hashCode()`, and `toString()` that are inherited from `java.lang.Object` are not considered abstract methods of the functional interface, even if they appear in the interface's definition.
+- Functional interfaces can still have `default` methods, `static` methods, or methods inherited from `Object`, and still remain functional interfaces as long as they have only one abstract method.
 
 4. **Sealed Interfaces (Java 17 Feature)** A sealed interface restricts which other interfaces or classes may implement it. This feature provides more control over the inheritance hierarchy, allowing only a specific set of classes or interfaces to implement the sealed interface.
 
