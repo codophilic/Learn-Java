@@ -1,11 +1,11 @@
 # About OOPS (Object-Oriented Programming System)
 
 - So when a car was introduce, a blueprint of a car was prepared, like what could be requirements to built a car? , this included color, Engine , cylinder and etc..
-- So imagine referring this blue print, there is a Ferrari car, so what could be its properties?  color - red, Engine - 3902 cc, No. of cylinder - 4 and so on.. what could be his behaviour? so the behaviors - Start engine, Accelerate, Brake, Turn, Park.
+- So imagine referring this blue print, there is a Ferrari car, so what could be its properties?  color - red, Engine - 3902 cc, No. of cylinder - 4 and so on.. what could be his behavior? so the behaviors - Start engine, Accelerate, Brake, Turn, Park.
 - **Class**: Is the blueprint to built a car.
 - **Object**: Is Ferrari
 - **Data**: Is Ferrari properties
-- **Method**: Is Ferrari behaviour.
+- **Method**: Is Ferrari behavior.
 
 - So OOP basically organize your code structure by defining a class which acts as a blueprint. It consists a set of properties (data) and methods (behaviors). It provides a general template for what an object can be and do.
 - To use the class, you create or instantiate an object. The object is a specific instance of the class, with its own customized properties using the properties of class (like a red Ferrari with a 3902 cc engine) and access to the methods defined in the class.
@@ -1983,7 +1983,7 @@ Subtraction of 5 and 4 - 1
 Reset value to 1
 ```
 
-- Thus we can see when we use reference variable of child class, the method `reset` inside the **CompleteCalculator** got executed. Whenever a method is called using child class reference variable , the method is searched first into child class if not found then java reaches out parent class. This how we can also peform **Method Overriding**
+- Thus we can see when we use reference variable of child class, the method `reset` inside the **CompleteCalculator** got executed. Whenever a method is called using child class reference variable , the method is searched first into child class if not found then java reaches out parent class. This how we can also perform **Method Overriding**
 
 ### Method Overriding
 

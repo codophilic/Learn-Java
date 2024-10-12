@@ -138,5 +138,36 @@ public class AboutCollectionsUtilityClass{
 
         // Try to modify the map (will throw an exception)
         // map.put("newKey", 20); // UnsupportedOperationException
+
+        //Disjoint
+        //Returns true if the two specified collections have no elements in common.
+        List<Integer> list1 = Arrays.asList(1, 2, 3);
+        List<Integer> list2 = Arrays.asList(4, 5, 6);
+        List<Integer> list3 = Arrays.asList(3, 4, 5);
+
+        boolean disjoint1 = Collections.disjoint(list1, list2); // True, no common elements
+        boolean disjoint2 = Collections.disjoint(list1, list3); // False, they share '3'
+
+        System.out.println("Is list1 disjoint with list2? " + disjoint1);
+        System.out.println("Is list1 disjoint with list3? " + disjoint2);
+
+        // Creating a non-thread-safe ArrayList
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+
+        // Making the list thread-safe
+        List<Integer> synchronizedList = Collections.synchronizedList(list);
+
+        // Thread-safe operations on the synchronized list
+        synchronized (synchronizedList) { // Explicit synchronization when iterating
+            for (Integer number : synchronizedList) {
+                System.out.println(number);
+            }
+        }
+
+        // Add, remove, or modify elements without worrying about synchronization
+        synchronizedList.add(3);
+        System.out.println("Updated list: " + synchronizedList);
     }
 }

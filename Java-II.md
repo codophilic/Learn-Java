@@ -913,6 +913,10 @@ fruits.add("Banana");
 
 - Here, you are declaring `fruits` as a `List` (the interface), but the actual implementation is still an `ArrayList`. This is good practice because you are programming to the interface (List), making your code more flexible (e.g., you could later switch to other implementation of list like `LinkedList` without changing the variable type). This is similar concept of dynamic method dispatch.
 
+>[!NOTE]
+> - `ArrayList` are not thread-safe. This means that if multiple threads try to access and modify the same `ArrayList` instance concurrently, it can lead to **inconsistent data**, **race conditions**, or **unexpected behavior**.
+
+
 ##### Internal Working of ArrayList
 
 - Initial Capacity: When an ArrayList is created, it has a default capacity (usually 10).
@@ -4018,8 +4022,8 @@ Output:
 1000
 ```
 
-- The `Collections` class in Java is a utility class in the **java.util** package that provides static methods to operate on or return collections. These methods help in manipulating and working with Collection-type data structures (like `List`, `Set`, `Map`, etc.) by offering functionalities like sorting, searching, synchronizing, and making collections immutable.
-- The purpose of the Collections class is to provide utility methods that perform common operations on collections. Some of these operations include:
+- The `Collections` class in Java is a utility class in the **java.util** package that **provides bunch of static methods** to operate on or return collections. These methods help in manipulating and working with Collection-type data structures (like `List`, `Set`, `Map`, etc.) by offering functionalities like sorting, searching, synchronizing, and making collections immutable.
+- The purpose of the **Collections** class is to provide utility methods that perform common operations on collection. Some of these operations include:
     - Sorting elements in a collection.
     - Searching for elements in a collection.
     - Making collections immutable or thread-safe.
@@ -4199,6 +4203,18 @@ public class AboutCollectionsUtilityClass{
 
         // Try to modify the map (will throw an exception)
         // map.put("newKey", 20); // UnsupportedOperationException
+
+        //Disjoint
+        //Returns true if the two specified collections have no elements in common.
+        List<Integer> list1 = Arrays.asList(1, 2, 3);
+        List<Integer> list2 = Arrays.asList(4, 5, 6);
+        List<Integer> list3 = Arrays.asList(3, 4, 5);
+
+        boolean disjoint1 = Collections.disjoint(list1, list2); // True, no common elements
+        boolean disjoint2 = Collections.disjoint(list1, list3); // False, they share '3'
+
+        System.out.println("Is list1 disjoint with list2? " + disjoint1);
+        System.out.println("Is list1 disjoint with list3? " + disjoint2);
     }
 }
 
@@ -4211,8 +4227,97 @@ Unmodifiable List: [Hello, Hello, Hello, Hello, Hello]
 Checked list: [Hello]
 Singleton List: [Hello]
 10
+Is list1 disjoint with list2? true
+Is list1 disjoint with list3? false
 ```
 
+- If you remember when we learned about `ArrayList`, we learned that `Arraylist` are **not thread-safe**. Using `Collections.synchronizedList()` we can make an `ArrayList` (or any `List` implementation) thread-safe by **wrapping it in a synchronized version**. This ensures that all operations on the list are performed in a thread-safe manner by synchronizing the methods that access the list.
+
+```
+import java.util.*;
+import java.util.Arrays;
+
+public class AboutCollectionsUtilityClass{
+    public static void main(String[] args) {
+
+        // Creating a non-thread-safe ArrayList
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+
+        // Making the list thread-safe
+        List<Integer> synchronizedList = Collections.synchronizedList(list);
+
+        // Thread-safe operations on the synchronized list
+        synchronized (synchronizedList) { // Explicit synchronization when iterating
+            for (Integer number : synchronizedList) {
+                System.out.println(number);
+            }
+        }
+
+        // Add, remove, or modify elements without worrying about synchronization
+        synchronizedList.add(3);
+        System.out.println("Updated list: " + synchronizedList);
+    }
+}
+
+Output:
+1
+2
+Updated list: [1, 2, 3]
+```
+
+- When you use methods like `add()`, `remove()`, etc., on the synchronized list, they are automatically synchronized. This means each of these individual operations is protected from being interrupted by other threads, so they won't cause data corruption or inconsistency. **Each method call is safe**.
+- Then why this block is used?
+
+```
+        // Thread-safe operations on the synchronized list
+        synchronized (synchronizedList) { // Explicit synchronization when iterating
+            for (Integer number : synchronizedList) {
+                System.out.println(number);
+            }
+        }
+```
+
+- Lets consider what gonna happen if you don't use **synchronized** block and use normal for loop
+
+```
+for (Integer num : synchronizedList) {
+    System.out.println(num);
+}
+```
+
+- The for loop is making multiple method calls:
+    - Get the iterator for the list.
+    - Check if there's a next element.
+    - Move to the next element.
+    - Access the element and print it.
+    - Repeat until all elements are accessed
+
+- These actions are not a single step but a sequence of steps. Even if the list itself is synchronized, other threads can still modify the list while the iteration is in progress. Imagine one thread is iterating through the list and another thread is modifying it (e.g., adding or removing elements) at the same time. This can cause unexpected behavior, like the `ConcurrentModificationException`, or the iterator might miss elements or show incorrect data.
+- By wrapping the iteration inside a synchronized block like this
+
+```
+        // Thread-safe operations on the synchronized list
+        synchronized (synchronizedList) { // Explicit synchronization when iterating
+            for (Integer number : synchronizedList) {
+                System.out.println(number);
+            }
+        }
+```
+
+- You ensure that no other thread can modify the list while your thread is iterating through it.
+The entire process of iteration (from start to finish) is protected from interference by other threads, making it safe.
+
+### Comparable & Comparator
+
+- Imagine the library there are two sections,
+
+    **1. Comparable Section:** - In this section the books are always sorted in the default order i.e by the book title names, so alphabetically the names of these books are added.
+
+    **2. Comparator Section:** - In this section, some of the books are sorted based on title names, some of the books are sorted based on page number wise, some of the books are sorted based on author names. So here the default criteria of sorting the books i.e based on title name is not necessary, a custom sorting approach is used.
+- Comparable is like the book having a built-in, default sorting rule – "I should always be sorted by title." and Comparator is providing a new sorting rule when you need to order books in a different way.
+- Comparable is for when you have a default, natural ordering for an object (e.g., sorting books by title). Comparator is for when you need flexibility, so you can sort the same object in different ways (e.g., by author, by page number, etc.), without changing the original sorting rule.
 
 ### Collections Framework
 
@@ -4242,55 +4347,6 @@ Singleton List: [Hello]
 ![alt text](image-55.png)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Comparable & Comparator
-
-- Imagine the library there are two sections,
-
-    **1. Comparable:** - In this section the books are always sorted in the default order i.e by the book title names, so alphabetically the names of these books are added.
-
-    **2. Comparator:** - In this section, some of the books are sorted based on title names, some of the books are sorted based on page number wise, some of the books are sorted based on author names. So here the default criteria of sorting the books i.e based on title name is not necessary, a custom sorting approach is used.
-- Comparable is like the book having a built-in, default sorting rule – "I should always be sorted by title." and Comparator is providing a new sorting rule when you need to order books in a different way.
-- Comparable is for when you have a default, natural ordering for an object (e.g., sorting books by title). Comparator is for when you need flexibility, so you can sort the same object in different ways (e.g., by author, by page number, etc.), without changing the original sorting rule.
-https://chatgpt.com/c/66f85640-8a94-8009-87a0-294685e1603b
 
 ## Reflection
 
