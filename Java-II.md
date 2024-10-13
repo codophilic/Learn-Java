@@ -4811,6 +4811,10 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
 ![alt text](image-55.png)
 
 
+## Stream API
+
+
+
 
 ## Reflection
 
