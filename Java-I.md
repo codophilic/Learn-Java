@@ -729,6 +729,7 @@ Inside static nested class 0
 >[!IMPORTANT]
 > - Static variables (also known as class variables) are associated with the class itself rather than with any particular instance of the class. They are shared across all instances of a class. Static variables are declared at the class level, outside any method. Declaring them inside a method would contradict their class-level nature, as methods are instance-specific (non-static methods) or just a part of the class logic (static methods).
 > - Static variables cannot be defined under any method.
+> - **Static variable gets loaded when class is loaded by `ClassLoader` and it remains inside the memory until when the class is Unloaded**
 
 
 #### Key Points about Static Nested Classes:
