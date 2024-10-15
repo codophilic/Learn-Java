@@ -4811,6 +4811,51 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
 ![alt text](image-55.png)
 
 
+## Method Reference
+
+- Method references provide a shorthand notation for lambda expressions that only call a single method. Method references can be used to simplify the code and make it more readable.
+- Lets see example of iterating `Arraylist` using lambda expression
+
+```
+import java.util.ArrayList;
+import java.util.*;
+import java.util.Arrays;
+
+public class AboutMethodReference{
+    public static void main(String[] args) {
+     
+        //Lambda Expression
+        List<Integer> ArrayOfNumbers=Arrays.asList(1,2,3);
+        ArrayOfNumbers.forEach(i->System.out.println(i));
+    }
+}
+
+Output:
+1
+2
+3
+```
+
+- Lets see example of method reference
+
+```
+import java.util.ArrayList;
+import java.util.*;
+import java.util.Arrays;
+
+public class AboutMethodReference{
+    public static void main(String[] args) {
+     
+        List<Integer> ArrayOfNumbers=Arrays.asList(1,2,3);
+        ArrayOfNumbers.forEach(System.out::println);
+    }
+}
+```
+
+- Lambda expression allows you to reduce code compared to an anonymous class to pass behaviors to methods, method reference goes one step further. It reduces code written in a lambda expression to make it even more readable and concise.
+
+
+
 ## Stream API
 
 
