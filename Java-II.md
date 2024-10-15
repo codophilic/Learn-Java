@@ -144,6 +144,9 @@ Output:
 - Lambda expression can only be used with functional interface because it only consist of one abstract method. Incase of multiple abstract methods it won't work because the statements of the lambda expression will wont't able to distinguish for which abstract method the implementation is written.
 
 
+*There is a short hand of lambda expression called method reference which we will learn later*
+
+
 ## Generics
 
 - Lets say you have a Box where you will keep numbers, string or float values. How can you implement this? since all these classes have their corresponding wrapper class, we can use **Object** has data type.
