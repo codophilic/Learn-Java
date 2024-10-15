@@ -1,5 +1,3 @@
-package Java2;
-
 @FunctionalInterface
 interface A{
     void show();
@@ -46,6 +44,6 @@ public class AboutLambdaExpression{
 
         Addition addvalues = (int i,int j) ->  i+j;
         System.out.println(addvalues.add(6, 5));
-        
+
     }
 }

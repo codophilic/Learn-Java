@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.BiFunction;
 
 public class AboutMethodReference{
@@ -32,6 +33,9 @@ public class AboutMethodReference{
         int result1 = maxFunction1.apply(10, 20);
         System.out.println(result1);  // Output: 20
 
+        Function<String, Integer> lengthFunction = String::length;
+        System.out.println(lengthFunction.apply("hello"));  // Output: 5
+        System.out.println(lengthFunction.apply("world"));  // Output: 5
 
     }
 }

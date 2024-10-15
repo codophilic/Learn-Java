@@ -3405,7 +3405,6 @@ Output:
 5
 ```
 
-
 ### Why Wrapper Class is Invented?
 
 - Now the question arise why wrapper class is actually invented when we have primitive data types?

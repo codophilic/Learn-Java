@@ -95,7 +95,7 @@ Number entered : 5
 Doubled value is 25
 ```
 
-- Lambda expression not only makes your code concise and readable but also decrease your file size by eliminating **Anonymous class**. How but? when we compile a class which has anonymous class, check the size.
+- Lambda expression not only makes your code concise and readable but also decrease your file size by eliminating **Anonymous class** `AboutLambdaExpression$1.class`. How but? when we compile a class which has anonymous class, check the size.
 
 ![alt text](image-1.png)
 
@@ -107,7 +107,8 @@ Doubled value is 25
 
 ![alt text](image-4.png)
 
-- See the difference in size.
+- See the difference in size and the file which got eliminated (`AboutLambdaExpression$1.class`) . 
+- Thus, **Lambda expression don't generate .class files just like anonymous class**.
 - If your functional interface have a method which returns something then in that case how to implement lambda expression?
 
 ```
@@ -141,6 +142,7 @@ Output:
 
 - After `->` you don't need to add `return` keyword, the lambda expression handle that by itself.
 - Lambda expression can only be used with functional interface because it only consist of one abstract method. Incase of multiple abstract methods it won't work because the statements of the lambda expression will wont't able to distinguish for which abstract method the implementation is written.
+
 
 ## Generics
 
@@ -4929,7 +4931,7 @@ System.out.println(result);  // Output: 20
 <br>
 <details>
 
-<summary> About BiFunction </summary>
+<summary> About BiFunction Interface </summary>
 
 - **BiFunction is a functional interface**.
 
@@ -4977,8 +4979,152 @@ Output:
 - `BiFunction` uses generic interface.
 
 </details>
+<br>
+
+#### 2. Reference to an Instance Method of a Particular Object
+
+- This type refers to an **instance method of a specific object that has already been created**. **The method is tied to that one particular object**, and it works directly on it.
+- When you have lambda expression where instance of object is passed and calls to an instance method with/without parameters, then you can use method reference to an instance method with object type. Syntax `object::staticMethodName`.
+- Below is an example of Lambda expression 
+
+```
+// Lambda expression to convert a string to uppercase using a specific instance
+String str = "hello";
+Supplier<String> toUpperCase = () -> str.toUpperCase();
+System.out.println(toUpperCase.get());  // Output: HELLO
+```
+
+- Here `str` is an instance object which uses method `toUpperCase()`.
+- For the above lambda expression, below is the code using method reference only **on a particular object reference (`hello`)**
+
+```
+// Method reference to str.toUpperCase() instance method
+String str = "hello";
+Supplier<String> toUpperCase = str::toUpperCase;
+System.out.println(toUpperCase.get());  // Output: HELLO
+```
+
+- In this case, the method `toUpperCase()` is tied to the specific object `str` (`hello`). The method reference `str::toUpperCase` refers to the `toUpperCase()` method of the already existing object `str`.
+
+#### 3. Reference to an Instance Method of an Arbitrary Object of a Particular Type
+
+- This type refers to an instance method of any object of a particular type. Instead of being tied to one specific object, the method can be called on any instance of that class.
+- Below is an example of Lambda expression 
+
+```
+Function<String, Integer> lengthFunction = (s) -> s.length();
+System.out.println(lengthFunction.apply("hello"));  // Output: 5
+System.out.println(lengthFunction.apply("world"));  // Output: 5
+```
+
+- For the above lambda expression, below is the code for using method reference **on multiple type of object reference (`hello`,`world`)**
+
+```
+Function<String, Integer> lengthFunction = String::length;
+System.out.println(lengthFunction.apply("hello"));  // Output: 5
+System.out.println(lengthFunction.apply("world"));  // Output: 5
+```
+
+- Here, the method reference `String::length` refers to the `length()` method of any String object. It can be called on different instances of String, such as `hello` and `world`. The method reference is tied to the class (`String`), not a specific instance of the class like earlier it was tied up with only reference object (`hello`).
+- The key difference between `Reference to an Instance Method of a Particular Object` and `Reference to an Instance Method of an Arbitrary Object of a Particular Type` is that, `Reference to an Instance Method of a Particular Object` refers to the method of a specific object. In this case, the method reference is tied to one specific object, like `str::toUpperCase` where `str` is a known, single object.
+
+```
+String str = "hello";
+Supplier<String> toUpperCase = str::toUpperCase;
+// `str` is a specific object
+```
+
+- Whereas `Reference to an Instance Method of an Arbitrary Object of a Particular Type` refers to the method of any object of a given type (like String). The method can be called on multiple different instances.
+
+```
+Function<String, Integer> lengthFunction = String::length;
+// Can be used with any String instance
+```
 
 
+<br>
+<details>
+
+<summary> About Function Interface </summary>
+
+- **Function Interface is a Functional Interface similarly like BiFunctional interface**.
+
+![alt text](image-67.png)
+
+- In `BiFunction` there we two input arguments passed to `apply` method whereas in `Function` only one input argument is passed. 
+
+```
+import java.util.function.Function;
+
+public class MainClass {
+
+    public static void main(String args[])
+    {
+        // Function which takes in a number
+        // and returns half of it
+        Function<Integer, Double> half = a -> a / 2.0;
+
+        // Applying the function to get the result
+        System.out.println(half.apply(10));
+    }
+}
+
+Output:
+5.0
+```
+
+- It uses generic interfaces.
+
+</details>
+<br>
+
+
+#### 4. Reference to a Constructor
+
+- When lambda expression is used to create new object with/without parameters, then you can use reference method constructor.
+- Consider below code
+
+```
+// Java Program to Illustrate Functional Interface
+// Via apply() method
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+
+public class MainClass {
+
+    public static void main(String args[])
+    {		
+        ArrayList<String> list=new ArrayList<>();
+		list.add("Rohan");
+		list.add("Andy");
+		list.add("Sneha");
+		list.add("Rohan");
+        
+        // Using lambda expression
+		Function<List<String>,Set<String>> f2 = (nameList) -> new HashSet<>(nameList);
+		Set<String> set2 = f2.apply(list);
+		System.out.println(set2); //Output: [Sneha, Andy, Rohan]
+		
+		// Using Method reference
+		Function<List<String>,Set<String>> f3= HashSet::new;
+		Set<String> set = f3.apply(list);
+		System.out.println(set); //Output: [Sneha, Andy, Rohan]
+    }
+}
+```
+
+- The lambda expression return a new object (`new HashSet<>()`) which is a constructor.
+
+
+>[!TIP]
+> #### How Method Reference and Lambda Expression does not generate .class files?
+> - Before Java 8, functional programming features like lambdas didn't exist, so you had to use anonymous inner classes. When you used anonymous classes, Java would generate a separate class for each anonymous class during compilation. This led to more memory usage and performance overhead because **each anonymous class was treated as a separate class file**.
+> - **Lambda expressions and method references were both introduced in Java 8.** With Java 8, instead of generating anonymous classes for lambdas and method references, the Java compiler generates more efficient bytecode using **`invokedynamic`**. This is a JVM instruction that allows method references and lambdas to be linked dynamically at runtime, rather than creating a new class file for each lambda or method reference. 
+> - This avoids the need to create separate anonymous classes and makes the code more memory efficient. This approach reduces memory overhead and improves performance compared to older anonymous classes.
 
 ## Stream API
 
