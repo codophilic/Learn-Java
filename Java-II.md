@@ -351,7 +351,7 @@ public class ClassName<T> {
 - Interfaces can also be generic, allowing different implementations to specify the type parameters.
 
 ```
-nterface Processor<T> {
+Interface Processor<T> {
     void process(T item);
 }
 
@@ -4814,7 +4814,36 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
 ## Method Reference
 
 - Method references provide a shorthand notation for lambda expressions that only call a single method. Method references can be used to simplify the code and make it more readable.
-- Lets see example of iterating `Arraylist` using lambda expression
+- Lets see example of iterating `ArrayList` using Anonymous class
+
+```
+import java.util.ArrayList;
+import java.util.*;
+import java.util.Arrays;
+import java.util.function.Consumer;
+
+public class AboutMethodReference{
+    public static void main(String[] args) {
+
+        List<String> ArrayOfNumbers=Arrays.asList("Hi","Hello","World");
+
+        //Using Anonymous class
+        ArrayOfNumbers.forEach(new Consumer<String>() {
+            @Override
+            public void accept(String t) {
+                System.out.println(t);
+            }
+        });
+    }
+}
+
+Output:
+Hi
+Hello
+World
+```
+
+- Lets see example of iterating `ArrayList` using lambda expression
 
 ```
 import java.util.ArrayList;
@@ -4824,19 +4853,19 @@ import java.util.Arrays;
 public class AboutMethodReference{
     public static void main(String[] args) {
      
+        List<String> ArrayOfNumbers=Arrays.asList("Hi","Hello","World");
         //Lambda Expression
-        List<Integer> ArrayOfNumbers=Arrays.asList(1,2,3);
         ArrayOfNumbers.forEach(i->System.out.println(i));
     }
 }
 
 Output:
-1
-2
-3
+Hi
+Hello
+World
 ```
 
-- Lets see example of method reference
+- Lets see example of iterating `ArrayList` using method reference
 
 ```
 import java.util.ArrayList;
@@ -4846,13 +4875,108 @@ import java.util.Arrays;
 public class AboutMethodReference{
     public static void main(String[] args) {
      
-        List<Integer> ArrayOfNumbers=Arrays.asList(1,2,3);
+        List<String> ArrayOfNumbers=Arrays.asList("Hi","Hello","World");
+        //Method Reference
         ArrayOfNumbers.forEach(System.out::println);
     }
 }
+
+Output:
+Hi
+Hello
+World
 ```
 
 - Lambda expression allows you to reduce code compared to an anonymous class to pass behaviors to methods, method reference goes one step further. It reduces code written in a lambda expression to make it even more readable and concise.
+
+![alt text](image-64.png)
+
+- General syntax of method reference is `object::methodName`
+- Now lets say you wanna perform multiple operation on your `ArrayList` like to make your `String` elements into upper case and then you wanted to print it out. In such scenario **you cannot use method reference**. So if the action involves multiple steps for only one method it is better to use lambda expression.
+
+![alt text](image-65.png)
+
+- **Method references are just syntactic sugar for lambda expressions**. Wherever a lambda expression is used, if that lambda matches a method's signature, you can replace the lambda with a method reference.
+
+
+>[!NOTE]
+> - Method references are mainly about readability. They don’t directly impact performance much compared to lambdas. However, they can make your code more concise and understandable.
+
+### Types of Method References
+
+#### 1. Reference to static method
+
+- When you have lambda expression which calls to static method, then you can method reference to static method. A static method reference refers to the static method for a class. We can use a method reference to directly call the static methods. Syntax `className::staticMethod`
+- Below is an example of Lambda expression 
+
+```
+// Lambda expression to find the maximum of two numbers using Math.max()
+    BiFunction<Integer, Integer, Integer> maxFunction = (a, b) -> Math.max(a, b);
+    int result = maxFunction.apply(10, 20);
+    System.out.println(result);  // Output: 20
+```
+
+- For the above lambda expression, below is the code for **Static method reference**
+
+```
+// Method reference to Math.max() static method
+BiFunction<Integer, Integer, Integer> maxFunction = Math::max;
+int result = maxFunction.apply(10, 20);
+System.out.println(result);  // Output: 20
+```
+
+
+<br>
+<details>
+
+<summary> About BiFunction </summary>
+
+- **BiFunction is a functional interface**.
+
+![alt text](image-66.png)
+
+- It is a part of the `java.util.function` package which has been introduced since Java 8, to implement functional programming in Java. It takes two arguments and produces a result.
+
+```
+R apply(T t, U u);
+```
+
+- `T` is the type of the first argument.
+- `U` is the type of the second argument.
+- `R` is the type of the result.
+- Consider below example
+
+```
+import java.util.function.BiFunction;
+
+public class BiFunctionExample {
+
+    public static void main(String[] args) {
+        
+        // Create a BiFunction to add two integers, fetching result in Integer format
+        BiFunction<Integer, Integer, Integer> add = (x, y) -> x+y;
+        
+        int result=add.apply(10,11);
+        System.out.println(result); 
+        
+        // Create a BiFunction to add two integers, fetching result in String format
+        BiFunction<Integer, Integer, String> add1 = (x, y) -> Integer.valueOf((x+y)).toString();
+        
+        String result1=add1.apply(10,11);
+        System.out.println(result1);
+
+
+    }
+}
+
+Output:
+21
+21
+```
+
+- `BiFunction` uses generic interface.
+
+</details>
 
 
 

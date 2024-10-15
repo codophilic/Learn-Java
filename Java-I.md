@@ -3372,6 +3372,40 @@ Result: 15
 
 - The method `addNumber()` returns a data type which is of Wrapper class. So you can apply Wrapper class as return type of your methods.
 
+
+### Dereferenced Error
+
+- Guess what will be the output of below code?
+
+```
+int x = 5;
+System.out.println(x.toString());
+```
+
+- The above code will throw error `int cannot be dereferenced`.
+- In Java, **dereferencing means accessing the value or method of an object through a reference**. When we declare an object, what we are really creating is a reference to that object. We can then use this reference to access the object’s fields and methods using the dot (`.`) operator.
+- For example, if we have a reference variable named `person` that refers to an instance of the class `Person`, we can dereference it like this
+
+```
+Person person = new Person();
+person.myMethod();  // dereferencing to call a method
+int myVariable = person.myField;  // dereferencing to access a field
+```
+
+- Primitive types like `int`, `double`, `boolean`, etc., are not objects, **so they cannot be dereferenced. You cannot call methods on a primitive types**.
+- In Java, primitive types such as int are not objects, and therefore they cannot be dereferenced. So, if we try to call a method or access a property using an int variable, we will get int cannot be dereferenced error.
+- In such case, you can use wrapper classes and convert the primitive type to its corresponding wrapper object
+
+```
+int x = 5;
+Integer xObject = Integer.valueOf(x);
+System.out.println(xObject.toString()); 
+
+Output:
+5
+```
+
+
 ### Why Wrapper Class is Invented?
 
 - Now the question arise why wrapper class is actually invented when we have primitive data types?
