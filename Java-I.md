@@ -7298,6 +7298,10 @@ WaitThread: I got the notification, time to proceed!
 - This synchronization mechanism ensures that the internal state of the StringBuffer remains consistent even in a multithreaded environment.
 - The synchronization overhead in StringBuffer makes it slower than StringBuilder, especially in single-threaded environments where thread safety is not a concern. If you're working in a single-threaded environment, using StringBuffer introduces unnecessary synchronization, which can impact performance.
 
+>[!TIP]
+> - Lets say if you wanna have a requirement where you wanted to replace multiple values in a long string, `StringUtils` is consider **the fastest way to replace values** in a string compared to the standard Java String methods (`String.replace()`).
+> - `StringUtils` does not comes with Java, you will require additional library which is [Apache Commons Lang](https://mvnrepository.com/artifact/org.apache.commons/commons-lang3)
+
 
 ## Finalize
 
