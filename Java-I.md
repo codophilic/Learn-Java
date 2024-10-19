@@ -7301,6 +7301,8 @@ WaitThread: I got the notification, time to proceed!
 >[!TIP]
 > - Lets say if you wanna have a requirement where you wanted to replace multiple values in a long string, `StringUtils` is consider **the fastest way to replace values** in a string compared to the standard Java String methods (`String.replace()`).
 > - `StringUtils` does not comes with Java, you will require additional library which is [Apache Commons Lang](https://mvnrepository.com/artifact/org.apache.commons/commons-lang3)
+> - `StringUtils` is specifically designed to handle multiple replacements efficiently, which can be faster than using multiple calls to the standard `String.replace` method. 
+> - Apache Commons often includes additional logic to handle edge cases like null values or empty strings more robustly, which can improve code reliability
 
 
 ## Finalize
