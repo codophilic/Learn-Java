@@ -5131,6 +5131,243 @@ public class MainClass {
 
 ## Stream API
 
+- **Stream API was introduce in Java 8**. Lets understand what it is.
+- Suppose you have an integer array and you want to find all of the elements in that array that are even numbers. Essentially, you'd need to iterate through the list and check if each number is even. If so, you'll need to add this information to an output list or your new array list.
+
+```
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
+
+public class AboutStreamApi{
+    public static void main(String[] args) {
+        
+        //Without Stream API
+
+        List<Integer> aListWSP = Arrays.asList(6,88,23,14,17,12,32,51,79,94);
+        List<Integer> evenNumbersListWSP = new ArrayList<Integer>();
+        for(int num:aListWSP){
+            if(num %2 == 0)
+            evenNumbersListWSP.add(num);
+        }
+        System.out.println(evenNumbersListWSP);
+    }
+}
+
+Output:
+[6, 88, 14, 12, 32, 94]
+```
+
+- The above code is the scenario without Stream API. Lets understand the same example with Stream API
+
+```
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+
+public class AboutStreamApi{
+    public static void main(String[] args) {
+
+        //With Stream API
+        List<Integer> aListSP = Arrays.asList(6,88,23,14,17,12,32,51,79,94);
+        List<Integer> evenNumbersListSP = aListSP.stream().filter(num -> num %2 == 0).collect(Collectors.toList());
+        System.out.println(evenNumbersListSP);
+    }
+}
+
+
+Output:
+[6, 88, 14, 12, 32, 94]
+```
+
+- Compared to the pre-Java 8 code, the code using Streams is far more concise. The stream API allows you to perform operations on collections without external iteration. In this case, we’re performing a filter operation which will filter the input collection based on the condition specified. The filtered values are collected and stored into a list.
+- Lets take another example where we need to process parallel data. Lets say you wanna sum up a huge amount of integer elements inside the array list.
+- Without Stream API you need to manually create multi-threads and perform processing or sum of element for specific set of range inside the array list
+
+```
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+
+// Task class that sums a part of the list
+class SumTask implements Runnable {
+    private List<Integer> numbers;
+    private int sum;
+
+    public SumTask(List<Integer> numbers) {
+        this.numbers = numbers;
+    }
+
+    public int getSum() {
+        return sum;
+    }
+
+    @Override
+    public void run() {
+        for (int number : numbers) {
+            sum += number;
+        }
+    }
+}
+
+
+public class AboutStreamApi{
+    public static void main(String[] args) throws InterruptedException {
+
+        // Without Stream API
+        List<Integer> numbersWithoutSA = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        // Create two threads to split the work
+        SumTask task1 = new SumTask(numbersWithoutSA.subList(0, 5)); // First half
+        SumTask task2 = new SumTask(numbersWithoutSA.subList(5, 10)); // Second half
+
+        Thread thread1 = new Thread(task1);
+        Thread thread2 = new Thread(task2);
+
+        // Start both threads
+        thread1.start();
+        thread2.start();
+
+        // Wait for both threads to finish
+        thread1.join();
+        thread2.join();
+
+        // Sum the results of both threads
+        int totalSum = task1.getSum() + task2.getSum();
+        System.out.println("Total sum: " + totalSum);  // Output: 55
+    }
+}
+
+Output:
+Total sum: 55
+```
+
+- So without stream api, we manually split the list of numbers into two parts (first half and second half). We created two threads, each responsible for summing a part of the list. After both threads finished their work, we combined their results to get the total sum.
+- Now lets achieve the same using **parallel Stream API**.
+
+```
+public class AboutStreamApi{
+    public static void main(String[] args) throws InterruptedException {
+        List<Integer> numbersWithSA = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        // Parallel stream to sum the numbers
+        int totalSumWithSA = numbersWithSA.parallelStream()
+                              .mapToInt(Integer::intValue)
+                              .sum();
+
+        System.out.println("Total sum: " + totalSumWithSA);  // Output: 55
+    }
+}
+
+Output:
+Total sum: 55
+```
+
+- We simply called `parallelStream()`, which automatically divides the data and processes it in parallel. The `mapToInt()` method converts the `Integer` objects to `int` for summing.
+- So now before stream api, 
+    - Writing iterative loops (`for` or `while` loops) to perform operations on collections resulted in verbose (too many unnecessary codes).
+    - Achieving parallelism in traditional loop-based code requires explicit management of threads, leading to complexity and potential bugs.
+    - It was challenging to compose a chain of multiple operations (e.g., `filter`, `map`, and `sum`) in a concise and readable manner.
+- After using stream api,
+    - Code becomes more concise and easier to understand, especially for complex data manipulations.
+    - It provides a rich set of operations for filtering, mapping, reducing, and more which leads to chain of multiple operations.
+    - It makes easier to parallelize data processing tasks, potentially improving performance.
+    - It encourage a **functional programming style**, leading to more expressive and maintainable code.
+
+### Functional Programming Style in Stream API
+
+- Wait what does **functional programming style** means? when we say streams encourage a functional programming style, it means that instead of writing code in a traditional imperative way (with loops, variables, and state changes), we can use functional programming concepts like
+    - **Pure functions**: Functions that don’t change the existing data but rather return a new results.
+    - **Declarative style**: Describing what you want to do, rather than how to do it.
+    - **Immutability**: Avoiding changes to the original data, making code safer and easier to maintain.
+    - **Utilizes higher-level functions** : A functions could take functions as inputs and returning functions as well.
+- In traditional Java programming (imperative style), you would process data with loops and manually track the state. 
+
+```
+import java.util.*;
+
+public class ImperativeExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        List<Integer> evenDoubled = new ArrayList<>();
+        
+        // Imperative loop: manually iterating, checking, and modifying
+        for (Integer number : numbers) {
+            if (number % 2 == 0) {
+                evenDoubled.add(number * 2);  // Check if even, then double it
+            }
+        }
+        
+        System.out.println("Even numbers doubled: " + evenDoubled);
+    }
+}
+
+
+Output:
+Even numbers doubled: [4, 8, 12, 16, 20]
+```
+
+- We manually iterate over the list with a `for` loop. We use conditional logic (`if` statement) to check each number. We mutate the `evenDoubled` list by adding every time the doubled value of an even number.
+- With functional programming style
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class FunctionalExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        
+        // Functional style with streams: filtering and mapping
+        List<Integer> evenDoubled = numbers.stream()
+                                           .filter(n -> n % 2 == 0)   // Filter even numbers
+                                           .map(n -> n * 2)           // Double them
+                                           .collect(Collectors.toList()); // Collect to list
+        
+        System.out.println("Even numbers doubled: " + evenDoubled);
+    }
+}
+
+Output:
+Even numbers doubled: [4, 8, 12, 16, 20]
+```
+
+-  We filter the even numbers using a pure function (`filter()`). We transform (double) the numbers using another pure function (`map()`). We collect the results (`collect()`) into a new list (without changing the original list). Here, `filter()` and `map()` accept lambda expressions (functions) as arguments, which is a functional programming concept.
+- **Here in functional programming style, instead of telling Java how to do it (loops, conditions), you describe what you want (filter even numbers, double them).** 
+- **You don't write down logic for filtering, map and collecting, java knows that part, you ask java that you want filter, you want to collect or map etc. You don't write code for loop making instead you use `forEach` which manages your iteration making it less error-prone (if you forgot to increment your iterator value or similarly silly mistakes)** 
+- **The original list `numbers` is not changed.**
+- **The code is more readable and focused on the data transformation, not on the control flow (like loops and conditionals).**
+- **Since you don't manage state of each methods like `filter()`, `map()` etc.. or mutability yourself, there's less risk of introducing bugs related to mutable data or incorrect logic.**
+- A Non-Functional Style
+
+```
+List<String> strList = Arrays.asList("Functional", "Programming", "in", "Java", "Not", "Javascript");
+for (int i = 0; i < strList.size(); i++) {
+System.out.print(strList.get(i) +” “);
+}
+```
+
+- A Functional Style
+
+```
+List<String> strList = Arrays.asList("Functional", "Programming", "in", "Java", "Not", "Javascript");
+System.out.print(strList.stream().collect(Collectors.joining(""))); //Joining Elements
+```
+
+### More Examples
+
+
+
+https://chatgpt.com/c/670c7d20-02a8-8009-86e1-b607d76c2554
+https://medium.com/@palivela.chaitu/java-streams-394274a2bd72
+https://hackajob.com/talent/blog/why-you-should-be-using-stream-api-in-java-8
+https://www.linkedin.com/pulse/intermediate-terminal-operations-java-streams-jahid-momin/
+https://howtodoinjava.com/java/stream/java-streams-by-examples/
+
+
+
 
 
 

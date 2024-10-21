@@ -273,4 +273,5 @@ where is interfaces present in memory management? abstract class ? static variab
 - transient
 - singleton class in java
 - logging
-- method reference out::println;
+- Optional in Java
+- Why Stream API is called api? internal working of it
