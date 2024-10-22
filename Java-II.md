@@ -5356,9 +5356,101 @@ List<String> strList = Arrays.asList("Functional", "Programming", "in", "Java", 
 System.out.print(strList.stream().collect(Collectors.joining(""))); //Joining Elements
 ```
 
+### Exploring `stream()`
+
+
+
 ### More Examples
 
+- Lets see some more example of Stream API
 
+#### Filter 
+
+- Filtering your elements 
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class FilterExample {
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("John", "Jane", "Jack", "Doe");
+
+        List<String> filteredNames = names.stream()
+            .filter(name -> name.startsWith("J"))
+            .collect(Collectors.toList());
+
+        System.out.println(filteredNames);  // Output: [John, Jane, Jack]
+    }
+}
+
+Output:
+[John, Jane, Jack]
+```
+
+#### Map 
+
+- Transforms each element using a function.
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class MapExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+        List<Integer> squaredNumbers = numbers.stream()
+            .map(n -> n * n)
+            .collect(Collectors.toList());
+
+        System.out.println(squaredNumbers);  // Output: [1, 4, 9, 16, 25]
+    }
+}
+
+Output:
+[1, 4, 9, 16, 25]
+```
+
+#### FlatMap 
+
+- Imagine we have a bunch of boxes, and each box contains some items. Now, we want to take out all those items from the boxes and put them in a single box. That's what `flatMap()` does with a stream. In layman's terms, flattening is referred to as merging nested collections/arrays into one. Consider the following example.
+
+```
+Before flattening 	: [[1, 2, 3], [4, 5], [6, 7, 8]]
+After flattening 	: [1, 2, 3, 4, 5, 6, 7, 8]
+```
+
+- Code example 
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class FlatMapExample {
+    public static void main(String[] args) {
+        List<List<String>> namesList = Arrays.asList(
+            Arrays.asList("John", "Jane"),
+            Arrays.asList("Jack", "Doe")
+        );
+
+        List<String> flatList = namesList.stream()
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+
+        System.out.println(flatList);
+    }
+}
+
+Output:
+[John, Jane, Jack, Doe]
+```
+
+
+
+
+
+lazy evaluation
 
 https://chatgpt.com/c/670c7d20-02a8-8009-86e1-b607d76c2554
 https://medium.com/@palivela.chaitu/java-streams-394274a2bd72
