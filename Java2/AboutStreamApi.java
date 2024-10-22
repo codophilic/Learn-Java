@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.Arrays;
 
 // Task class that sums a part of the list
@@ -73,5 +74,9 @@ public class AboutStreamApi{
                               .sum();
 
         System.out.println("Total sum: " + totalSumWithSA);  // Output: 55
+
+        List<String> list = Arrays.asList("one", "two", "three");
+        Stream<String> streamFromList = list.stream();
+        System.out.println(streamFromList);
     }
 }

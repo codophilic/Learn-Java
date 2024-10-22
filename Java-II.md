@@ -5358,7 +5358,360 @@ System.out.print(strList.stream().collect(Collectors.joining(""))); //Joining El
 
 ### Exploring `stream()`
 
+- Lets open the `stream()` method, we see **`stream()` method is part of Collection Interface**.
 
+![alt text](image-68.png)
+
+- When we click on `Stream<E>`, we can see it an interface.
+
+![alt text](image-69.png)
+
+- There are several methods provided in the `Stream` interface. The `Stream` interface extends `BaseStream<T, Stream<T>>` interface.
+
+![alt text](image-70.png)
+
+- The `BaseStream` interface is the super interface for all types of streams in Java, including:
+    - `Stream<T>` (for regular object streams)
+    - `IntStream`, `LongStream`, `DoubleStream` (for primitive types)
+
+*We will learn about Stream of primitive later*
+
+- `BaseStream` provides the common operations that are shared by all these types of streams, like:
+    - Managing the stream lifecycle (e.g., `close()` for closing a stream or a resource hence we can see it also extends `AutoClosable`).
+    - Indicating whether the stream is sequential or parallel.
+- `BaseStream` provides the foundation on which different types of streams are built. It ensures that all streams share certain core functionalities, such as:
+    - Being able to switch between sequential and parallel execution.
+    - Ensuring that streams can be closed properly, especially in cases where they are working with external resources (like files).
+
+- Lets understand Stream by an analogy. You can think of the Stream API as a conveyor belt on a fishing vessel
+    - **Data Source**: The river, full of various sea creatures, symbolizes the raw data we are going to process.
+    - **Filter**: This is like the fishermen who pick only the desired types of fish from the catch, excluding unwanted species. In code, this corresponds to filtering elements using the `filter()` method.
+    - **Map**: This step is similar to packing the fish into containers. It transforms the elements (fish) into another form of data—“packages.” In the Stream API, this is done using the `map()` method.
+    - **Collect**: This is the stage where all the packed fish are loaded onto a truck for further transportation. In the Stream API, this is the final `collect()` operation, which gathers all the results into a final data structure.
+
+
+![alt text](image-71.png)
+
+- Thus, the Stream API creates a “flow” where each element passes through specific stages, much like on a conveyor belt, making the process efficient and consistent.
+
+#### Components of the Stream API
+
+- The main components of the Stream API work together to organize an efficient and declarative data processing workflow.
+
+![alt text](image-72.png)
+
+1. **Source**: This is the starting point from which data is fed into the processing stream. A source can be a collection, array, string, file, generator, or another data source.
+2. **Stream**: A sequence of elements to be processed. The stream can be processed either in a **single-threaded or multi-threaded manner**.
+3. **Operations**: These are transformations and/or manipulations performed on the data in the stream, categorized into **intermediate** and **terminal** operations.
+4. **Pipeline**: A **chain of intermediate operations applied to the data**, forming a sequence of transformations.
+5. **Terminal**: The final operation that closes the stream, **producing output or converting the data into a final structure**.
+
+
+- What are these **intermediate** and **terminal** operations ?
+
+**1. Intermediate Operations**: An intermediate operation is an operation that transforms a stream into another stream. Intermediate operations are evaluated sequentially for each element, one after the other. The intermediate operations like `map()`, `filter()`, etc., execute in the exact sequence you define them in. These intermediate operations can be chain together, allow you to chain multiple operations together in a readable, declarative manner.
+
+
+**2. Terminal Operations**: A terminal operation is an operation that produces a result or a side-effect, and it marks the end of the stream pipeline. They can also perform actions like printing to the console or writing to a file. Terminal operations complete the stream processing and return a result. They may involve actions such as counting, collecting into a collection, searching, or iterating over the elements. **Terminal operations are mandatory if you want to execute the stream operations and produce a result. Without a terminal operation, the stream will not process the data, as the stream operates in a lazy manner. It is the terminal operation that triggers the execution of the stream. Once it is called, the operations in the pipeline are analyzed, and an efficient execution strategy is determined.**. 
+
+>[!NOTE]
+> - Stream operations are either intermediate or terminal. The terminal operations return a result of a certain type, and intermediate operations return the stream itself so we can chain multiple methods in a row to perform the operation in multiple steps.
+
+
+- Now consider below code snip
+
+```
+List<String> list = Arrays.asList("one", "two", "three");
+Stream<String> streamFromList = list.stream();
+System.out.println(streamFromList);
+
+Output:
+java.util.stream.ReferencePipeline$Head@1e4a7dd4
+```
+
+- Here, we are taking a L`ist<String>` (a list of strings) and calling `.stream()` on it, which creates a `Stream<String>`. The type `Stream<String>` means that this stream will process strings ("one", "two", "three"). However, at this point, no data has been processed yet because no terminal operation (like `collect()` or `forEach()`) has been called.
+- When you create a stream (using `.stream()` or `.parallelStream()`), the stream object represents a pipeline of data operations. But without a terminal operation, it’s just a "blueprint" of how data will be processed. The stream itself does not "collect" data, it just:
+    - References the source (like a list or array).
+    - Holds a set of intermediate operations (if you chain things like `filter()` or `map()`).
+    - Waits for a terminal operation to trigger the execution of those operations.
+- The stream just defines the sequence of operations to be performed on the source (list or array). The data remains in the original source (the list or array), and the stream is just a wrapper or pipeline around it, waiting for a terminal operation to actually trigger any work.
+
+
+##### Analogy
+
+![alt text](image-73.png)
+
+- Think of a stream like a pipeline that allows objects to flow through it. Intermediate operations are like valves or filters that can be used to modify the objects in the pipeline. You can use these operations to perform transformations on the objects, such as mapping them to a new value or filtering out certain objects based on some condition.
+- Once you've made all the adjustments you want with intermediate operations, you can use a terminal operation to get a final result from the pipeline. Terminal operations are like the tap at the end of the pipeline that allows you to get the final output you want. When you turn on the tap (terminal operation) you get the water (data getting from source and are filtered/mapped)
+
+#### Lazy Evaluation
+
+- *Operations like `map()` and `filter()` are lazy, they are executed in the order they appear when the terminal operation is called.* what does this means?
+- Intermediate operations are lazy, meaning they only define the transformation and don't actually do anything until a terminal operation (like `collect()`, `forEach()`) is called.
+- When the terminal operation is invoked, the entire pipeline is executed for each element in sequence.
+- **Even though the terminal operation triggers the processing, each element flows through all the intermediate operations in the exact sequence they are defined in the chain. This happens on each one of the element at a time. It’s as if each element enters a pipeline, gets processed by every operation in the chain, and then goes to the terminal operation.**
+- Lets understand this via code
+
+```
+public static void main(String[] args) {
+    final List<String> list = List.of("one", "two", "three");
+
+    list.stream()
+            .filter(s -> {
+                System.out.println("filter: " + s);
+                return s.length() <= 3;
+            })
+            .map(s1 -> {
+                System.out.println("map: " + s1);
+                return s1.toUpperCase();
+            })
+            .forEach(x -> {
+                System.out.println("forEach: " + x);
+            });
+}
+```
+
+- In this example, three operations are applied in sequence:
+    - `filter()` — filters strings whose length is less than or equal to 3 characters.
+    - `map()` — converts the remaining strings to uppercase.
+    - `forEach()` — prints each element to the console.
+- At first glance, it might seem that the entire list is first filtered, then transformed, and finally printed to the console. However, thanks to lazy processing, this is not the case. Instead of processing all elements at each stage, the Stream API processes each element step-by-step through the entire pipeline.
+
+
+```
+Output:
+filter: one
+map: one
+forEach: ONE
+filter: two
+map: two
+forEach: TWO
+filter: three
+```
+
+- This output shows the following:
+    - The first element, "one", passes through the `filter()` method, then gets converted to uppercase via `map()`, and finally is printed to the console.
+    - The second element, "two", is processed similarly: filtering, transformation, and printing.
+    - The third element, "three", does not pass the filter **because its length is greater than 3**, so its processing stops after the `filter()` call.
+- Even though the terminal operation (`forEach()`) triggers the execution, each element flows through the entire sequence of intermediate operations (`map()` -> `filter()`) in the order they are defined. Intermediate operations are evaluated sequentially for each element, one after the other. The terminal operation (`forEach()`, `collect()`, etc.) simply signals when to start processing and defines what to do with the final result.
+
+
+![alt text](image-74.png)
+
+
+>[!NOTE]
+> - The Stream API supports many types of data sources. A stream can be created from collections, arrays, strings, files, and other structures. For example:
+> ```
+> List<String> list = Arrays.asList("one", "two", "three");
+> Stream<String> streamFromList = list.stream();
+> 
+> String[] array = {"one", "two", "three"};
+> Stream<String> streamFromArray = Arrays.stream(array);
+> ```
+>
+> - **The source data remains unchanged during stream processing—every transformation occurs in a new stream, and the result is saved in a new data structure**.
+
+
+- Now the question arise that if the existing collection is unchanged, the intermediate operation takes up memory for each of its chain method? when you chain methods in a stream (like `filter()`, `map()`), the intermediate steps do not create new collections or data structures. Streams process one element at a time. Each element is passed through the pipeline, and the intermediate results are not stored in memory unless you explicitly ask for it using a terminal operation like `collect().`
+- Streams are particularly useful for large datasets because they are lazy and only process data when necessary. If you had to manually create new lists at each step (filtering, mapping, etc.), it would take up a lot more memory.
+- If you had a huge dataset of millions of elements and used a loop to filter and map them, you'd have to create temporary collections at each stage. Streams avoid this by not creating intermediate collections.
+- Terminal operations like `collect()` do create new collections or data structures (like lists or sets), and that’s where memory comes into play.
+- If you use parallel streams, the work is split across multiple threads, and some additional memory overhead is involved due to thread management, but streams themselves are still memory-efficient because of the same lazy evaluation.
+
+
+#### Stream can be used once
+
+- **Streams in Java can only be used once**. Once you perform a terminal operation (like `forEach()`, `collect()`, etc.), the stream is consumed or closed, and it cannot be reused.
+- Consider below code
+
+```
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+public class StreamExample {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("one", "two", "three");
+
+        // Create a stream from the list
+        Stream<String> stream = list.stream();
+
+        // First use of the stream (valid)
+        stream.forEach(System.out::println);
+
+        // Trying to use the stream again (invalid, will throw an exception)
+        stream.forEach(System.out::println);  // This will cause an error!
+    }
+}
+
+Output:
+Output:
+
+one
+two
+three
+
+Exception in thread "main" java.lang.IllegalStateException: stream has already been operated upon or closed
+	at java.base/java.util.stream.AbstractPipeline.sourceStageSpliterator(AbstractPipeline.java:279)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at StreamExample.main(StreamExample.java:16)
+```
+
+- This error occurs because the stream has been consumed after the first forEach(), and streams can’t be reused once they are closed. If you want to again use the same collection you need to create a new stream.
+
+```
+import java.util.Arrays;
+import java.util.List;
+
+public class StreamExample {
+    public static void main(String[] args) {
+        List<String> list = Arrays.asList("one", "two", "three");
+
+        // First stream usage
+        list.stream().forEach(System.out::println);
+
+        // Second stream usage (new stream created)
+        list.stream().forEach(System.out::println);
+    }
+}
+
+
+Output:
+one
+two
+three
+one
+two
+three
+```
+
+- Once you’ve performed the operations on the data and reached a result (via a terminal operation), the stream is closed. This design prevents accidental reuse of streams, which could lead to unexpected behaviors in data processing.
+- **Thats why it implements AutoClosable interface**. The reason a stream in Java implements the `AutoCloseable` interface is related to this "one-time-use" nature of streams and their ability to release resources after being used.
+- Streams, especially those working with I/O resources (like files or sockets), may require explicit resource management. After processing, streams can hold resources (like open file handles, database connections, or network resources), and these need to be properly closed to avoid memory leaks or resource exhaustion.
+- Since streams can be used only once, they implement `AutoCloseable`, which allows them to automatically release resources after they're consumed, especially when used in a `try-with-resources` block.
+
+```
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+public class AutoCloseableStreamExample {
+    public static void main(String[] args) {
+        // Try-with-resources ensures the stream is closed automatically after use
+        try (Stream<String> lines = Files.lines(Paths.get("example.txt"))) {
+            // Processing the file content
+            lines.forEach(System.out::println);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+#### Stateless and Stateful Operations
+
+**1. Stateless Operations**:
+    - Stateless means that each element in the stream is processed independently of the others.
+    - The operation doesn't need to know about other elements to do its job.
+    - These operations can easily be parallelized because they don’t need to keep track of the whole stream.
+    - Example, `map()` and `filter()` are stateless.
+
+```
+import java.util.Arrays;
+import java.util.List;
+
+public class StatelessExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+        // Stateless operations: map and filter
+        numbers.stream()
+               .filter(n -> n > 2)    // Filters each element independently (no need to know other elements)
+               .map(n -> n * 2)       // Multiplies each element independently by 2
+               .forEach(System.out::println);  // Terminal operation to print elements
+    }
+}
+
+
+Output:
+6
+8
+10
+```
+
+**2. Stateful Operations**:
+    - Stateful means that the operation needs to know about other elements in the stream to do its job.
+    - These operations cannot begin to return results until they process part or all of the stream. 
+    - These operations require more memory and processing because they can’t work element by element — they need to look at part or all of the stream before producing results.
+    - Example, `sorted()`, `distinct()`, and `limit()` are stateful.
+
+```
+import java.util.Arrays;
+import java.util.List;
+
+public class StatefulExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(5, 1, 4, 2, 3);
+
+        // Stateful operation: sorted
+        numbers.stream()
+               .sorted()  // Needs to look at all elements first to sort them
+               .forEach(System.out::println);  // Terminal operation to print sorted elements
+    }
+}
+
+Output:
+1
+2
+3
+4
+5
+```
+
+- Stateless operations (like `map()` and `filter()`) are generally faster and easier to parallelize because they process each element independently. Stateful operations (like `sorted()` and `distinct()`) are usually slower and use more memory because they need to keep track of the whole stream or part of it before producing results.
+- If the pipeline consists only of stateless operations, the stream can be processed `in one pass`, which makes the execution fast and efficient. However, when stateful operations are added along with it, the stream is divided into sections, and each section must complete its processing before the next one can begin.
+
+```
+public static void main(String[] args) {
+    final List<String> list = List.of("one", "two", "three");
+
+    list.stream()
+            .filter(s -> {
+                System.out.println("filter: " + s);
+                return s.length() <= 3;
+            })
+            .map(s1 -> {
+                System.out.println("map: " + s1);
+                return s1.toUpperCase();
+            })
+            .sorted()
+            .forEach(x -> {
+                System.out.println("forEach: " + x);
+            });
+}
+
+Output:
+filter: one
+map: one
+filter: two
+map: two
+filter: three
+forEach: ONE
+forEach: TWO
+```
+
+- After filtering, the stream gathers all the elements that passed the check. Only after that does the sorting occur, followed by the execution of `map()` for each element. The order of output in the `forEach()` method changes according to the result of the sorting.
+- Thus, the `sorted()` operation creates a **`synchronization point`**, where all elements must be processed first before the pipeline can complete. This can be useful in some cases but may also slow down processing, especially for large datasets.
+
+#### Parallel Stream
+
+- In Java 8, parallel streaming allows you to parallelize the processing of streams. parallel streaming refers to the ability to process elements of a stream concurrently, leveraging multiple threads to improve the performance of processors
+- This is achieved by invoking the `stream().parallel()` or `.parallelStream()` method on a stream.
+
+### Internal Working of Stream
+
+Internally, the stream uses iterators and function composition. For each element in the source (e.g., List), it applies all the intermediate operations (map(), filter()) before moving on to the next element.
+The stream combines operations into a single pass over the data (for each element), which makes it more efficient than using multiple loops.
 
 ### More Examples
 
@@ -5449,13 +5802,10 @@ Output:
 
 
 
-
-lazy evaluation
-
+https://struchkov.dev/blog/en/java-stream-api/#parallel-execution
 https://chatgpt.com/c/670c7d20-02a8-8009-86e1-b607d76c2554
 https://medium.com/@palivela.chaitu/java-streams-394274a2bd72
 https://hackajob.com/talent/blog/why-you-should-be-using-stream-api-in-java-8
-https://www.linkedin.com/pulse/intermediate-terminal-operations-java-streams-jahid-momin/
 https://howtodoinjava.com/java/stream/java-streams-by-examples/
 
 
