@@ -273,7 +273,6 @@ where is interfaces present in memory management? abstract class ? static variab
 - transient
 - singleton class in java
 - logging
-- Optional in Java
 - Why Stream API is called api? internal working of it, 2.7. Stream of Primitives, custom stream logic
 
 Functional Programming And Programming Paradigms in Java

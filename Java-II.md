@@ -5129,6 +5129,157 @@ public class MainClass {
 > - **Lambda expressions and method references were both introduced in Java 8.** With Java 8, instead of generating anonymous classes for lambdas and method references, the Java compiler generates more efficient bytecode using **`invokedynamic`**. This is a JVM instruction that allows method references and lambdas to be linked dynamically at runtime, rather than creating a new class file for each lambda or method reference. 
 > - This avoids the need to create separate anonymous classes and makes the code more memory efficient. This approach reduces memory overhead and improves performance compared to older anonymous classes.
 
+
+## Optional
+
+- Every Java Programmer is familiar with `NullPointerException`. It can crash your code. And it is very hard to avoid it without using too many null checks. So, to overcome this, Java 8 has introduced a new class `Optional` in `java.util package`. It can help in writing a neat code without using too many null checks. By using Optional, we can specify alternate values to return or alternate code to run.
+- Without Optional
+
+```
+public class OptionalDemo {
+    public static void main(String[] args)
+    {
+        String[] words = new String[10];
+        String word = words[5].toLowerCase();
+        System.out.print(word);
+    }
+}
+
+Output:
+Exception in thread "main" java.lang.NullPointerException
+```
+
+- With Optional
+
+```
+import java.util.Optional;
+
+// Driver Class
+public class OptionalDemo {
+      // Main Method
+    public static void main(String[] args)
+    {
+        String[] words = new String[10];
+        
+          Optional<String> checkNull = Optional.ofNullable(words[5]);
+          if (checkNull.isPresent()) {
+            String word = words[5].toLowerCase();
+            System.out.print(word);
+        }
+        else
+            System.out.println("word is null");
+    }
+}
+
+
+Output:
+word is null
+```
+
+- In Java, `Optional<T>` is a container object that represents the presence or absence of a value of type `T`. When we open `Optional` class we get several methods.
+
+![alt text](image-76.png)
+
+- By using `Optional`, you make it clear to other developers that a method might return a value or nothing at all, improving readability and understanding of the code.
+- **Optional Encourages Functional Programming**.
+- Some more examples of `Optional` class
+
+```
+import java.util.Optional;
+
+
+public class AboutOptional {
+    public static void main(String[] args) {
+
+        Optional<String> nonEmptyOpt = Optional.of("Hello");          // Contains "Hello"
+        Optional<String> nullableOpt = Optional.ofNullable(null);     // Contains no value
+        Optional<String> emptyOpt = Optional.empty();                 // Contains no value
+        
+        if (nonEmptyOpt.isPresent()) {
+            System.out.println("Value is present: " + nonEmptyOpt.get()); // Prints "Hello"
+        }
+        
+        if (nullableOpt.isEmpty()) {
+            System.out.println("No value present"); // Prints this because nullableOpt is empty
+        }
+
+        if(emptyOpt.isEmpty()){
+            System.out.println("Value is Empty");
+        }
+
+        //Retrieve value
+        System.out.println(nonEmptyOpt.get()); // Prints "Hello"
+
+        //Providing Default Value
+
+        /**
+         * Returns the value if present, or the specified default value if empty.
+         */
+        String result = nullableOpt.orElse("Default Value"); // Returns "Default Value" because nullableOpt is empty
+        System.out.println(result);
+
+        //result = emptyOpt.orElseThrow(() -> new IllegalStateException("No value")); // Returns "Hello" or throws
+        /**
+         * Exception in thread "main" java.lang.IllegalStateException: No value
+        at AboutOptional.lambda$1(AboutOptional.java:38)
+        at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+        at AboutOptional.main(AboutOptional.java:38)
+         */
+
+        // Perform some actions based on the values
+        /**
+         * Executes the given action with the value if it’s present.
+         */
+        nonEmptyOpt.ifPresent(value -> System.out.println("Found: " + value)); // Prints "Found: Hello"
+
+        /**
+         * Executes the given action with the value if it’s present; otherwise, runs the empty action.
+         */
+        nullableOpt.ifPresentOrElse(
+            value -> System.out.println("Found: " + value),
+            () -> System.out.println("Value is absent") // Prints "Value is absent" because nullableOpt is empty
+        );
+
+    }
+}
+
+Output:
+Value is present: Hello
+No value present
+Value is Empty
+Hello
+Default Value
+Found: Hello
+Value is absent
+```
+
+>[!NOTE]
+> - The feature provided by `Optional` class can be done explicitly by writing more lines of code. Since `Optional` provides functional programming style it makes those lines of code clearer and less error-prone.
+> - `Optional` gives us methods to handle the value safely without writing if statements every time. If many parts of your code need to check for `null`, it can get messy and harder to read. Plus, `null` doesn’t tell us why something is missing, it just indicates an absence of a value.
+> - If you are using database resources, and executing queries , you might encounter `null` values.
+> - Without `Optional`
+>
+> ```
+> public String findUserNameById(int userId) {
+>     User user = database.findUserById(userId);
+>     if (user != null) {
+>         return user.getName();
+>     } else {
+>         return "Unknown User";
+>     }
+> }
+> ```
+> - With `Optional`
+> 
+> ```
+> // To use it
+> String userName = Optional.ofNullable(database.findUserById(123)).orElse("Unknown User").toString();
+> ```
+>
+> - **Optional returns Object value which requires type conversion**.
+
+
+
 ## Stream API
 
 - **Stream API was introduce in Java 8**. Lets understand what it is.
@@ -5441,7 +5592,8 @@ java.util.stream.ReferencePipeline$Head@1e4a7dd4
 
 ![alt text](image-73.png)
 
-- Think of a stream like a pipeline that allows objects to flow through it. Intermediate operations are like valves or filters that can be used to modify the objects in the pipeline. You can use these operations to perform transformations on the objects, such as mapping them to a new value or filtering out certain objects based on some condition.
+- Think of a stream like a pipeline that allows objects to flow through it. Intermediate operations are like valves or filters that can be used to modify the objects in
+ the pipeline. You can use these operations to perform transformations on the objects, such as mapping them to a new value or filtering out certain objects based on some condition.
 - Once you've made all the adjustments you want with intermediate operations, you can use a terminal operation to get a final result from the pipeline. Terminal operations are like the tap at the end of the pipeline that allows you to get the final output you want. When you turn on the tap (terminal operation) you get the water (data getting from source and are filtered/mapped)
 
 #### Lazy Evaluation
@@ -6260,6 +6412,87 @@ public class Java8FindAnyExample1 {
 Output:
 2 // no guaranteed
 ```
+
+### Stream Types
+
+- Java's Stream API provides specialized stream types like `IntStream`, `DoubleStream`, and `LongStream` to work specifically with primitive data types (`int`, `double`, and `long`, respectively). These types are similar to the generic `Stream<T>`, but they’re optimized for primitive values, **avoiding the overhead of boxing/unboxing that occurs** when using `Stream<Integer>`, `Stream<Double>`, or `Stream<Long>`.
+- Consider example of `IntStream`
+
+```
+import java.util.stream.IntStream;
+
+public class IntStreamExample {
+    public static void main(String[] args) {
+        // Generating an IntStream
+        IntStream intStream = IntStream.range(1, 5); // 1, 2, 3, 4
+
+        // Using IntStream methods
+        int sum = intStream.sum();
+        System.out.println("Sum: " + sum); // Output: Sum: 10
+
+        // Using another IntStream with intermediate operations
+        IntStream.range(1, 10)
+                .filter(n -> n % 2 == 0) // Filter even numbers
+                .forEach(System.out::println); // Output: 2, 4, 6, 8
+    }
+}
+```
+
+- Consider example of `DoubleStream`
+
+```
+import java.util.stream.DoubleStream;
+
+public class DoubleStreamExample {
+    public static void main(String[] args) {
+        // Creating a DoubleStream from an array
+        double[] values = {1.2, 2.3, 3.4};
+        DoubleStream doubleStream = DoubleStream.of(values);
+
+        // Calculate average
+        double avg = doubleStream.average().orElse(0.0);
+        System.out.println("Average: " + avg); // Output: Average: 2.3
+
+        // Creating a range of random doubles
+        DoubleStream.generate(Math::random)
+                    .limit(3) // Only generate 3 random doubles
+                    .forEach(System.out::println);
+    }
+}
+```
+
+- Consider example of `LongStream`
+
+```
+import java.util.stream.LongStream;
+
+public class LongStreamExample {
+    public static void main(String[] args) {
+        // Creating a LongStream from a range
+        LongStream longStream = LongStream.rangeClosed(1, 5); // Includes 5
+
+        // Calculate the product of the numbers
+        long product = longStream.reduce(1, (a, b) -> a * b);
+        System.out.println("Product: " + product); // Output: Product: 120
+
+        // Using another LongStream with intermediate operations
+        LongStream.range(1, 10)
+                  .filter(n -> n % 2 != 0) // Filter odd numbers
+                  .forEach(System.out::println); // Output: 1, 3, 5, 7, 9
+    }
+}
+```
+
+- When you use `Stream<T>`, where `T` is a wrapper class like `Integer`, `Double`, or `Long`, Java performs boxing and unboxing between the primitive and wrapper types. **This can lead to overhead in terms of both memory and processing**. The specialized streams (`IntStream`, `DoubleStream`, and `LongStream`) handle primitives directly, making them more efficient for large data sets or computations.
+
+
+| **Feature**                     | **`Stream<T>`** | **`IntStream`, `DoubleStream`, `LongStream`** |
+|---------------------------------|---------------|-----------------------------------------|
+| **Works with**                  | Objects       | Primitive types                         |
+| **Supports boxing/unboxing**    | Yes           | Not required                            |
+| **Specialized numeric methods** | No            | Yes (sum, average, etc.)                |
+
+
 
 ## Reflection
 
