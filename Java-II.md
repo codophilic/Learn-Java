@@ -5705,13 +5705,246 @@ forEach: TWO
 
 #### Parallel Stream
 
-- In Java 8, parallel streaming allows you to parallelize the processing of streams. parallel streaming refers to the ability to process elements of a stream concurrently, leveraging multiple threads to improve the performance of processors
+- In Java 8, parallel streaming allows you to parallelize the processing of streams. Parallel streaming refers to the ability to process elements of a stream concurrently, leveraging multiple threads to improve the performance of processors.
+- A parallel stream breaks the stream's data into smaller chunks and processes them in parallel using multiple threads. It takes advantage of the multiple cores in your CPU to process data faster. The idea is that instead of processing data sequentially (one by one), parallel streams process multiple chunks of data at the same time, in different threads.
 - This is achieved by invoking the `stream().parallel()` or `.parallelStream()` method on a stream.
+- Lets see example of `parallelStream()`.
+
+```
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.Arrays;
+
+
+public class AboutStreamApi{
+    public static void main(String[] args) throws InterruptedException {
+
+        List<String> names = Arrays.asList("John", "Jane", "Mike", "Emily", "Chris");
+
+        // Parallel stream
+        names.parallelStream().forEach(name -> {
+            System.out.println(name + " - processed by " + Thread.currentThread().getName());
+        });
+    }
+}
+```
+
+- When we run the code multiple times we see that we order of names which are getting printed keeps varying.
+
+![alt text](image-75.png)
+
+- `parallelStream()` splits the list of names and processes them in parallel across multiple threads. Each element is handled by a different thread (e.g., `ForkJoinPool.commonPool-worker-1`, `worker-2`, etc.). The result is that elements are processed in parallel, not in the order they appear in the list.
+
+>[!TIP]
+> - Parallel Stream internally, it uses the `Fork/Join` framework in Java, which is designed for parallel task execution.
+> - Java uses the `ForkJoinPool` to distribute tasks for parallel streams. This is a common thread pool where tasks are broken down into smaller fragments and distributed across threads.
+
+- Some more examples of Parallel stream
+
+```
+import java.util.HashMap;
+import java.util.Map;
+
+public class ParallelStreamWithMap {
+    public static void main(String[] args) {
+        Map<String, String> nameToCity = new HashMap<>();
+        nameToCity.put("Alice", "New York");
+        nameToCity.put("Bob", "Los Angeles");
+        nameToCity.put("Charlie", "Chicago");
+        nameToCity.put("Diana", "Houston");
+        nameToCity.put("Eve", "Phoenix");
+
+        // Process each entry in parallel
+        nameToCity.entrySet().parallelStream()
+                .forEach(entry -> {
+                    System.out.println(entry.getKey() + " (name length: " + entry.getKey().length() +
+                            "), City: " + entry.getValue() + " (city length: " + entry.getValue().length() +
+                            ") - processed by " + Thread.currentThread().getName());
+                });
+    }
+}
+
+
+Output:
+Bob (name length: 3), City: Los Angeles (city length: 11) - processed by main
+Eve (name length: 3), City: Phoenix (city length: 7) - processed by main
+Alice (name length: 5), City: New York (city length: 8) - processed by main
+Charlie (name length: 7), City: Chicago (city length: 7) - processed by main
+Diana (name length: 5), City: Houston (city length: 7) - processed by ForkJoinPool.commonPool-worker-3
+```
+
+- Filter prime numbers
+
+```
+import java.util.Set;
+import java.util.HashSet;
+import java.util.stream.Collectors;
+
+public class ParallelStreamWithSet {
+    public static void main(String[] args) {
+        Set<Integer> numbers = new HashSet<>();
+        for (int i = 2; i <= 50; i++) {
+            numbers.add(i);
+        }
+
+        // Find prime numbers using parallel stream
+        Set<Integer> primes = numbers.parallelStream()
+                .filter(ParallelStreamWithSet::isPrime)
+                .collect(Collectors.toSet());
+
+        System.out.println("Prime numbers: " + primes);
+    }
+
+    // Helper method to check if a number is prime
+    public static boolean isPrime(int number) {
+        if (number <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(number); i++) {
+            if (number % i == 0) return false;
+        }
+        return true;
+    }
+}
+
+
+Output:
+Prime numbers: [2, 3, 5, 37, 7, 41, 11, 43, 13, 47, 17, 19, 23, 29, 31]
+```
+
+```
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+public class ParallelStreamLargeData {
+    public static void main(String[] args) {
+        // Generating a large list of random numbers
+        List<Double> numbers = new Random().doubles(1_000_000, 1, 1000)
+                .boxed()
+                .collect(Collectors.toList());
+
+        // Parallel stream to compute square roots and filter
+        long count = numbers.parallelStream()
+                .map(Math::sqrt)              // Compute square root
+                .filter(sqrt -> sqrt < 5)     // Filter square roots below 5
+                .count();                     // Count the remaining elements
+
+        System.out.println("Count of square roots below 5: " + count);
+    }
+}
+
+Output:
+Count of square roots below 5: 23954
+```
+
+- Let’s say we have a list of people with their names and ages, and we want to filter, transform, and collect only those who are over 18, with their names in uppercase.
+
+```
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+class Person {
+    String name;
+    int age;
+
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}
+
+public class ComplexParallelStreamExample {
+    public static void main(String[] args) {
+        List<Person> people = Arrays.asList(
+                new Person("Alice", 23),
+                new Person("Bob", 15),
+                new Person("Charlie", 30),
+                new Person("Diana", 17),
+                new Person("Eve", 25)
+        );
+
+        // Parallel stream to filter, map, and collect
+        Map<String, Integer> adults = people.parallelStream()
+                .filter(person -> person.getAge() > 18)             // Filter only adults
+                .collect(Collectors.toConcurrentMap(
+                        person -> person.getName().toUpperCase(),  // Convert name to uppercase
+                        Person::getAge                            // Keep age as value
+                ));
+
+        System.out.println("Adults (name in uppercase and age): " + adults);
+    }
+}
+
+
+Output:
+Adults (name in uppercase and age): {EVE=25, ALICE=23, CHARLIE=30}
+```
 
 ### Internal Working of Stream
 
-Internally, the stream uses iterators and function composition. For each element in the source (e.g., List), it applies all the intermediate operations (map(), filter()) before moving on to the next element.
-The stream combines operations into a single pass over the data (for each element), which makes it more efficient than using multiple loops.
+- When you create a stream from a collection, like `List<String> list = Arrays.asList("a", "b", "c"); Stream<String> stream = list.stream();`, Java wraps the collection into a stream. This wrapper provides methods like `filter`, `map`, etc., without altering the original collection.
+-  A `Spliterator` is a special iterator used in streams to split the source data for processing. It makes it possible for the stream to divide data into smaller parts when processing in parallel and handles traversing the source in a way that supports both sequential and parallel processing.
+- When you invoke `.stream()` or `.parallelStream()` on a collection, a `Spliterator` for that collection is created. If the stream is sequential, the `Spliterator` processes elements one by one. If the stream is parallel, it divides the source into chunks, with each part processed by a separate thread.
+- Now we know that how stream works, by iterating or processing each element or chunks (in parallel stream) into several pipelines or different functions but how these functions are connected? **it uses function composition**. Consider below snip
+
+```
+import java.util.function.Function;
+
+public class FunctionComposition {
+
+    public static void main(String[] args) {
+        Function<Integer, Integer> doubleIt = n -> n * 2;
+        Function<Integer, Integer> squareIt = n -> n * n;
+
+        Function<Integer, Integer> composedFunction = doubleIt.andThen(squareIt);
+
+        int result = composedFunction.apply(3); // (3*2)=6 --> 6*6=36
+
+        System.out.println(result);
+    }
+}
+
+Output:
+36
+```
+
+- Function composition in Java Streams can be achieved by chaining multiple intermediate operations together. Each intermediate operation transforms the stream in some way, and the final result is produced.
+- `PipelineHelper` is an internal component that manages the pipeline of operations in a stream, ensuring each intermediate operation is applied to each element. It maintains the **composition of functions**, coordinating the sequence of each map, filter, and other operations.
+- `PipelineHelper` is invoked when the terminal operation is triggered, and it handles each element in the pipeline by applying all the intermediate operations before passing the result to the terminal step. This is key to the function composition concept because it "chains" all intermediate steps together for each element.
+- The `forEachRemaining` method is defined in `Iterator` and `Spliterator`. It’s used to apply a function to each remaining element in the stream pipeline, one by one, as they flow through the intermediate operations until reaching a terminal operation.
+- When the terminal operation is called, `forEachRemaining` (for sequential streams) or an equivalent mechanism in parallel streams iterates over each element in the source data.
+
+```
+import java.util.Arrays;
+import java.util.List;
+
+public class StreamExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+        // Stream pipeline with multiple stages
+        numbers.stream() // Spliterator created for list
+            .filter(n -> n % 2 == 0) // Intermediate operation, using PipelineHelper
+            .map(n -> n * n)         // Another intermediate operation, chained functionally
+            .forEach(System.out::println); // Terminal operation, invoking forEachRemaining
+    }
+}
+
+Output:
+4
+16
+```
 
 ### More Examples
 
@@ -5794,24 +6027,239 @@ public class FlatMapExample {
         System.out.println(flatList);
     }
 }
+```
 
-Output:
-[John, Jane, Jack, Doe]
+#### Reduce
+
+- Performs a reduction on the elements of the stream (e.g., summing numbers).
+
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class ReduceExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+        int sum = numbers.stream()
+            .reduce(0, Integer::sum);
+
+        System.out.println(sum);  // Output: 15
+    }
+}
+```
+
+#### Collect
+
+- Collects the elements of a stream into a collection or another form.
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class CollectExample {
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("John", "Jane", "Jack");
+
+        // Collecting names into a comma-separated string
+        String result = names.stream()
+            .collect(Collectors.joining(", "));
+
+        System.out.println(result);  // Output: John, Jane, Jack
+    }
+}
+```
+
+#### Sorted
+
+- Sorts the elements in natural or custom order.
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class SortedExample {
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("John", "Jane", "Jack", "Doe");
+
+        List<String> sortedNames = names.stream()
+            .sorted()
+            .collect(Collectors.toList());
+
+        System.out.println(sortedNames);  // Output: [Doe, Jack, Jane, John]
+    }
+}
+```
+
+#### Limit and Skip
+
+- `limit()` limits the number of elements in the stream. `skip()` skips the first `N` elements.
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class LimitSkipExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        List<Integer> limited = numbers.stream()
+            .limit(5)
+            .collect(Collectors.toList());
+
+        List<Integer> skipped = numbers.stream()
+            .skip(5)
+            .collect(Collectors.toList());
+
+        System.out.println(limited);  // Output: [1, 2, 3, 4, 5]
+        System.out.println(skipped);  // Output: [6, 7, 8, 9, 10]
+    }
+}
+```
+
+#### Distinct
+
+- Returns a stream with distinct elements (removes duplicates).
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class DistinctExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 2, 3, 4, 4, 5);
+
+        List<Integer> distinctNumbers = numbers.stream()
+            .distinct()
+            .collect(Collectors.toList());
+
+        System.out.println(distinctNumbers);  // Output: [1, 2, 3, 4, 5]
+    }
+}
+```
+
+#### AnyMatch, NoneMatch and AllMatch
+
+- `anyMatch()` determines if at least one element meets a condition. `allMatch()` determines if all elements meet a condition. `noneMatch()` determines if none of the elements meet a condition
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class MatchExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+        boolean anyMatch = numbers.stream().anyMatch(n -> n > 3);
+        boolean allMatch = numbers.stream().allMatch(n -> n < 10);
+        boolean noneMatch = numbers.stream().noneMatch(n -> n < 0);
+
+        System.out.println(anyMatch);   // Output: true
+        System.out.println(allMatch);   // Output: true
+        System.out.println(noneMatch);  // Output: true
+        
+        anyMatch = numbers.stream().anyMatch(n -> n > 20);
+        allMatch = numbers.stream().allMatch(n -> n < 0);
+        noneMatch = numbers.stream().noneMatch(n -> n < 4);
+        
+        System.out.println(anyMatch);   // Output: false
+        System.out.println(allMatch);   // Output: false
+        System.out.println(noneMatch);  // Output: false
+    }
+}
+```
+
+#### Peek
+
+- Used to perform an action on each element without changing the stream.
+
+```
+import java.util.*;
+import java.util.stream.*;
+
+public class PeekExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+        List<Integer> processedNumbers = numbers.stream()
+            .peek(n -> System.out.println("Processing: " + n))
+            .map(n -> n * 2)
+            .collect(Collectors.toList());
+
+        System.out.println(processedNumbers);  // Output: [2, 4, 6, 8, 10]
+    }
+}
+```
+
+#### FindFirst and FindAny
+
+- `findFirst()` and `findAny()` are both terminal operations in the Stream API that find an element in a stream and return a single element.
+- `findFirst()` returns the first element in a stream, if one is available. It's useful when you need to find the first matching element in a deterministic way. 
+- `findAny()` returns any element from a stream, but it's non-deterministic, meaning the value returned may be different each time. It's useful when you don't need a specific element, just any one.
+- `findFirst()`
+
 ```
 
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
+public class Java8FindFirstExample1 {
 
-https://struchkov.dev/blog/en/java-stream-api/#parallel-execution
-https://chatgpt.com/c/670c7d20-02a8-8009-86e1-b607d76c2554
-https://medium.com/@palivela.chaitu/java-streams-394274a2bd72
-https://hackajob.com/talent/blog/why-you-should-be-using-stream-api-in-java-8
-https://howtodoinjava.com/java/stream/java-streams-by-examples/
+    public static void main(String[] args) {
 
+        List<Integer> list = Arrays.asList(1, 2, 3, 2, 1);
 
+        Optional<Integer> first = list.stream().findFirst();
+        if (first.isPresent()) {
+            Integer result = first.get();
+            System.out.println(result);       //Output: 1
+        } else {
+            System.out.println("no value?");
+        }
 
+        Optional<Integer> first2 = list
+                .stream()
+                .filter(x -> x > 1).findFirst();
 
+        if (first2.isPresent()) {
+            System.out.println(first2.get()); //Output: 2
+        } else {
+            System.out.println("no value?");
+        }
+    }
 
+}
+```
+
+- `findAny()`
+
+```
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+public class Java8FindAnyExample1 {
+
+    public static void main(String[] args) {
+
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        Optional<Integer> any = list.stream().filter(x -> x > 1).findAny();
+        if (any.isPresent()) {
+            Integer result = any.get();
+            System.out.println(result);
+        }
+
+    }
+
+}
+
+Output:
+2 // no guaranteed
+```
 
 ## Reflection
 

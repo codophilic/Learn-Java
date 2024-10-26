@@ -7282,6 +7282,9 @@ WaitThread: I got the notification, time to proceed!
     - User threads, also known as application threads, are threads that are explicitly created by the programmer to perform specific tasks. They play a direct role in the main functionality of the application. User threads continue executing until their task is completed or until the application explicitly terminates them.
     - They keep the application running as long as they are alive.
     - All above examples we have seen are user threads.
+
+
+
 **2. Daemon Threads:**
     - Daemon threads are threads that provide support to user threads. They run in the background and are considered "service" threads. Unlike user threads, daemon threads do not prevent the JVM from exiting, even if they are still running. When all user threads have finished executing, the JVM terminates, abruptly stopping any remaining daemon threads.
     - Daemon threads are commonly used for tasks such as automatic memory management (garbage collection) or other housekeeping activities that should not delay the program's termination.

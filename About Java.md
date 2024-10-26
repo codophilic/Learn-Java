@@ -5,7 +5,8 @@
 
 ## Types of Programming
 
-![image](https://github.com/user-attachments/assets/24cee976-8627-4466-a47d-f5fcbcd899cf)
+![alt text](Images/aboutjava/lastImage.jpg)
+
 
 **1. Low Level**
   - Also known as machine language, this is the only language computers understand. It's made up of binary numbers (1s and 0s) and is machine-friendly, but hard for humans to understand. Low-level languages are closer to machine code, offering more control and efficiency, but are harder to program. They are often used in system programming, operating systems, and device drivers
@@ -16,7 +17,7 @@
 **3. High-level**
   - These languages are easier to understand and debug, and are widely used today. They are portable and do not depend on machines. High-level languages are more human-readable and abstracted from hardware, making them easier to program but less efficient. They allow for faster development time since they require less coding and debugging. Examples include Java, C, C++, Python, Perl, BASIC, COBOL, Pascal, and Ruby.
 
-![image](https://github.com/user-attachments/assets/515317d8-4a14-42aa-a298-ef3e4f9c76cc)
+![alt text](Images/aboutjava/lastImage-1.jpg)
 
 
 # About Java
@@ -195,7 +196,7 @@ public class Example {
 ![alt text](Images/aboutjava/image-11.png)
 
 - Writing the code in NetBeans IDE or any other IDE. In this image above you can see we have our code file as **abc.java**
-- Once you have written the code you save itand click Run. This invokes the Java Compiler. The compiler checks the code for syntax errors and any other compile time errors and if no error is found the compiler converts the java code into an intermediate code( **abc.class** file) known as bytecode. 
+- Once you have written the code you save it and click Run. This invokes the Java Compiler. The compiler checks the code for syntax errors and any other compile time errors and if no error is found the compiler converts the java code into an intermediate code( **abc.class** file) known as bytecode. 
 -  This intermediate code is platform independent (you can take this bytecode from a machine running windows and use it in any other machine running Linux or MacOS etc). Also this bytecode is an intermediate code, hence it is only understandable by the JVM and not the user or even the hardware /OS layer.
 - This is the start of the Run Time phase, where the bytecode is loaded into the JVM by the class loader (another inbuilt program inside the JVM).
 - Now the bytecode verifier (an inbuilt program inside the JVM) checks the bytecode for its integrity and if not issues are found passes it to the interpreter.
@@ -222,6 +223,7 @@ public class Example {
 > - In Java, the main point here is that the JVM depends on the operating system – so if you are running Mac OS X you will have a different JVM than if you are running Windows or some other operating system.
 > - This fact can be verified by trying to download the JVM for your particular machine – when trying to download it, you will given a list of JVM’s corresponding to different operating systems, and you will obviously pick whichever JVM is targeted for the operating system that you are running. 
 > - **Every system has its own JVM which gets installed automatically when the jdk software is installed. ... An important point to be noted is that while JAVA is platform-independent language, the JVM is platform-dependent. Different JVM is designed for different OS and byte code is able to run on different OS.**
+> - **Thats why java programs are WORA (write once, run anywhere). WORA is a programming paradigm that's associated with Java and its technologies. It allows programmers to create a Java program on one system and run it on any other Java-enabled system without needing to make changes to the code. WORA is made possible by the use of virtual machines and intermediate code. These abstract the details of the underlying operating system and hardware. Java code is compiled into a universal bytecode that can be executed on any device with a Java Virtual Machine (JVM). Java is considered platform independent because it compiles code into a universal "bytecode" that can be run on any system with a Java Virtual Machine (JVM), which acts as a translator to convert that bytecode into machine-specific instructions for the current platform, meaning you can run the same Java program on different operating systems without needing to recompile it; therefore, the JVM is necessary to execute Java programs on any given system as it handles the platform-specific translation of the bytecode. While Java code itself is platform independent, the JVM is platform dependent, meaning a different JVM is needed for each operating system to correctly translate the bytecode**
 
 ## Data Types
 
@@ -313,7 +315,7 @@ public class PrimitiveDataType {
     public static void main(String[] args) {
 
         /**
-         * Declaring and Initializating variables
+         * Declaring and Initializing variables
          */
          int a=1;
          float b=2;
@@ -338,7 +340,7 @@ public class PrimitiveDataType {
     public static void main(String[] args) {
 
         /**
-         * Declaring and Initializating variables
+         * Declaring and Initializing variables
          */
          int a=1;
          float b=2;
@@ -359,7 +361,7 @@ Output:
 3.678
 ```
 
-- Lets explore all the datatypes.
+- Lets explore all the data-types.
 
 ```
 public class PrimitiveDataType {
@@ -367,7 +369,7 @@ public class PrimitiveDataType {
     public static void main(String[] args) {
 
         /**
-         * Declaring and Initializating variables
+         * Declaring and Initializing variables
          */
          int a=1;
          float b=2;
@@ -379,7 +381,7 @@ public class PrimitiveDataType {
         System.out.println(a+b+c);
 
         /**
-         * Literals are the values assigned to the varibles like 1,2,3 are literals.
+         * Literals are the values assigned to the Variables like 1,2,3 are literals.
          */
 
         /**
@@ -421,7 +423,7 @@ public class PrimitiveDataType {
         System.out.println(bTrue);
 
         /**
-         * Apart from stroing decimal valeues ,int can store hexadecimal, Octal and even binary representing values
+         * Apart from Storing decimal values ,int can store hexadecimal, Octal and even binary representing values
          */
 
          int x = 100; //Decimal
