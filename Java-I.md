@@ -351,7 +351,7 @@ Output:
 ![alt text](Images/java-1/image-6.png)
 
 >[!IMPORTANT]
-> - If we explicitly specify **`String str=new String("Explicitly telling java to create a new Object but still it won't create")`** then still it will search in String pool. If literal is not available then only its creates a new object of string.
+> - If we explicitly specify **`String str=new String("Explicitly telling java to create a new Object then only it creates")`** then it will create a new string in String pool with different memory address.
 
 ### Common String in-built methods
 
@@ -405,6 +405,11 @@ str = str + " World";  // A new string "Hello World" is created, "str" now refer
 ```
 - **Usage**: Best used when the string content is not expected to change frequently, such as for string literals or small concatenations.
 - **Performance**: Since strings are immutable, every modification (like concatenation) creates a new object, which can be inefficient, especially in loops or when handling large amounts of data.
+
+##### Why are String Immutable?
+
+- **Security Purpose**: Strings are often used to store sensitive data like usernames, passwords, and file paths. Immutability prevents malicious modification of these values, enhancing the security of the application
+- **Performance and Efficiency**: Immutability allows Java to implement a string pool, a memory optimization that stores only one copy of each distinct string value. This reduces memory usage and improves performance when working with large numbers of strings. So even if the same string value are created multiple times, instead of creating every time a new objects, it will refer the same value from the string pool.
 
 #### Mutable (String Buffer, String Builder)
 
@@ -2779,7 +2784,7 @@ public class Main {
 - Also one thing if you observer , we are using the same reference variable of Animal for Cat's object creation. This makes your code **loosely coupled** , so lets say in future you will create another subclass name `Cow` which extends Animal, using the same reference variable you can create object of Cow thus making your code **loosely coupled**.
 - If you have created individual reference variable for each class it would ended up taking space in heap and also made your application **tightly coupled** means for a new subclass like `Cow` you need to create a new reference variable.
 
-### There are two types of polymorphism in Java:
+### Types of Polymorphism
 
 1. **Compile-time Polymorphism (Static Polymorphism)**: This is also known as method overloading. It occurs when multiple methods have the same name with different parameters (different type or number of parameters) within the same class.
 
@@ -5796,6 +5801,64 @@ finally{
 }
 ```
 
+- **`finally` block always gets executed**
+
+```
+class HelloWorld {
+    public static void main(String[] args) {
+        try{
+            
+        }catch(Exception e){
+            
+        }finally{
+            System.out.println("Always gets executed");
+        }
+    }
+}
+```
+
+- Output
+
+```
+Always gets executed
+```
+
+- **We can also write `try-finally` block**
+
+```
+class HelloWorld {
+    public static void main(String[] args) {
+        try{
+            
+        }finally{
+            System.out.println("Always gets executed");
+        }
+    }
+}
+```
+
+- Output
+
+```
+Always gets executed
+```
+
+>[!NOTE]
+> - `finally` block will won't execute when system crashes or system exists the program  (`System.exit(1)`)
+> ```
+> class HelloWorld {
+>     public static void main(String[] args) {
+>         try{
+>             System.exit(1);
+>         }finally{
+>             System.out.println("Always gets executed");
+>         }
+>     }
+> }
+> 
+> Output: (Nothing)
+> ```
+
 ## I/O Streams
 
 - Have you ever wondered how java accepts input and gives output? it is using **Streams** which is part of package `java.io`.
@@ -5970,7 +6033,7 @@ Hi
 
 ### Buffering in Streams
 
--**What is a Buffer?**
+- **What is a Buffer?**
     - A buffer is a temporary storage area, usually in memory (RAM), used to hold data while it is being transferred between two places. In the context of I/O streams, buffers help manage data efficiently by reducing the number of direct interactions with the underlying data source or destination.
 
 - Both byte-oriented and character-oriented streams use buffers to improve performance.
@@ -7805,4 +7868,186 @@ public static void main(String... args) {
     // code here
 }
 ```
+
+## Why pointers are not used in java ?
+
+- Java doesn't explicitly support pointers for several reasons
+
+**1. Security:** Pointers allow direct memory access, which can be dangerous if not handled carefully. This can lead to memory corruption, unauthorized access, and security vulnerabilities. **Java's memory management (JVM) model eliminates these risks by handling memory allocation and deallocation automatically.**
+
+
+**2. Simplicity**: Pointers add complexity to programming, making code harder to write, read, and maintain. Java aims to be a simpler language, accessible to a wider range of developers.
+
+
+**3. Garbage Collection**: Java's garbage collector automatically reclaims memory that is no longer in use. This eliminates the need for manual memory management, which can be error-prone and time-consuming. Pointers would complicate garbage collection.
+
+
+**4. References**: Java provides references, which are similar to pointers but safer. References allow you to access objects without direct memory manipulation. **The Java runtime environment (JVM) manages the memory and ensures references are valid**.
+
+## Is it possible to OVERRIDE private or static methods?
+
+- Consider below code of private method
+
+```
+class Aprivate{
+    private void method1(){
+        System.out.println("In Aprivate");
+    }
+}
+
+class Bprivate extends Aprivate{
+
+    @Override
+    private void method1(){
+
+    }
+}
+
+public class AboutOverridePrivateOrStatic {
+    public static void main(String[] args) {
+        
+
+    }
+}
+```
+
+- Now when we write the above we get error
+
+![alt text](image-77.png)
+
+- **You cannot override private method because inside the subclass, the private method of parent class are not accessible**. So what you actually do is create a new private method of same name in the subclass and **not override it**.
+- Consider below static method
+
+```
+class AStatic{
+    public static void method1(){
+        System.out.println("In AStatic");
+    }
+}
+
+class BStatic{
+    @Override
+    public static void method1(){
+        System.out.println("In AStatic");
+    }
+}
+```
+
+- Now when we write the above code we get error.
+
+![alt text](image-78.png)
+
+- The above code is not an example of **method overriding**, it is an example of **method hiding**. Overriding happens when you provide a **different implementation for a non-static (instance) method in a subclass**, which is called based on the actual runtime type of the object. 
+- **Static methods like `method1` are class-level methods, not instance-level**. When a subclass defines a static method with the same signature as in its superclass, **the method in the subclass hides the superclass method**. This is called **method hiding**.
+
+## Singleton Class
+
+- In Java, a Singleton class is a design pattern that restricts the instantiation of a class to only one object. This means that no matter how many times you try to create an instance of the class, you will always get the same, single instance.
+- Consider below example
+
+```
+class Singleton {
+    private static Singleton instance;
+
+    private Singleton() {
+        // Private constructor to prevent external instantiation
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+
+    public void doSomething() {
+        System.out.println("Singleton doing something...");
+    }
+
+}
+
+public class AboutSingletonClass{
+    public static void main(String[] args) {
+        Singleton obj1 = Singleton.getInstance();
+        Singleton obj2 = Singleton.getInstance();
+        System.out.println(obj1 == obj2); // True, both references point to the same object
+    }
+}
+
+Output:
+True
+```
+
+- In Java, a singleton class is a class that allows only one instance (object) to be created and provides a global point of access to that instance. This design pattern is useful when exactly one instance of a class is needed to control a particular task or coordinate actions across the system, such as logging, configuration management, caching, or database connection pools.
+- In cases where multiple instances could lead to conflicting states, resource wastage, or synchronization issues, a singleton ensures that only one object coordinates actions. For instance, a logging service would be consistent across the application if it has only one instance managing all log entries.
+
+### Why Use Singleton?
+
+- **Controlled Access to a Single Resource**: When a single shared resource (like a database connection) needs to be accessed across multiple parts of an application, a singleton ensures that only one object controls this resource.
+- **Global Access**: It provides a way to access the single instance globally, allowing for consistent data or behavior across different parts of an application.
+- **Saves Memory**: Only one instance is created, which saves memory, especially for objects that consume significant resources.
+
+### Implementing a Singleton Class in Java
+- Declare a private static variable to hold the single instance of the class.
+- Make the constructor of the class private, so that no other instances can be created.
+- Provide a public static method to return the single instance of the class, creating it if necessary.
+
+### Types of Singleton class
+
+#### Eager Initialization:
+
+- The singleton instance is created when the class is loaded, ensuring it's available from the beginning. This approach is straightforward but could waste resources if the instance is never used.
+
+```
+public class Singleton {
+    private static final Singleton instance = new Singleton();
+
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        return instance;
+    }
+}
+```
+
+#### Lazy Initialization:
+
+- The singleton instance is created only when it’s requested for the first time. This avoids unnecessary resource use. However, it’s not thread-safe without additional synchronization.
+
+```
+public class Singleton {
+    private static Singleton instance;
+
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+```
+
+#### Thread-Safe Singleton (with Synchronization):
+
+- The singleton instance is created in a thread-safe way using synchronized. This ensures that multiple threads cannot create multiple instances simultaneously, but it can lead to performance issues due to synchronization overhead.
+
+```
+public class Singleton {
+    private static Singleton instance;
+
+    private Singleton() {}
+
+    public static synchronized Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
+}
+```
+
+
+
 

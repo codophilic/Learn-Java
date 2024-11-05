@@ -47,7 +47,7 @@
 
 - When we use double quotes to create a String, it first looks for String with the same value in the String pool, if found it just returns the reference else it creates a new String in the pool and then returns the reference. However using new operator, we force String class to create a new String object in heap space.
 
-#### Example of Memory Managment using Code.
+#### Example of Memory Management using Code.
 
 - Consider below class
 
