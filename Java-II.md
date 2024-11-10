@@ -2824,6 +2824,12 @@ After inserting [50]:
 - After insertions or deletions, if the tree becomes unbalanced, it re-balances itself using Red-Black tree properties (rotations).
 - This makes `TreeMap` ideal for scenarios where you need sorted data but are okay with a bit of overhead compared to hash-based maps.
 
+#### Why Map does not extends Collection interface?
+
+- The `Map` interface stores value in form of Key/Value pairs whereas the `Collection` interface stores a specific element.
+- In `Collection` interface, to add any element in a collection we have a `add(E e)` method. The method `add(E e)` does not supports storing value in key-value pair format like for `Map` interface we have `put(K,V)`. Similarly all other methods in the `Collection` interface works with specific element and not with key-value pair.
+- Thats why `Map` does not extends `Collection` interface but it is part of **Collections Framework**.
+
 ### Set
 
 - Set is a collection of elements (Or objects) that contains no duplicate elements. Java Set is an **interface** that extends **Collection interface**. Unlike List, Java Set is NOT an ordered collection, it’s elements does NOT have a particular order.
@@ -4814,6 +4820,152 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
 
 
 ![alt text](image-55.png)
+
+### Fail-Fast vs Fail-Safe
+
+- In Java Collections, the terms fail-fast and fail-safe refer to different behaviors of iterators when a collection is modified during iteration.
+- A fail-fast iterator immediately throws a `ConcurrentModificationException` if it detects any structural modification of the collection after the iterator was created. This behavior is designed to prevent unpredictable behavior during iteration. Most of Java's core collection classes like `ArrayList`, `HashSet`, and `HashMap` use fail-fast iterators.
+
+```
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class FailFastExample {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+            // Attempting to modify the list during iteration
+            list.add("D"); // This will cause ConcurrentModificationException
+        }
+    }
+}
+
+Output:
+A
+ERROR!
+Exception in thread "main" java.util.ConcurrentModificationException
+	at java.base/java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1043)
+	at java.base/java.util.ArrayList$Itr.next(ArrayList.java:997)
+	at FailFastExample.main(FailFastExample.java:14)
+```
+
+- A fail-safe iterator, on the other hand, does not throw an exception if the collection is modified during iteration. Instead, it works on a "clone" or "snapshot" of the original collection, allowing modifications without affecting the ongoing iteration. Fail-safe iterators are typically found in concurrent collections like `CopyOnWriteArrayList` and `ConcurrentHashMap`.
+
+```
+import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class FailSafeExample {
+    public static void main(String[] args) {
+        CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+            // Attempting to modify the list during iteration
+            list.add("D"); // No exception will be thrown
+        }
+
+        System.out.println("List after iteration: " + list);
+    }
+}
+
+
+Output:
+A
+B
+C
+List after iteration: [A, B, C, D, D, D]
+```
+
+### Synchronize vs Concurrent Collections
+
+- In Java, synchronized collections and concurrent collections both aim to handle multi-threaded access, but they do so in different ways and with different trade-offs.
+- Synchronized collections are part of the `java.util.Collections` class and provide basic synchronization for thread safety. When a synchronized collection is accessed, it locks the entire collection, meaning only one thread can access or modify it at a time. This approach is simpler but can lead to reduced performance due to extensive locking, especially in highly concurrent situations.
+- Example
+
+```
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
+
+public class SynchronizedCollectionExample {
+    public static void main(String[] args) {
+        List<String> list = Collections.synchronizedList(new ArrayList<>());
+        
+        // Adding elements to the synchronized list
+        list.add("A");
+        list.add("B");
+
+        // Iterating through the synchronized list
+        synchronized (list) { // Explicit synchronization is still required during iteration
+            for (String item : list) {
+                System.out.println(item);
+            }
+        }
+    }
+}
+
+
+Output:
+A
+B
+```
+
+- Concurrent collections, introduced in `java.util.concurrent` package, are designed specifically for multi-threaded access. Instead of locking the entire collection, these classes use advanced concurrency control mechanisms like internal **locking on specific segments or even lock-free algorithms**. This design allows higher performance and finer-grained locking, meaning multiple threads can work on different parts of the collection concurrently.
+- Example
+
+```
+import java.util.concurrent.ConcurrentHashMap;
+
+public class ConcurrentCollectionExample {
+    public static void main(String[] args) {
+        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+
+        // Adding elements to the concurrent map
+        map.put("1", "A");
+        map.put("2", "B");
+
+        // Iterating through the concurrent map
+        for (String key : map.keySet()) {
+            System.out.println(key + " -> " + map.get(key));
+            // We can safely modify the map during iteration
+            map.put("3", "C"); // No exception will be thrown
+        }
+    }
+}
+
+
+Output:
+1 -> A
+2 -> B
+3 -> C
+```
+
+- **Drawbacks of Synchronized Collections**:
+    - Low performance under high concurrency because it locks the entire collection.
+    - Needs explicit synchronization when iterating to prevent ConcurrentModificationException.
+- **Advantages of Concurrent Collections**:
+    - Better performance and scalability in high-concurrency scenarios.
+    - Safe for concurrent modification without additional synchronization.
+
+![alt text](image-79.png)
+
+
+## Equals and HashCode Contract
+
+
+
 
 
 ## Method Reference

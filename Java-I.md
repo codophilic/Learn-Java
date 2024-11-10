@@ -7884,7 +7884,7 @@ public static void main(String... args) {
 
 **4. References**: Java provides references, which are similar to pointers but safer. References allow you to access objects without direct memory manipulation. **The Java runtime environment (JVM) manages the memory and ensures references are valid**.
 
-## Is it possible to OVERRIDE private or static methods?
+## Overriding PRIVATE or STATIC methods?
 
 - Consider below code of private method
 
@@ -8047,7 +8047,3 @@ public class Singleton {
     }
 }
 ```
-
-
-
-

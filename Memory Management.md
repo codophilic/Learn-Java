@@ -271,9 +271,7 @@ where is interfaces present in memory management? abstract class ? static variab
 - simple date local date dd-mm-yyyy or YYYYY
 - The Buffer class in Java NIO (New I/O) provides the foundation for working with buffers. It's an abstract class with subclasses for different primitive data types (e.g., ByteBuffer, CharBuffer, IntBuffer).
 - transient
-- singleton class in java
 - logging
-- Why Stream API is called api? internal working of it, 2.7. Stream of Primitives, custom stream logic
 
 Functional Programming And Programming Paradigms in Java
 
