@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -111,6 +112,15 @@ public class AboutExceptions{
         }catch(Exception e){
             System.out.println("Inside catch block");
         }
+
+        // try{
+
+        // }catch(Exception e){
+
+        // }
+        // catch(NumberFormatException | NullPointerException sql){
+
+        // }
 
     }
 

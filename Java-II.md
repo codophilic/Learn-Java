@@ -4964,9 +4964,272 @@ Output:
 
 ## Equals and HashCode Contract
 
+### `equals()` contract
+
+- Now lets take a scenario where we have an `Employee` class and two object which has same attributes values
+
+```
+class Employee{
+    String name;
+    int salary;
+
+    public Employee(String name, int salary){
+        this.name=name;
+        this.salary=salary;
+    }
+}
+
+
+public class AboutEqualsHashCodeContract {
+    public static void main(String[] args) {
+        Employee e1=new Employee("ABC", 1000);
+        Employee e2=new Employee("ABC", 1000);
+
+        /** Shallow Comparison */
+        System.out.println(e1==e2); // false
+        
+    }
+}
+
+Output:
+false
+```
+
+- Now why we got `false`? it is because when we used `new` keyword we are create two different objects which has different memory address. The `==` operator **perform shallow comparison by just checking whether if two objects point to the same memory address or not**. When we try to print the `hashCode()` we get two different memory addresses thats why it result in `false`.
+
+```
+        Employee e1=new Employee("ABC", 1000);
+        Employee e2=new Employee("ABC", 1000);
+        
+        System.out.println(e1.hashCode());
+        System.out.println(e2.hashCode());
+
+Output:
+925858445
+798154996
+```
+
+- So lets use the in-built `equals()` method provided by `Object` class. 
+- The method definition for equals looks like as mentioned below. The default implementation of the `equals()` method checks for **referential equality or simply checks if two objects’ references point to the same memory address**. Again it performs shallow comparison.
+
+![alt text](image-80.png)
+
+- Ideally, `e1` and `e2` should be same as they have same attributes values (`ABC,1000`), so here we need to override the `equals()` method.
+
+```
+class Employee{
+    String name;
+    int salary;
+
+    public Employee(String name, int salary){
+        this.name=name;
+        this.salary=salary;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        /**
+         * Comparing two object, e1.equals(e2)
+         * e1-> refers 'this' or current object
+         * e2-> refers 'o' the second object
+         */
+        if (this == o) return true; //e1==e1
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee e2 = (Employee) o;
+        /** Deep Comparison */
+        /** the below return can be also re-written as (salary==e2.salary && name.equals(e2.name)) */
+        return (this.salary==e2.salary && this.name.equals(e2.name));
+    }
+}
+
+
+public class AboutEqualsHashCodeContract {
+    public static void main(String[] args) {
+        Employee e1=new Employee("ABC", 1000);
+        Employee e2=new Employee("ABC", 1000);
+
+        /** Shallow Comparison */
+        System.out.println(e1==e2); // false
+
+        /** Deep Comparison by overriding default equals method */
+        System.out.println(e1.equals(e2)); // true
+    }
+}
+
+
+Output:
+false
+true
+```
+
+- When we override the `equals()` method **it not only considers referential equality (objects’ references point to the same memory address) but also the value of the attributes for comparison**. 
+- **Principles of equals() method or equals() Contract**
+    1. Reflexive: For any reference value `x`, `x.equals(x)` must be `true`.
+
+    2. Symmetric: For any reference values `x` and `y`, `x.equals(y)` must return the same value as `y.equals(x)`.
+
+    3. Transitive: For any reference values `x`, `y` and `z`, if `x.equals(y)` and `y.equals(z)`, then `x.equals(z)`.
+
+    4. Consistent: For any reference values `x` and `y`, results of `x.equals(y)` must remain the same provided no modification is made to the `equals` method.
+
+- Now if we add both objects `e1` and `e2` in a `Set` collection we are expecting that it the collection must consist only 1 item because now `e1` and `e2` are same right?
+
+```
+import java.util.HashSet;
+import java.util.Set;
+
+
+class Employee{
+    String name;
+    int salary;
+
+    public Employee(String name, int salary){
+        this.name=name;
+        this.salary=salary;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        /**
+         * Comparing two object, e1.equals(e2)
+         * e1-> refers 'this' or current object
+         * e2-> refers 'o' the second object
+         */
+        if (this == o) return true; //e1==e1
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee e2 = (Employee) o;
+        /** Deep Comparison */
+        /** the below return can be also re-written as (salary==e2.salary && name.equals(e2.name)) */
+        return (this.salary==e2.salary && this.name.equals(e2.name));
+    }
+}
+
+
+public class AboutEqualsHashCodeContract {
+    public static void main(String[] args) {
+        Employee e1=new Employee("ABC", 1000);
+        Employee e2=new Employee("ABC", 1000);
+
+        /** Shallow Comparison */
+        System.out.println(e1==e2); // false
+
+        /** Deep Comparison by overriding default equals method */
+        System.out.println(e1.equals(e2)); // true
+
+        Set<Employee> empSet= new HashSet<>();
+
+        empSet.add(e1);
+        empSet.add(e2);
+        System.out.println(empSet);
+        
+        System.out.println(e1.hashCode());
+        System.out.println(e2.hashCode());
+
+    }
+}
+
+
+Output:
+false
+true
+[Employee@372f7a8d, Employee@2f92e0f4]
+925858445
+798154996
+```
+
+- In the collections we can still see two object why so? because both object `e1` and `e2` has different hashCode.
+
+### `hashCode()` contract
+
+- A hash code is an integer value of an object. This hash code is unique to an object and generated using a hashing function.
+
+![alt text](image-81.png)
+
+- By overriding `equals()` method we make objects equals, but the hashCode yield by the object having same attributes must also be same right? so we need to also override `hashCode()`.
+
+```
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Objects;
 
 
 
+class Employee{
+    String name;
+    int salary;
+
+    public Employee(String name, int salary){
+        this.name=name;
+        this.salary=salary;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        /**
+         * Comparing two object, e1.equals(e2)
+         * e1-> refers 'this' or current object
+         * e2-> refers 'o' the second object
+         */
+        if (this == o) return true; //e1==e1
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee e2 = (Employee) o;
+        /** Deep Comparison */
+        /** the below return can be also re-written as (salary==e2.salary && name.equals(e2.name)) */
+        return (this.salary==e2.salary && this.name.equals(e2.name));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, salary);
+    }
+}
+
+
+public class AboutEqualsHashCodeContract {
+    public static void main(String[] args) {
+        Employee e1=new Employee("ABC", 1000);
+        Employee e2=new Employee("ABC", 1000);
+
+        /** Shallow Comparison */
+        System.out.println(e1==e2); // false
+
+        /** Deep Comparison by overriding default equals method */
+        System.out.println(e1.equals(e2)); // true
+
+        Set<Employee> empSet= new HashSet<>();
+
+        empSet.add(e1);
+        empSet.add(e2);
+        System.out.println(empSet);
+
+        System.out.println(e1.hashCode());
+        System.out.println(e2.hashCode());
+
+    }
+}
+
+
+Output:
+false
+true
+[Employee@1e93a7]
+2003879
+2003879
+```
+
+- By overriding `hashCode()` method, it ensure that all the object which has same attribute values has same hashCode, thus maintaining consistency.
+- **Principles of hashCode() method or hashCode() contract**
+    1. Hash Consistency: The value of the hash code must remain the same provided no modification is made to the `equals()` method. Also
+
+    2. Equals Consistency: If two objects are equal according to the `equals()` method, then the `hashCode()` method must return the same value for them.
+
+    3. Hash Collision: If two objects are unequal according to the `equals()` method, it not necessarily means that the hash code for these objects has to be different. In other words, unequal objects may have the same hash codes. But this can adverse impact on the performance of hashing due to collisions.
+
+- In general, we would want to override either both `equals()` and `hashCode()` method or neither. Both these methods co-exist and without one other would result in errors specifically when we working with custom objects within large-scale applications. In summary,
+    - If two objects are equal, they must have the same hash code.
+    - If two objects have the same hash code, it does not necessarily mean they are equal.
+    - Overriding the `equals()` method alone would fail with hashing data structures like `Map`, `Set`, etc.
+    - Overriding the `hashCode()` method alone would not help in comparing objects.
 
 ## Method Reference
 
@@ -5281,6 +5544,40 @@ public class MainClass {
 > - **Lambda expressions and method references were both introduced in Java 8.** With Java 8, instead of generating anonymous classes for lambdas and method references, the Java compiler generates more efficient bytecode using **`invokedynamic`**. This is a JVM instruction that allows method references and lambdas to be linked dynamically at runtime, rather than creating a new class file for each lambda or method reference. 
 > - This avoids the need to create separate anonymous classes and makes the code more memory efficient. This approach reduces memory overhead and improves performance compared to older anonymous classes.
 
+
+### Custom Method References
+
+- Consider below code
+
+```
+@FunctionalInterface
+interface MethodReferenceDemo{
+
+    void display();
+}
+
+class DisplayMethodImpl{
+    public static void implDisplay(){
+        System.out.println("Display");
+    }
+}
+
+
+public class AboutMethodReference{
+    public static void main(String[] args) {
+     
+        MethodReferenceDemo mrd = DisplayMethodImpl::implDisplay;
+        mrd.display();
+
+    }
+}
+
+Output:
+Display
+```
+
+- So here we have a functional interface `MethodReferenceDemo` which has only one method `display()`, we have a class `DisplayMethodImpl` which has a static method `implDisplay()`. So here we are telling java that to get the implementation of interface `MethodReferenceDemo` , `display()` method please refer the class `DisplayMethodImpl` which has a method called `implDisplay()` (`MethodReferenceDemo mrd = DisplayMethodImpl::implDisplay`). **This makes the code reusable**.
+- This is an example of **reference to a static method**.
 
 ## Optional
 
@@ -6674,3 +6971,124 @@ https://www.javaguides.net/2018/06/guide-to-serialization-in-java.html
 https://www.javatpoint.com/serialization-in-java
 https://techvidvan.com/tutorials/serialization-in-java/
 
+
+## Logging
+
+- Logging in Java is the process of recording information about an application’s execution, typically to help with debugging, monitoring, and troubleshooting. Logs capture details about an application’s behavior, errors, or performance, and can provide valuable insights into what is happening "behind the scenes" at runtime.
+- Java provides built-in support for logging through the `java.util.logging` package, and there are also popular external logging frameworks like `Log4j` and `SLF4J`.
+- Lets see an example
+
+```
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class AboutLogging {
+
+    // Create a logger instance
+    private static final Logger logger = Logger.getLogger(AboutLogging.class.getName());
+
+    public static void main(String[] args) {
+        logger.info("This is an INFO message");
+    }
+}
+
+
+Output:
+Nov 10, 2024 10:43:18 PM AboutLogging main
+INFO: This is an INFO message
+```
+
+- Logging frameworks support various logging levels to categorize messages based on their importance or severity. This lets you filter logs so you only see relevant information. Common logging levels in Java (and their purposes) are:
+
+**1. SEVERE (or ERROR)**: Indicates a critical issue or failure. This level is used when something goes wrong that requires immediate attention, such as application crashes or database connection failures.
+
+**2. WARNING**: Indicates a potential problem or something that should be watched. It doesn’t stop the application but might need fixing to avoid future issues, like low disk space or deprecated API usage.
+
+**3. INFO**: Used to log general information about the application's execution. It provides useful but non-essential information, like application startup, shutdown, or configuration settings.
+
+**4. CONFIG**: Logs configuration details or initialization of resources. This level is specific to java.util.logging and can help with debugging configuration-related issues.
+
+**5. FINE (or DEBUG)**: Provides detailed information useful for debugging. This includes intermediate steps in processing, or more information about the state of the application at a specific point.
+
+**6. FINER**: Even more detailed than FINE. Often used in development to trace the flow through methods and classes.
+
+**7. FINEST (or TRACE)**: The most detailed logging level. This can log nearly everything, including enter/exit for every method and very low-level details, which is useful for in-depth troubleshooting.
+
+- Consider below example
+
+```
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class AboutLogging {
+
+    // Create a logger instance
+    private static final Logger logger = Logger.getLogger(AboutLogging.class.getName());
+
+    public static void main(String[] args) {
+        logger.severe("This is a SEVERE message");
+        logger.warning("This is a WARNING message");
+        logger.info("This is an INFO message");
+        logger.config("This is a CONFIG message");
+        logger.fine("This is a FINE message");
+        logger.finer("This is a FINER message");
+        logger.finest("This is a FINEST message");
+    }
+}
+
+
+Output:
+Nov 10, 2024 11:20:24 PM AboutLogging main
+SEVERE: This is a SEVERE message
+Nov 10, 2024 11:20:24 PM AboutLogging main
+WARNING: This is a WARNING message
+Nov 10, 2024 11:20:24 PM AboutLogging main
+INFO: This is an INFO message
+```
+
+- Wait, why `config`,`fine`,`finer` and `finest` did not got printed? by default, the logging configuration in `java.util.logging` is set to the `INFO` level. This means that only messages with a level of `INFO` or higher (`INFO`, `WARNING`, and `SEVERE`) are printed. The lower levels (`CONFIG`, `FINE`, `FINER`, `FINEST`) will not appear unless the logging level is explicitly changed.
+
+```
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class AboutLogging {
+
+    // Create a logger instance
+    private static final Logger logger = Logger.getLogger(AboutLogging.class.getName());
+
+    public static void main(String[] args) {
+
+        // Set the log level to FINE to see all messages down to FINE
+        logger.setLevel(Level.FINEST);
+
+        // Optionally, adjust the ConsoleHandler level as well
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(Level.FINEST);  // or any other desired level
+        logger.addHandler(handler);
+
+        
+        logger.severe("This is a SEVERE message");
+        logger.warning("This is a WARNING message");
+        logger.info("This is an INFO message");
+        logger.config("This is a CONFIG message");
+        logger.fine("This is a FINE message");
+        logger.finer("This is a FINER message");
+        logger.finest("This is a FINEST message");
+    }
+}
+
+
+Output:
+
+
+
+- Logging is useful for:
+    1. Debugging: To track down errors or unexpected behavior.
+
+    2. Monitoring: To keep track of application performance and resource usage.
+
+    3. Audit: To maintain records of specific actions or events (e.g., logins, transactions).
+
+    4. Troubleshooting: To analyze issues after they occur in production.

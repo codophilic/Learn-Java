@@ -4,6 +4,19 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.BiFunction;
 
+@FunctionalInterface
+interface MethodReferenceDemo{
+
+    void display();
+}
+
+class DisplayMethodImpl{
+    public static void implDisplay(){
+        System.out.println("Display");
+    }
+}
+
+
 public class AboutMethodReference{
     public static void main(String[] args) {
      
@@ -36,6 +49,9 @@ public class AboutMethodReference{
         Function<String, Integer> lengthFunction = String::length;
         System.out.println(lengthFunction.apply("hello"));  // Output: 5
         System.out.println(lengthFunction.apply("world"));  // Output: 5
+
+        MethodReferenceDemo mrd = DisplayMethodImpl::implDisplay;
+        mrd.display();
 
     }
 }

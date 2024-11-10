@@ -5027,8 +5027,11 @@ In B
 - If you see `@Retention` and `@Target` anntotation define, what are they?
 - Annotations in Java are processed at compile time or runtime, depending on their retention policy. The retention policy is specified by the `@Retention` annotation, and it can be one of three values: SOURCE, CLASS, or RUNTIME.
     1. **SOURCE**: Annotations are only available in the source code and are discarded during compilation.
+    
     2. **CLASS**: Annotations are included in the class file during compilation but not accessible at runtime.
+
     3. **RUNTIME**: Annotations are retained at runtime and can be accessed programmatically through reflection.
+    
 - The `@Target` annotation specifies the types of program elements to which an annotation can be applied. The `@Target` annotation specifies where an annotation can be applied, defining the kinds of program elements (like methods, classes, fields) that the annotation can be used on via **ElementType**.
 - For example, if an annotation is designed for methods, you would use `@Target(ElementType.METHOD)`. `ElementType.TYPE` annotation can be applied to any class, interface, enum, or annotation type. `ElementType.FIELD` annotation can be applied to fields (i.e., member variables of a class). `ElementType.PARAMETER` annotation can be applied to method parameters , example `@RequestParam` in spring boot framework and so on.
 - Can we create our own annotation? , yes you can. Creating custom annotation is similar to writing an interface, except that the interface keyword is prefixed with `@` symbol.
@@ -5430,6 +5433,7 @@ Division method failed
 
 > [!CAUTION]
 > - Below declaration is invalid leading to syntax error
+>
 > ```
 > 
 >    public static int division(int num,int den) throws ArithmeticException("Custom Exception Message"),NullPointerException{
@@ -5484,7 +5488,7 @@ public static int division(int num,int den) throws ArithmeticException,NullPoint
     }
 ```
 
-- Ducking occurs in the `division()` method because it doesn't handle the ArithmeticException,NullPointerException itself; it declares throws ArithmeticException,NullPointerException and leaves it to the `main()` method to handle it.
+- Ducking occurs in the `division()` method because it doesn't handle the `ArithmeticException`,`NullPointerException` itself; it declares throws `ArithmeticException`,`NullPointerException` and leaves it to the `main()` method to handle it.
 - The advantage of ducking is that it allows exceptions to be handled at a higher level, where you might have a better understanding of the context in which the exception occurred.
 
 ### Throwable
@@ -5636,7 +5640,6 @@ public class AboutExceptions{
 - Unchecked exceptions, like `NullPointerException` or `ArrayIndexOutOfBoundsException`, which means they don't require explicit declaration or handling. Unchecked exceptions often signal programming errors, such as accessing an array index out of bounds, prompting developers to rectify their code.
 
 
-
 | **Aspect**               | **Checked Exception**                                                                                  | **Unchecked Exception**                                                                                   |
 |--------------------------|--------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
 | **Other Name**           | Compile-time exception                                                                                 | Runtime exception                                                                                         |
@@ -5646,7 +5649,6 @@ public class AboutExceptions{
 | **Examples**             | IOException, SQLException, ClassNotFoundException                                                      | NullPointerException, ArrayIndexOutOfBoundsException, ArithmeticException                                 |
 | **When to Use**          | Used for conditions that are outside the control of the program (e.g., file not found, network issues) | Used for programming errors or logical mistakes that can be avoided (e.g., null access, dividing by zero) |
 | **Type**                 | Typically recoverable                                                                                  | Generally results from programming errors                                                                 |
-
 
 
 ![alt text](Images/java-1/image-46.png)
@@ -5766,6 +5768,43 @@ class CompileTimeAgeCheckerException extends Exception{
 Output:
 CompileTimeAgeCheckerException: Age is greater than 100
 ```
+
+### Multi-catch block
+
+- You can define multple catch blocks like below
+
+```
+try{
+
+}catch(Exception1 e1){
+
+}catch(Exception2 e2){
+
+}
+
+OR
+
+try{
+
+}catch(Exception1 | Exception2 e){
+
+}
+```
+
+- Now consider below code.
+
+```
+try{
+
+}catch(Exception e){
+
+}catch(NullPointerException np){
+            
+}
+```
+
+- We get a compilation error `Unreachable catch block for NumberFormatException. It is already handled by the catch block for Exception`. We get this error because the parent exception `Exception` is defined before it. So all error including `NumberFormatException` will automatically get handled at `Exception` thus making the second `catch` block unreachable.
+- A catch block for `NumberFormatException` is considered unreachable if you have a preceding catch block for a more general `Exception` because any `NumberFormatException` will always be caught by the broader `Exception` catch block, making the specific `NumberFormatException` handler unnecessary and therefore unreachable. 
 
 ## Finally
 
@@ -7703,7 +7742,7 @@ public class AboutMainMethodPSVM {
 
 - Lets run the program via cmd.
 
-![alt text](image-5.png)
+![alt text](Images/java-1/image-84-new.png)
 
 - The `String[] args` is used to pass command-line arguments to the program. These are optional arguments that you can specify when running the Java program. The args array would contain `{"Hi", "Hello"}`. This is useful if you want to provide inputs to your program from the command line.
 - **Can i change the variable name `args` to any other name?**, yep you can `public static void main(String[] cmdInput)`
@@ -7913,7 +7952,7 @@ public class AboutOverridePrivateOrStatic {
 
 - Now when we write the above we get error
 
-![alt text](image-77.png)
+![alt text](Images/java-1/image-77-new.png)
 
 - **You cannot override private method because inside the subclass, the private method of parent class are not accessible**. So what you actually do is create a new private method of same name in the subclass and **not override it**.
 - Consider below static method
@@ -7935,10 +7974,109 @@ class BStatic{
 
 - Now when we write the above code we get error.
 
-![alt text](image-78.png)
+![alt text](Images/java-1/image-78-new.png)
 
 - The above code is not an example of **method overriding**, it is an example of **method hiding**. Overriding happens when you provide a **different implementation for a non-static (instance) method in a subclass**, which is called based on the actual runtime type of the object. 
 - **Static methods like `method1` are class-level methods, not instance-level**. When a subclass defines a static method with the same signature as in its superclass, **the method in the subclass hides the superclass method**. This is called **method hiding**.
+- Now consider below code
+
+```
+
+class AParentClass{
+    public void display(){
+        System.out.println("In Class AParentClass");
+    }
+}
+
+class BChildClass extends AParentClass{
+
+    public void display(){
+        System.out.println("In Class BChildClass");
+    }
+}
+
+
+
+public class AboutOverridePrivateOrStatic {
+    public static void main(String[] args) {
+        
+        AParentClass apc= new BChildClass();
+        apc.display();
+
+        AParentClass apc1 = new AParentClass();
+        apc1.display();
+    }
+}
+
+Output:
+In Class BChildClass
+In Class AParentClass
+```
+
+- Now since methods are instance method, based on the memory allocated (`new`) the `display()` of the specific constructor gets executed respectively. The `display()` method depends on the constructor which is being created.
+- Now consider below code here we are just making the `display()` method as static
+
+```
+class AParentClass{
+    public static void display(){
+        System.out.println("In Class AParentClass");
+    }
+}
+
+class BChildClass extends AParentClass{
+
+    public static void display(){
+        System.out.println("In Class BChildClass");
+    }
+}
+
+
+
+public class AboutOverridePrivateOrStatic {
+    public static void main(String[] args) {
+        
+        AParentClass apc= new BChildClass();
+        apc.display();
+
+        AParentClass apc1 = new AParentClass();
+        apc1.display();
+    }
+}
+
+
+Output:
+In Class AParentClass
+In Class AParentClass
+```
+
+- Now `display()` method depends to the type of the variable. Another example of **Method hidding**.
+
+## Covirant Return Type
+
+- Covariant types relate to the return types of methods in subclasses. In a covariant relationship, the return type of a method in a subclass can be a subtype of the return type of the same method in the superclass. 
+- Lets see an example
+
+```
+class ACovirant{
+    public Object display(){
+        return null;
+    }
+}
+
+class BCovirant{
+    public Object display(){
+        return "B";
+    }
+}
+```
+
+- Both the `display()` methods has a return type of `Object`, if in the child class (`BCovirant`) if we reduce the return type to `String`, the code will still get executed. **But if the return type of parent class is not subclass return type in child class method, java will give error**.
+
+
+![alt text](Images/java-1/image-83-new.png)
+
+- **The return type of the child class method (If methods are overriding the parent class) should be same return type of parent class ( like `Object`) or its subclass ( like `String` is subclass of `Object` class)**.
+
 
 ## Singleton Class
 
@@ -8047,3 +8185,116 @@ public class Singleton {
     }
 }
 ```
+
+## Can we restrict visibility of derived methods?
+
+- Suppose we have two class `Dog` and `Corgis`, the `Corgis` class extends `Dog` class and override its method.
+
+```
+class Dog{
+
+    public void bark(){
+        System.out.println("Dog Barks");
+    }
+}
+
+class Corgis extends Dog{
+
+    @Override
+    public void bark(){
+        System.out.println("Corgi Barks");
+    }
+}
+```
+
+- Now currently the derived method (`bark()` of class `Corgis`) is `public` , so if we change the access of it to `private` will java will give compile time error?
+
+```
+class Dog{
+
+    public void bark(){
+        System.out.println("Dog Barks");
+    }
+}
+
+class Corgis extends Dog{
+
+    @Override
+    private void bark(){
+        System.out.println("Corgi Barks");
+    }
+}
+```
+
+- We get compilation error `Cannot reduce the visibility of the inherited method from DogJava`.
+
+![alt text](Images/java-1/image-82-new.png)
+
+- In Java, you can't directly restrict the visibility of a derived method to be less visible than the method it overrides in the superclass. If you parent class methods have a larger scope, you cannot restrict or make the scope small in your child class overriden methods. **But you can increase its visibility**.
+
+```
+class Dog{
+
+    protected void bark(){
+        System.out.println("Dog Barks");
+    }
+}
+
+class Corgis extends Dog{
+
+    @Override
+    public void bark(){
+        System.out.println("Corgi Barks");
+    }
+}
+
+
+public class AboutRestrictVisibilityDerivedMethods {
+    public static void main(String[] args) {
+        
+        Dog d = new Corgis();
+        d.bark();
+
+    }
+}
+
+
+Output:
+Corgi Barks
+```
+
+- Consider another example where we can increase the scope of visibility
+
+```
+class Dog{
+
+    // Default Method
+    void bark(){
+        System.out.println("Dog Barks");
+    }
+}
+
+class Corgis extends Dog{
+
+    // Protected Method
+    @Override
+    protected void bark(){
+        System.out.println("Corgi Barks");
+    }
+}
+
+
+public class AboutRestrictVisibilityDerivedMethods {
+    public static void main(String[] args) {
+        
+        Dog d = new Corgis();
+        d.bark();
+
+    }
+}
+```
+
+- Scope of visibility: **Public (Higher Scope)**> **Protected**> **Default**> **Private (Lower Scope)**.
+
+- Learn more about [java concepts](Java-II.md)
+
