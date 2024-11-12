@@ -8340,3 +8340,107 @@ public class AboutRestrictVisibilityDerivedMethods {
 
 - Learn more about [java concepts](Java-II.md)
 
+## Working with Date
+
+- In Java, working with dates has been simplified and improved with the `java.time` package introduced in Java 8. Using classes like `LocalDate`, `LocalDateTime`, and `DateTimeFormatter`, you can easily create, format, and parse dates.
+- `LocalDate`: Represents a date without time (e.g., `2024-11-12`).
+- `DateTimeFormatter`: Used to format and parse date and time objects. You define the format pattern using strings like `dd-MM-yyyy`.
+
+- Example
+
+```
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class AboutDates {
+    public static void main(String[] args) {
+        
+        LocalDate today = LocalDate.now(); // Gets the current date
+        System.out.println("LocalDate "+today);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        
+        String formattedDate = today.format(formatter); // Formats the date to "dd-MM-yyyy"
+        System.out.println("Formatted date (dd-MM-yyyy): " + formattedDate);
+        
+        DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter3 = DateTimeFormatter.ofPattern("MMMM dd, yyyy"); // Month in full
+
+        String date1 = today.format(formatter1); // "yyyy-MM-dd" format
+        String date2 = today.format(formatter2); // "dd/MM/yyyy" format
+        String date3 = today.format(formatter3); // "MMMM dd, yyyy" format
+
+        System.out.println("Format yyyy-MM-dd: " + date1);
+        System.out.println("Format dd/MM/yyyy: " + date2);
+        System.out.println("Format MMMM dd, yyyy: " + date3);
+
+        DateTimeFormatter formatter4 = DateTimeFormatter.ofPattern("dd-MMM-yyyy"); // Abbreviated month
+        DateTimeFormatter formatter5 = DateTimeFormatter.ofPattern("E, dd MMM yyyy"); // Day abbreviation
+
+        String date4 = today.format(formatter4);
+        String date5 = today.format(formatter5);
+
+        System.out.println("Format dd-MMM-yyyy: " + date4);
+        System.out.println("Format E, dd MMM yyyy: " + date5);
+
+        DateTimeFormatter yearFormatter1 = DateTimeFormatter.ofPattern("yyyy");
+        DateTimeFormatter yearFormatter2 = DateTimeFormatter.ofPattern("YYYY");
+
+        String year1 = today.format(yearFormatter1); // Regular year
+        String year2 = today.format(yearFormatter2); // Week-based year
+
+        System.out.println("Calendar Year (yyyy): " + year1);
+        System.out.println("Week-Based Year (YYYY): " + year2);
+
+
+    }
+}
+
+Output:
+LocalDate 2024-11-12
+Formatted date (dd-MM-yyyy): 12-11-2024
+Format yyyy-MM-dd: 2024-11-12
+Format dd/MM/yyyy: 12/11/2024
+Format MMMM dd, yyyy: November 12, 2024
+Format dd-MMM-yyyy: 12-Nov-2024
+Format E, dd MMM yyyy: Tue, 12 Nov 2024
+Calendar Year (yyyy): 2024
+Week-Based Year (YYYY): 2024
+```
+
+- Whats the difference between Calendar Year (`yyyy`) and Week-Based Year (`YYYY`)? `yyyy` represents the calendar year. This is the typical year we use in everyday life, running from January 1st to December 31st. `YYYY` represents the week-based year. This is based on the ISO 8601 week-numbering system, where a week starts on Monday and the first week of the year is the week that contains January 4th.
+- The difference becomes apparent at the edges of the year. For example, if December 31st falls on a Monday, Tuesday, or Wednesday, it can be **considered part of the first week of the next calendar year (2025) as those week consider days (Thursday,Friday..) which are part of 2025** according to the ISO week-numbering system.
+
+```
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class Main {
+    public static void main(String[] args) {
+        LocalDate date = LocalDate.parse("2024-12-31"); // Tuesday
+
+        DateTimeFormatter calendarYearFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter weekYearFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+
+        System.out.println(date.format(calendarYearFormatter)); // Output: 2024-12-31
+        System.out.println(date.format(weekYearFormatter)); // Output: 2025-12-31
+    }
+}
+```
+
+- In most cases, **you'll want to use `yyyy` to represent the calendar year**. Using `YYYY` can lead to unexpected results if you're not specifically working with week-based dates.
+- You can convert `String` to `Date`
+
+```
+        /**
+         * Covert String to Date
+         */
+        String dateStr = "12-11-2024";
+
+        LocalDate parsedDate = LocalDate.parse(dateStr, formatter);
+        System.out.println("Parsed date: " + parsedDate);
+
+Output:
+Parsed date: 2024-11-12
+```
