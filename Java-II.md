@@ -6942,8 +6942,9 @@ public class LongStreamExample {
 | **Specialized numeric methods** | No            | Yes (sum, average, etc.)                |
 
 
+## Reflection API
 
-## Reflection
+
 
 
 
@@ -6974,8 +6975,8 @@ https://techvidvan.com/tutorials/serialization-in-java/
 
 ## Logging
 
-- Logging in Java is the process of recording information about an application’s execution, typically to help with debugging, monitoring, and troubleshooting. Logs capture details about an application’s behavior, errors, or performance, and can provide valuable insights into what is happening "behind the scenes" at runtime.
-- Java provides built-in support for logging through the `java.util.logging` package, and there are also popular external logging frameworks like `Log4j` and `SLF4J`.
+- Logging in Java is the process of recording information about an application's execution, typically to help with debugging, monitoring, and troubleshooting. Logs capture details about an application’s behavior, errors, or performance, and can provide valuable insights into what is happening "behind the scenes" at runtime.
+- Java provides built-in support for logging through the `java.util.logging` (JUL) package, and there are also popular external logging frameworks like `Log4j` and `SLF4J`.
 - Lets see an example
 
 ```
@@ -6988,7 +6989,7 @@ public class AboutLogging {
     private static final Logger logger = Logger.getLogger(AboutLogging.class.getName());
 
     public static void main(String[] args) {
-        logger.info("This is an INFO message");
+        logger.log(Level.INFO,"This is an INFO message");
     }
 }
 
@@ -6997,6 +6998,28 @@ Output:
 Nov 10, 2024 10:43:18 PM AboutLogging main
 INFO: This is an INFO message
 ```
+
+- A Logger is the main class in JUL used to log messages. It's like a “channel” through which you send log messages. Each Logger is associated with a unique name, often structured like the class or package name. For example, you can create a logger with a name `com.myapp.logger` to represent logging for a specific module. The Logger names must be based on the class or the package name of the logged component.
+
+### Logging Components
+
+- The Java logging components help the developer to create logs, pass the logs to the respective destination and maintain a proper format. The following are the three components:
+
+    - Loggers — Responsible for capturing log records and passing them to the corresponding Appender.
+    - Appenders or Handlers — They are responsible for recording log events to a destination. Appenders format events with the help of Layouts, before sending outputs. A Handler (or Appender in other frameworks) is responsible for specifying where to send log messages, such as to the console, file, or a remote server. Common handlers include.
+        - `ConsoleHandler`: Logs messages to the console.
+        - `FileHandler`: Logs messages to a file.
+        - `SocketHandler`: Sends log records to a network socket
+    - Layouts or Formatters — Responsible to determine how data looks when it appears in the log entry. A Formatter controls the format of log messages. JUL has built-in formatters such as:
+        - `SimpleFormatter`: Formats log messages in a simple text format.
+        - `XMLFormatter`: Outputs log messages in XML format
+
+![alt text](image-5.png)
+
+- Events are created by calling methods like `info()`, `warning()`, `severe()`, etc., on a Logger instance. These methods generate log records that are processed by Handlers.
+- When an application makes a logging call, the Logger component records the event in a LogRecord and forwards it to the appropriate Appender. Then it formatted the record using the Layout according to the required format. Apart from this, you can also use more than one Filters to specify which Appenders should be used for events.
+
+### Logging Levels
 
 - Logging frameworks support various logging levels to categorize messages based on their importance or severity. This lets you filter logs so you only see relevant information. Common logging levels in Java (and their purposes) are:
 
@@ -7014,77 +7037,218 @@ INFO: This is an INFO message
 
 **7. FINEST (or TRACE)**: The most detailed logging level. This can log nearly everything, including enter/exit for every method and very low-level details, which is useful for in-depth troubleshooting.
 
-- Consider below example
 
 ```
-import java.util.logging.Level;
-import java.util.logging.Logger;
+SERVER > WARNING > INFO > CONFIG > FINE > FINER > FINEST
+```
 
-public class AboutLogging {
+```
+import java.util.logging.*;
 
-    // Create a logger instance
-    private static final Logger logger = Logger.getLogger(AboutLogging.class.getName());
+public class AboutLoggers {
+    private static final Logger logger = Logger.getLogger(AboutLoggers.class.getName());
 
     public static void main(String[] args) {
-        logger.severe("This is a SEVERE message");
-        logger.warning("This is a WARNING message");
-        logger.info("This is an INFO message");
-        logger.config("This is a CONFIG message");
-        logger.fine("This is a FINE message");
-        logger.finer("This is a FINER message");
-        logger.finest("This is a FINEST message");
+        try {
+
+            // ConsoleHandler with SimpleFormatter
+            ConsoleHandler consoleHandler = new ConsoleHandler();
+
+            consoleHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(consoleHandler);
+
+            // FileHandler with XMLFormatter
+            FileHandler fileHandler = new FileHandler("app.log");
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+
+            // Logging events at different levels
+            logger.severe("This is a severe error message");
+            logger.warning("This is a warning message");
+            logger.info("This is an info message");
+            logger.config("This is a config message");
+            logger.fine("This is a fine message");
+            logger.finer("This is a finer message");
+            logger.finest("This is a finest message");
+
+
+        } catch (Exception e) {
+            logger.severe("Failed to initialize handlers: " + e.getMessage());
+        }
     }
 }
 
 
-Output:
-Nov 10, 2024 11:20:24 PM AboutLogging main
-SEVERE: This is a SEVERE message
-Nov 10, 2024 11:20:24 PM AboutLogging main
-WARNING: This is a WARNING message
-Nov 10, 2024 11:20:24 PM AboutLogging main
-INFO: This is an INFO message
+Output: (On Console)
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+SEVERE: This is a severe error message
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+SEVERE: This is a severe error message
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+WARNING: This is a warning message
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+WARNING: This is a warning message
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+INFO: This is an info message
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+INFO: This is an info message
+
+Output: (In app.log file)
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+SEVERE: This is a severe error message
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+WARNING: This is a warning message
+Nov 12, 2024 7:26:06 PM AboutLoggers main
+INFO: This is an info message
 ```
 
-- Wait, why `config`,`fine`,`finer` and `finest` did not got printed? by default, the logging configuration in `java.util.logging` is set to the `INFO` level. This means that only messages with a level of `INFO` or higher (`INFO`, `WARNING`, and `SEVERE`) are printed. The lower levels (`CONFIG`, `FINE`, `FINER`, `FINEST`) will not appear unless the logging level is explicitly changed.
+- Wait why are we getting double output on console. The duplicate log entries are likely due to the root `Logger` already having a default `ConsoleHandler` attached, and when you add another `ConsoleHandler` manually, it results in two handlers processing the same log messages.
+- To resolve this, you can remove all existing handlers from the Logger before adding your custom `ConsoleHandler`
 
 ```
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
-public class AboutLogging {
-
-    // Create a logger instance
-    private static final Logger logger = Logger.getLogger(AboutLogging.class.getName());
+public class AboutLoggers {
+    private static final Logger logger = Logger.getLogger(AboutLoggers.class.getName());
 
     public static void main(String[] args) {
+        try {
+            Logger rootLogger = Logger.getLogger("");
+            for ( Handler handler : rootLogger.getHandlers()) {
+                rootLogger.removeHandler(handler);
+            }
+    
+            // ConsoleHandler with SimpleFormatter
+            ConsoleHandler consoleHandler = new ConsoleHandler();
 
-        // Set the log level to FINE to see all messages down to FINE
-        logger.setLevel(Level.FINEST);
+            consoleHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(consoleHandler);
 
-        // Optionally, adjust the ConsoleHandler level as well
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setLevel(Level.FINEST);  // or any other desired level
-        logger.addHandler(handler);
+            // FileHandler with XMLFormatter
+            FileHandler fileHandler = new FileHandler("app.log");
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
 
-        
-        logger.severe("This is a SEVERE message");
-        logger.warning("This is a WARNING message");
-        logger.info("This is an INFO message");
-        logger.config("This is a CONFIG message");
-        logger.fine("This is a FINE message");
-        logger.finer("This is a FINER message");
-        logger.finest("This is a FINEST message");
+            // Logging events at different levels
+            logger.severe("This is a severe error message");
+            logger.warning("This is a warning message");
+            logger.info("This is an info message");
+            logger.config("This is a config message");
+            logger.fine("This is a fine message");
+            logger.finer("This is a finer message");
+            logger.finest("This is a finest message");
+
+
+        } catch (Exception e) {
+            logger.severe("Failed to initialize handlers: " + e.getMessage());
+        }
+    }
+}
+
+Output: (On Console)
+Nov 12, 2024 7:29:42 PM AboutLoggers main
+SEVERE: This is a severe error message
+Nov 12, 2024 7:29:42 PM AboutLoggers main
+WARNING: This is a warning message
+Nov 12, 2024 7:29:42 PM AboutLoggers main
+INFO: This is an info message
+```
+
+- But wait, the `fine`, `finer`, `finest` and `config` are not getting printed? this is because in Java Util Logging (JUL), we need to set the level on the Logger to get `FINE`, `FINER`, or `FINEST` level messages printed to the console or file. Each Handler attached to the Logger also has its own logging level, **and by default, `ConsoleHandler` is set to `INFO`**.  To ensure that messages at `FINE` level or lower are logged, you need to:
+    - Set the level of both the Logger and the Handler to `FINE` (or lower).
+    - Add the handler to the logger after setting the levels.
+
+```
+import java.util.logging.*;
+
+public class AboutLoggers {
+    private static final Logger logger = Logger.getLogger(AboutLoggers.class.getName());
+
+    public static void main(String[] args) {
+        try {
+            Logger rootLogger = Logger.getLogger("");
+            for ( Handler handler : rootLogger.getHandlers()) {
+                rootLogger.removeHandler(handler);
+            }
+
+            /**
+             * Setting Level Of Logger
+             */
+            logger.setLevel(Level.FINEST);
+
+            // ConsoleHandler with SimpleFormatter
+            ConsoleHandler consoleHandler = new ConsoleHandler();
+            consoleHandler.setFormatter(new SimpleFormatter());
+
+            /**
+             * Setting Level of ConsoleHandler
+             */
+            consoleHandler.setLevel(Level.FINEST);
+            logger.addHandler(consoleHandler);
+
+            // FileHandler with XMLFormatter
+            FileHandler fileHandler = new FileHandler("app.log");
+            fileHandler.setFormatter(new SimpleFormatter());
+
+            /**
+             * Setting Level of FileHandler
+             */
+            fileHandler.setLevel(Level.FINEST);
+            logger.addHandler(fileHandler);
+
+            // Logging events at different levels
+            logger.severe("This is a severe error message");
+            logger.warning("This is a warning message");
+            logger.info("This is an info message");
+            logger.config("This is a config message");
+            logger.fine("This is a fine message");
+            logger.finer("This is a finer message");
+            logger.finest("This is a finest message");
+
+
+        } catch (Exception e) {
+            logger.severe("Failed to initialize handlers: " + e.getMessage());
+        }
     }
 }
 
 
-Output:
+Output: (On Console)
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+SEVERE: This is a severe error message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+WARNING: This is a warning message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+INFO: This is an info message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+CONFIG: This is a config message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+FINE: This is a fine message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+FINER: This is a finer message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+FINEST: This is a finest message
 
+Output: (In app.log file)
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+SEVERE: This is a severe error message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+WARNING: This is a warning message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+INFO: This is an info message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+CONFIG: This is a config message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+FINE: This is a fine message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+FINER: This is a finer message
+Nov 12, 2024 7:36:59 PM AboutLoggers main
+FINEST: This is a finest message
+```
 
-
+- When we change the level to `INFO` or any other criteria, only the corresponding and its upper level are printed. For example incase when level is set to `INFO`, `WARNING` and `SEVERE` logs are printed out.
 - Logging is useful for:
+
     1. Debugging: To track down errors or unexpected behavior.
 
     2. Monitoring: To keep track of application performance and resource usage.
