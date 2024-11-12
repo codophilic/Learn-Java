@@ -6942,10 +6942,413 @@ public class LongStreamExample {
 | **Specialized numeric methods** | No            | Yes (sum, average, etc.)                |
 
 
-## Reflection API
+## Reflection API or Reflection
+
+- Ever wonder whenever you create a method in interface , classes etc.. , how does your IDE (Eclipse, VSCode, NetBeans etc..) auto-suggest you methods when you create an instance? How does Java frameworks like SpringBoot, Hibernate etc.. analyzes annotation, invoke methods or instantiate classes based on configurations rather than hardcoded values? **all this is due to reflection api**.
+- As far we know, `java.lang.Object` is the parent class, but you know, there is a class which name is `Class` (`java.lang.Class`) and there is another class name `Method` (`java.lang.reflect.Method`)?
 
 
+![alt text](image-77.png)
 
+![alt text](image-78.png)
+
+- Based on this, lets try to mimic any IDE. Suppose a user is creating a class `UserDefinedClass`.
+
+```
+class UserDefinedClass{
+    public String name;
+    private int Salary;
+    public static String companyName="GOOGLE";
+
+    public UserDefinedClass(){
+        System.out.println("UserDefinedClass default constructor");
+    }
+
+    public UserDefinedClass(String name,int Salary){
+        this.name=name;
+        this.Salary=Salary;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getSalary() {
+        return Salary;
+    }
+
+    public void setSalary(int salary) {
+        Salary = salary;
+    }
+
+}
+```
+
+- Now here, the user using our newly IDE has written some methods, some fields and some constructors. Now as an IDE, we need to auto suggest them, now the first we need to check whether the given user has created a class or interface?
+
+```
+public class AboutReflectionApi {
+    public static void main(String[] args) throws ClassNotFoundException {
+
+        Class checkClass = Class.forName("UserDefinedClass");
+        System.out.println(checkClass);
+        
+    }
+}
+
+Output:
+class UserDefinedClass
+```
+
+- Okay, so it seems the user has written a class and not any interface. The `Class.forName` check whether the class is of type `Class` and if not then it throws a checked exception `ClassNotFoundException`.
+
+![alt text](image-82.png)
+
+- Now using the `Class checkClass` we can see all its internal implementation written. Now to see the written implementation reflection api provides built-in methods, lets say now as an IDE we need to get all the constructor from the `UserDefinedClass`. 
+
+```
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
+public class AboutReflectionApi {
+    public static void main(String[] args) throws ClassNotFoundException {
+
+        Class checkClass = Class.forName("UserDefinedClass");
+        System.out.println(checkClass);
+
+        Constructor[] getAllConstructors=checkClass.getConstructors();
+        for(Constructor i: getAllConstructors){
+            System.out.println(i); // Prints out fully qualified name of Constructor
+        }
+        
+    }
+}
+
+Output:
+class UserDefinedClass
+public UserDefinedClass(java.lang.String,int)
+public UserDefinedClass()
+```
+
+- The `getConstructors` returns a array of `Constructor` which consist of all the **public constructors**. If any of the constructor is `private`, `default` or `protected`, we need to use `getDeclaredConstructors()` method to retrieve those constructor. 
+
+```
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
+
+class UserDefinedClass{
+    public String name;
+    private int Salary;
+    public static String companyName="GOOGLE";
+
+    UserDefinedClass(){
+        System.out.println("UserDefinedClass default constructor");
+    }
+
+    protected UserDefinedClass(int Salary){
+        this.name="NOT PROVIDED";
+        this.Salary=Salary;
+    }
+
+    private UserDefinedClass(String name){
+        this.name=name;
+        this.Salary=0;
+    }
+
+    public UserDefinedClass(String name,int Salary){
+        this.name=name;
+        this.Salary=Salary;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getSalary() {
+        return Salary;
+    }
+
+    public void setSalary(int salary) {
+        Salary = salary;
+    }
+
+}
+
+public class AboutReflectionApi {
+    public static void main(String[] args) throws ClassNotFoundException {
+
+        Class checkClass = Class.forName("UserDefinedClass");
+        System.out.println(checkClass);
+
+        Constructor[] getAllConstructors=checkClass.getDeclaredConstructors();
+        for(Constructor i: getAllConstructors){
+            System.out.println(i); // Prints out fully qualified name of Constructor
+        }
+        
+    }
+}
+
+
+Output:
+class UserDefinedClass
+public UserDefinedClass(java.lang.String,int)
+private UserDefinedClass(java.lang.String)
+protected UserDefinedClass(int)
+UserDefinedClass()
+```
+
+
+- Now based on this, our IDE will suggest available constructor to the user who is user our IDE. Lets retrieve some methods and fields.
+
+```
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class AboutReflectionApi {
+    public static void main(String[] args) throws ClassNotFoundException {
+
+        Class checkClass = Class.forName("UserDefinedClass");
+        System.out.println(checkClass);
+
+        System.out.println("All Constructors");
+        Constructor[] getAllConstructors=checkClass.getDeclaredConstructors();
+        for(Constructor i: getAllConstructors){
+            System.out.println(i); // Prints out fully qualified name of Constructor
+        }
+
+        System.out.println("All Fields");
+        Field[] getAllFields=checkClass.getDeclaredFields();
+        for(Field i: getAllFields){
+            System.out.println(i); // Prints out fully qualified field name
+        }
+
+        System.out.println("All Methods");
+        Method[] getAllMethods=checkClass.getDeclaredMethods();
+        for(Method i:getAllMethods){
+            System.out.println(i); // Prints out fully qualified method name
+        }        
+    }
+}
+
+
+Output:
+class UserDefinedClass
+All Constructors
+public UserDefinedClass(java.lang.String,int)
+private UserDefinedClass(java.lang.String)
+protected UserDefinedClass(int)
+UserDefinedClass()
+All Fields
+public java.lang.String UserDefinedClass.name
+private int UserDefinedClass.Salary
+public static java.lang.String UserDefinedClass.companyName
+All Methods
+public java.lang.String UserDefinedClass.getName()
+public void UserDefinedClass.setName(java.lang.String)
+public int UserDefinedClass.getSalary()
+public void UserDefinedClass.setSalary(int)
+```
+
+- Now suppose we have a class which as a private method.
+
+```
+class PrivateMethods{
+    private void display(){
+        System.out.println("Private Method display()");
+    }
+}
+```
+
+- In java, we cannot access the private methods. But using **reflection api** we can.
+
+```
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+class PrivateMethods{
+    private void display(){
+        System.out.println("Private Method display()");
+    }
+}
+
+public class AboutReflectionApi {
+    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException,Exception {
+        // Loading the Class
+        Class privateMethodClass = Class.forName("PrivateMethods");
+
+        // Creating a new instance of the class
+        PrivateMethods pm=(PrivateMethods)privateMethodClass.newInstance();
+
+        // Getting the private method by passing method name
+        Method displayM=privateMethodClass.getDeclaredMethod("display");
+
+        // Making private method accessible
+        displayM.setAccessible(true);
+
+        // Calling method based on the instance created.
+        displayM.invoke(pm);
+    }
+}
+
+Output:
+Private Method display()
+```
+
+- `Class.forName("PrivateMethods")` dynamically loads the `PrivateMethods` class at runtime. `Class.forName` is useful when the class name is not known at compile time or when loading classes dynamically. `privateMethodClass.newInstance()` creates a new instance of the `PrivateMethods` class. `newInstance()` calls the default constructor (no-argument constructor) of `PrivateMethods` to create an object. The result is cast to `PrivateMethods` and stored in `pm`.
+
+>[!NOTE]
+> - Starting with Java 9, `newInstance()` is considered outdated and can be replaced with `GivenClassName.getDeclaredConstructor().newInstance()` ( e.g `privateMethodClass.getDeclaredConstructor().newInstance()` ) for better exception handling.
+
+- `privateMethodClass.getDeclaredMethod("display")` retrieves the display method from `PrivateMethods`, regardless of its access level. `getDeclaredMethod` is used here because it can access private, protected, and public methods. `displayM` now holds a reference to the display method, which is private in this case.
+
+```
+displayM.setAccessible(true);
+```
+
+- `displayM.setAccessible(true)` allows access to the private method by bypassing Java’s access control checks. This is necessary because the display method is private and cannot be called directly from outside its class. Reflection allows us to override this restriction.
+- `displayM.invoke(pm)` calls the display method on the `pm` instance of `PrivateMethods`. It requires the instance name as there could be multiple instance which will have the `display` method, so on which instance we need to invoke it? so it requires the name or instance name.
+- Now lets say the `display` method now accepts an integer. So now when you invoke it you need to pass an integer value.
+
+```
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+class PrivateMethods{
+    private void display(int i){
+        System.out.println("Private Method display() , integer value - "+i);
+    }
+}
+
+public class AboutReflectionApi {
+    public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException,Exception {
+
+        // Loading the Class
+        Class privateMethodClass = Class.forName("PrivateMethods");
+
+        // Creating a new instance of the class
+        PrivateMethods pm=(PrivateMethods)privateMethodClass.getDeclaredConstructor().newInstance();
+
+        // Getting the private method by passing method name
+        Method displayM=privateMethodClass.getDeclaredMethod("display",int.class); // Another parameter is variable arguments which representing the types of the method's argument required for the method.
+
+        // Making private method accessible
+        displayM.setAccessible(true);
+
+        // Calling method based on the instance created.
+        displayM.invoke(pm,30); // Passing value
+    }
+}
+
+
+Output:
+Private Method display() , integer value - 30
+```
+
+- The Java Reflection API allows a program to examine or "reflect" on itself, meaning it can inspect classes, methods, fields, and interfaces at runtime (while the program is running). Using Reflection, Java code can:
+    - Discover and manipulate methods, fields, and constructors of a class dynamically.
+    - Call methods or access fields that may not be directly accessible or known at compile time.
+
+
+>[!WARNING]
+> - **Avoid using Reflection API implementation on Production as it may create unexpected behaviors, it can be useful for trouble shooting purpose**.
+> - Using reflection bypasses many of Java’s security and design features:
+>   - **Encapsulation**: Reflection can access private members of a class, potentially breaking the encapsulation principle of object-oriented programming. (As we were able to access private fields)
+>   - **Performance**: Reflective operations are generally slower due to their dynamic nature. They involve various runtime checks and lookups, making them more computationally intensive than their non-reflective counterparts.
+>   - **Security**: Malicious code might exploit reflection to access or modify private fields and methods, leading to security risks.
+> - While the Reflection API is an indispensable tool, it’s essential to use it judiciously. Developers must strike a balance between the dynamic capabilities reflection offers and the design principles Java promotes. When used with care, reflection can help create robust, flexible, and extensible applications without compromising the system’s integrity.
+
+- All Java objects inherit the `getClass()` method from the `java.lang.Object` class. This method returns a `Class` **object representing the runtime class of the instance**. It's an easy and direct approach when you have an object instance.
+
+```
+String s = "Hello, Reflection!";
+Class<?> clazz = s.getClass();
+System.out.println(clazz.getName()); // prints "java.lang.String"
+```
+
+- Sometimes, you might want to get the `Class` **object without instantiating an object**. In such cases, using .class syntax on class names or primitive data types provides a straightforward solution.
+
+```
+Class<?> intClass = int.class;
+Class<?> listClass = java.util.ArrayList.class;
+System.out.println(intClass.getName()); // prints "int"
+System.out.println(listClass.getName()); // prints "java.util.ArrayList"
+
+try {
+    Class<?> dynamicClass = Class.forName("java.util.HashMap");
+    System.out.println(dynamicClass.getSimpleName()); // prints "HashMap"
+} catch (ClassNotFoundException e) {
+    e.printStackTrace();
+}
+```
+
+- Lets take a example of interface.
+
+```
+import java.lang.reflect.Method;
+
+// Define a user-defined interface
+interface Animal {
+    void sound(); // Method to be implemented by classes
+}
+
+// Implementation class for the Animal interface
+class Dog implements Animal {
+    // Implementing the sound() method for Dog
+    public void sound() {
+        System.out.println("Dog barks!");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+
+            // Get the class object for the Dog class
+            Class<?> dogClass = Class.forName("Dog");
+
+            // Check if the Dog class implements the Animal interface
+            if (Animal.class.isAssignableFrom(dogClass)) {
+                System.out.println(dogClass.getName() + " implements Animal");
+
+                // Get the methods of the Animal interface
+                Method[] animalMethods = Animal.class.getDeclaredMethods();
+
+                // Iterate through each method in the Animal interface
+                for (Method method : animalMethods) {
+                    System.out.println("Method in Animal interface: " + method.getName());
+
+                    // Set the method accessible if needed (not required here since it's public)
+                    method.setAccessible(true);
+
+                    // Invoke the method on the Dog instance using reflection
+                    method.invoke(dog);  // This will call Dog's implementation of sound()
+                }
+            } else {
+                System.out.println(dogClass.getName() + " does not implement Animal");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Output:
+Dog implements Animal
+Method in Animal interface: sound
+Dog barks!
+```
 
 
 ## Serialization & Deserialization
