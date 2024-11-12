@@ -1471,6 +1471,48 @@ Speed value 150
 | **Access to Variables** | Can access instance variables.            | Can only access static variables.               |
 | **When to Use**         | For code common to multiple constructors. | For initializing static data.                   |
 
+- Now consider below code can you guess which will execute first?
+
+```
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+
+class Ordering{
+    
+    static{
+        System.out.println("Static Block");
+    }
+    
+    {
+        System.out.println("Instance Block");
+    }
+    
+    Ordering(){
+        System.out.println("Default Constructor");
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Ordering o1=new Ordering();
+        Ordering o2 = new Ordering();
+    }
+}
+
+Output:
+Static Block
+Instance Block
+Default Constructor
+Instance Block
+Default Constructor
+```
+
+- Static Block:
+    - The first time `Ordering` is referenced in `main`, the JVM loads the class and executes the static block.
+    - This block runs only once, regardless of how many instances are created afterward.
+- Instance Block and Constructor for Each Instance:
+    - When `new Ordering()` is called to create `o1`, the instance block runs first, followed by the constructor.
+    - When `new Ordering()` is called again to create `o2`, the instance block and constructor run again in the same sequence.
 
 ## Anonymous Object
 
