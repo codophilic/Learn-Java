@@ -4961,6 +4961,74 @@ Output:
 
 ![alt text](image-79.png)
 
+### Miscellaneous
+
+- Consider below code, and guess what will be the output?
+
+```
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Map<Object,Object> m = new HashMap<>();
+        List<Object> l = new ArrayList<>();
+        
+        l.add(1);
+        l.add("1");
+        l.add(true);
+        
+        System.out.println(l);            // Outputs: [1, "1", true]
+        
+        m.put("Key1",l);
+        System.out.println(m.get("Key1")); // Outputs: [1, "1", true]
+        
+        l.clear();                        // Clears the list
+        
+        System.out.println(m.get("Key1")); // Outputs: []
+    }
+}
+
+Output:
+[1, 1, true]
+[1, 1, true]
+[]
+```
+
+- In above code, when you add an object (like a `List`) to a `Map`, the map **stores a reference to that object rather than creating a copy of it**. This means that any changes made to the original object (in this case, the list `l`) will reflect in the map as well because both the map and the variable `l` point to the same object in memory.
+- When you use `l.clear()`, it empties the list `l`, which also affects the value stored in the map under `"Key1"` because `m` is holding a reference to the same list object `l`. Since `m` holds a reference, not a copy, the cleared list is also reflected in the map. Hence, after `l.clear()`, `m.get("Key1")` also returns an empty list `[]`.
+- This behavior applies to all types of Java collections, not just `Map`. Collections in Java (such as `List`, `Set`, `Map`, etc.) all store references to the objects they contain, rather than creating copies of those objects.
+- Now consider below code
+
+```
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Map<Object,Object> m = new HashMap<>();
+        List<Object> l = new ArrayList<>();
+        
+        l.add(1);
+        l.add("1");
+        l.add(true);
+        
+        System.out.println(l);            // Outputs: [1, "1", true]
+        
+        m.put("Key1",l);
+        System.out.println(m.get("Key1")); // Outputs: [1, "1", true]
+        
+        l = null;                         // Sets `l` to null
+        
+        System.out.println(m.get("Key1")); // Outputs: [1, "1", true]
+    }
+}
+
+Output:
+[1, 1, true]
+[1, 1, true]
+[1, 1, true]
+```
+
+- When you set `l` to null, you're only changing the variable `l` to reference `null`, but it does not affect the actual list object that was stored in the map. `m.get("Key1")` still returns the original list `[1, "1", true]` because `m` still holds a reference to the original list object. This means the `null` assignment to `l` only disconnects the variable `l` from that list object, but the map `m` still retains the reference.
 
 ## Equals and HashCode Contract
 
@@ -7358,23 +7426,160 @@ Dog barks!
 - In java, serialization and deserialization works similarly.
 - **Serialization:** Java Serialization is a mechanism by which Java objects can be converted into a byte stream. This byte stream data can be saved to a file, sent over a network or stored in memory.
 - **Deserialization:** Java Deserialization is a mechanism by which byte stream (0's and 1's) fetched over the network, memory or file can be converted back again to its original java objects.
+- Serialization and deserialization in Java are processes that allow objects to be converted to a format that can be easily stored or transmitted, and then reconstructed back into objects. This is particularly useful for saving objects to files, sending them over a network, or caching data.
 
 ![alt text](image.png)
 
 - In java if a class implements **java.io.Serializable**, then those classes object can serialize and deserialize. Lets see an example.
 
 ```
+import java.io.Serializable;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+
+class Person implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    String name;
+    int age;
+    String password;
+    
+    public Person(String name, int age, String password) {
+        this.name = name;
+        this.age = age;
+        this.password = password;
+    }
+    
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "', age=" + age + ", password='" + password + "'}";
+    }
+}
 
 
 
+public class AboutSerialization {
+    public static void main(String[] args) {
+        Person person = new Person("Alice", 30, "secretPassword");
+        
+        try (FileOutputStream fileOut = new FileOutputStream("person.ser");
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+             
+            out.writeObject(person);  // Serialize the object
+            System.out.println("Person object serialized to person.ser file.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Output:
+Person object serialized to person.ser file.
 ```
 
-- not all classes and object can be serialize, .ser is not always the extension.
+- To make a class serializable, it needs to implement the **Serializable** interface. **This is a marker interface, meaning it doesn’t have any methods to implement—it simply indicates that the class can be serialized.**. If you see there is one `person.ser` file generated. This is a binary file.
 
-https://www.javaguides.net/2018/06/guide-to-serialization-in-java.html
-https://www.javatpoint.com/serialization-in-java
-https://techvidvan.com/tutorials/serialization-in-java/
+![alt text](image-83.png)
 
+- Now lets try to deserialize the file `person.ser`. 
+
+```
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+public class AboutDeserialization {
+    public static void main(String[] args) {
+        try (FileInputStream fileIn = new FileInputStream("person.ser");
+             ObjectInputStream in = new ObjectInputStream(fileIn)) {
+             
+            Person person = (Person) in.readObject();  // Deserialize the object
+            System.out.println("Deserialized Person: " + person);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+Output:
+Deserialized Person: Person{name='Alice', age=30, password='secretPassword'}
+```
+
+- Lets say , you wanted to exclude some certain fields from being serialized. In that case you can use **`transient`** keyword.
+- Updated Serialization Code
+
+```
+import java.io.Serializable;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+
+class Person implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    String name;
+    int age;
+    transient String password;  // This field will not be serialized
+    
+    public Person(String name, int age, String password) {
+        this.name = name;
+        this.age = age;
+        this.password = password;
+    }
+    
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "', age=" + age + ", password='" + password + "'}";
+    }
+}
+
+
+
+public class AboutSerialization {
+    public static void main(String[] args) {
+        Person person = new Person("Alice", 30, "secretPassword");
+        
+        try (FileOutputStream fileOut = new FileOutputStream("person.ser");
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+             
+            out.writeObject(person);  // Serialize the object
+            System.out.println("Person object serialized to person.ser file.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Output:
+Person object serialized to person.ser file.
+```
+
+- Deserialize code remains same, but in the output we see that the `password` field value is `null`
+
+```
+Output:
+Deserialized Person: Person{name='Alice', age=30, password='null'}
+```
+
+- The `transient` keyword is used to **mark fields that should not be serialized**. For example, if an object has a sensitive field like a `password`, marking it as `transient` will prevent it from being written to the byte stream.
+- Do we need to use always `.ser` file extension? no, it is not mandatory to use the `.ser` extension for serialized files in Java. You can use any file extension ( ` .data`, `.bin`, `.txt` etc..) or even no extension at all. The .ser extension is just a convention that helps indicate that the file contains serialized data, but it doesn’t impact the serialization or deserialization process.
+
+### SerialVersionUID
+
+- The `serialVersionUID` is a unique identifier for Serializable classes. This ID is used during deserialization to verify that the sender and receiver of a serialized object have loaded classes for that object that are compatible with respect to serialization.
+- It's considered good practice to always explicitly define it to avoid potential issues with deserialization if you modify the class structure in the future.
+- If you don't explicitly declare `serialVersionUID`, Java will automatically generate one based on your class definition. However, this generated ID can change if you make even minor modifications to your class, causing deserialization errors when trying to load older serialized data.
+
+### Internal Working
+
+- Now if Serialization is marker interface which has no method then how does it work ? how does it serialize things? since there is no method in it? the Serializable interface acts like a "flag" or "marker" that tells the Java Virtual Machine (JVM) that an object of this class can be serialized. When you mark a class with implements `Serializable`, you’re essentially "opting in" to the serialization process, **allowing Java’s built-in serialization mechanisms to take over**.
+- Java has built-in code in its standard library (inside `ObjectOutputStream` and `ObjectInputStream`) that knows how to:
+    - Access the fields of an object.
+    - Convert each field into a series of bytes that represent the object’s data.
+    - Store the class metadata, so that the object can be correctly reconstructed during deserialization.
+- The actual work of serialization is handled by Java’s I/O classes, `ObjectOutputStream` (for writing objects) and `ObjectInputStream` (for reading objects). When you call `out.writeObject(object)`, the `ObjectOutputStream` checks if the object’s class implements `Serializable`. If the object’s class implements `Serializable`, `ObjectOutputStream` then serializes the object’s fields (attributes) by converting them into a byte stream. If the class does not implement `Serializable`, the `ObjectOutputStream` will throw a `NotSerializableException`, preventing the object from being written.
 
 ## Logging
 
