@@ -2599,7 +2599,7 @@ Default Constructor of X
 Parameterized constructor of Y
 ```
 
-- If you see ,X default constructor is called and Y parameterize constructor is called. How will you call X parameterizec constructor? simple just pass int value into the `super` .
+- If you see, `X` default constructor is called and `Y` parameterize constructor is called. How will you call `X` parameterized constructor? simple just pass int value into the `super` .
 
 ```
 class X{
@@ -2721,6 +2721,75 @@ Parameterized double constructor of Y
 - What happens if we write both? , if both `super()` and `this()` need to be the first statement, then only one of them can actually be the first statement in any given constructor. It is not possible to have two first statements, so you cannot use both super() and this() simultaneously in a single constructor.
 
 ![alt text](Images/java-1/image-18.png)
+
+- Now consider below code.
+
+```
+class A{
+    A(int a){
+        System.out.println("In A "+a);
+    }
+
+}
+
+class B extends A{
+    B(int b){
+
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        B b = new B(1);
+    }
+}
+
+
+Output:
+constructor A in class A cannot be applied to given types;
+    B(int b){
+            ^
+  required: int
+  found:    no arguments
+  reason: actual and formal argument lists differ in length
+1 error
+```
+
+- Why so? , now consider below code.
+
+```
+class A{
+    A(int a){
+        System.out.println("In A "+a);
+    }
+
+}
+
+class B extends A{
+    B(int b){
+        super(b);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        B b = new B(1);
+    }
+}
+
+Output:
+In A 1
+```
+
+- When a subclass constructor is invoked, it implicitly calls the no-argument constructor of the parent class (`super()`), unless another `super(...)` constructor is explicitly specified.
+- If the parent class does not define a no-argument constructor, and the subclass does not explicitly call a parameterized constructor of the parent class using `super(...)`, the compiler throws an error.
+
+```
+Implicit super constructor ParentClass() is undefined. Must explicitly invoke another constructor.
+```
+
+- **If the parent class lacks a no-argument constructor, the subclass must explicitly invoke one of the parameterized constructors of the parent class using `super(...)` and pass the required arguments.**
+
 
 ## Polymorphism
 
@@ -6438,7 +6507,7 @@ try{
 }
 ```
 
-- Now as a developer, when you build an application, you will be writing multiple streams to accept input in your applications, you will also write database related connections. So you may forget to close any of these resources during coding. So to avoid such error-prone we have **try-with-resources**. Lets take an example
+- Now as a developer, when you build an application, you will be writing multiple streams to accept input in your applications, you will also write database related connections. So you may forget to close any of these resources during coding. So to avoid such error-prone we have **try-with-resources (Introduce in Java 9)**. Lets take an example
 
 ```
 import java.io.BufferedReader;
@@ -8444,3 +8513,5 @@ public class Main {
 Output:
 Parsed date: 2024-11-12
 ```
+
+- Learn more about [java concepts](Java-II.md)

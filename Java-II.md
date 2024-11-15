@@ -97,15 +97,15 @@ Doubled value is 25
 
 - Lambda expression not only makes your code concise and readable but also decrease your file size by eliminating **Anonymous class** `AboutLambdaExpression$1.class`. How but? when we compile a class which has anonymous class, check the size.
 
-![alt text](image-1.png)
+![alt text](Images/java-2/image-1.png)
 
-![alt text](image-2.png)
+![alt text](Images/java-2/image-2.png)
 
 - When we use lambda expression.
 
-![alt text](image-3.png)
+![alt text](Images/java-2/image-3.png)
 
-![alt text](image-4.png)
+![alt text](Images/java-2/image-4.png)
 
 - See the difference in size and the file which got eliminated (`AboutLambdaExpression$1.class`) . 
 - Thus, **Lambda expression don't generate .class files just like anonymous class**.
@@ -763,7 +763,7 @@ Output:
 
 - In this example, the `addNumbers` method accepts a list of any type that is a supertype of `Integer`. This means you can pass in a `ArrayList<Integer>`, a `ArrayList<Number>`, or even a `ArrayList<Object>`.
 
-![alt text](image-6.png)
+![alt text](Images/java-2/image-6.png)
 
 >[!NOTE]
 > - Lower bounds (`<? super Something>`) are only valid with wildcards and are typically used in method parameters, not in class declarations.
@@ -792,7 +792,7 @@ Output:
 
 - The Collection interface acts like a blueprint or theory that defines what operations a collection should be able to perform. It specifies methods like `add()`, `remove()`, `size()`, but doesn't say how to implement these operations.
 
-![alt text](image-7.png)
+![alt text](Images/java-2/image-7.png)
 
 ### List
 
@@ -805,15 +805,15 @@ Output:
 - **List is an interface** which extends **SequencedCollection** , **SequencedCollection** extends **Collection** interface. If we checkout methods inside the list interface, it consist of method of SequencedCollection and Collection interface along with additional methods.
 - SequencedCollection interface methods
 
-![alt text](image-8.png)
+![alt text](Images/java-2/image-8.png)
 
 - List interface methods
 
-![alt text](image-9.png)
+![alt text](Images/java-2/image-9.png)
 
 - Now list is an interface, we cannot work with interface we require classes to work with. Lets see the implementation of List.
 
-![alt text](image-10.png)
+![alt text](Images/java-2/image-10.png)
 
 >[!NOTE]
 > - We will not explore all its implementation, we will only explore the widely used implementation of list.
@@ -961,7 +961,7 @@ After Trim Capacity is: 8
 
 ##### Memory Management
 
-![alt text](image-11.png)
+![alt text](Images/java-2/image-11.png)
 
 - Internally, an `ArrayList` uses a regular array (of type `Object[]`) to store the elements. The elements are placed in contiguous memory locations within this array.When an ArrayList is created, it allocates a continuous block of memory with a default initial capacity (usually 10). This means the memory for 10 elements is reserved, even if fewer elements are added initially.
 - When the ArrayList exceeds its capacity (i.e., more than 10 elements), a new larger array is created, and the existing elements are copied into the new array. The new size is generally 1.5 times the previous size.
@@ -979,7 +979,7 @@ numbers.ensureCapacity(100); // Pre-allocate space for 100 elements
 
 - In Java, a `LinkedList` is a collection that implements the `List` interface and stores elements in a linear fashion. Unlike an `ArrayList`, which uses a dynamic array, a `LinkedList` uses a series of interconnected nodes to store its elements. Each node contains the data and references (or links) to the next nodes in the list.
 
-![alt text](image-12.png)
+![alt text](Images/java-2/image-12.png)
 
 - **Node Structure**:
     - Data: The actual element being stored.
@@ -1085,7 +1085,7 @@ Is the LinkedList empty? true
 - Memory space is a shared resource among all programs. In a complex system environment, available memory can be dispersed throughout the memory space. We understand that the memory allocated for an array must be continuous. However, for very large arrays, finding a sufficiently large contiguous memory space might be challenging. This is where the flexible advantage of linked lists becomes evident.
 - **Non-contiguous Memory**: Unlike an ArrayList, a LinkedList does not allocate a contiguous block of memory. Each node can be located anywhere in memory, and the nodes are linked using pointers.
 
-![alt text](image-13.png)
+![alt text](Images/java-2/image-13.png)
 
 - Since `LinkedList` nodes are allocated as needed, the overall size of the list can grow or shrink dynamically based on the number of elements.
 
@@ -1250,9 +1250,9 @@ Capacity after trim: 2
 
 - When we open `add()` method in `Vector` class we can see it uses **synchronized**. Not only `add()` all other method uses **synchronized**. Thus making it thread-safety.
 
-![alt text](image-14.png)
+![alt text](Images/java-2/image-14.png)
 
-![alt text](image-15.png)
+![alt text](Images/java-2/image-15.png)
 
 
 
@@ -1266,12 +1266,12 @@ Capacity after trim: 2
 
 ##### Stack
 
-![alt text](image-16.png)
+![alt text](Images/java-2/image-16.png)
 
 - A Stack in Java is a data structure that follows the Last-In-First-Out (LIFO) principle, meaning that the last element added to the stack is the first one to be removed. Imagine a cylinder closed at one end. So when you fill the cylinder will elements, once the cylinder is filled, and if you want to make it empty, you need to remove that element which was inserted at the last.
 - It is implemented as a subclass of `Vector`.
 
-![alt text](image-17.png)
+![alt text](Images/java-2/image-17.png)
 
 - Stack Operations: The primary operations of a stack include:
     - Push: Add an element to the top of the stack.
@@ -1390,19 +1390,19 @@ Stack after clearing: []
 
 - A `Queue` is a collection designed to hold elements prior to processing. It typically orders elements in a FIFO (First-In-First-Out) manner.
 
-![alt text](image-18.png)
+![alt text](Images/java-2/image-18.png)
 
 - Lets explore **Queue.class** in java.
 
-![alt text](image-19.png)
+![alt text](Images/java-2/image-19.png)
 
 - If you see, `Queue` is an interface which extends another interface called `Collection`. Lets checkout implementations of `Queue`.
 
-![alt text](image-20.png)
+![alt text](Images/java-2/image-20.png)
 
 - Lets see method define for `Queue` interface.
 
-![alt text](image-21.png)
+![alt text](Images/java-2/image-21.png)
 
 - Main operations:
     - `add(element)`: Adds an element to the rear of the queue. If the queue is full, it throws an exception.
@@ -1414,7 +1414,7 @@ Stack after clearing: []
 
 - Now Queue is an interface, we cannot work with interface we require classes to work with. Lets see the implementation of Queue.
 
-![alt text](image-36.png)
+![alt text](Images/java-2/image-36.png)
 
 >[!NOTE]
 > - We will not explore all its implementation, we will only explore the widely used implementation of Queue.
@@ -1566,7 +1566,7 @@ Is queue empty after clear? true
 
 - When you create a `PriorityQueue` in Java without specifying an initial capacity, it creates an internal array with a default size of **11**. As elements are added, the queue automatically grows in size to accommodate more elements.
 
-![alt text](image-23.png)
+![alt text](Images/java-2/image-23.png)
 
 - The internal array would look in memory after several elements are added
 
@@ -1582,14 +1582,14 @@ Is queue empty after clear? true
 - A Deque (Double Ended Queue) in Java is a linear data structure that allows insertion and deletion of elements from both ends. Unlike a Queue that only allows operations at one end (FIFO: First-In-First-Out), a Deque supports operations at both the front and rear.
 
 
-![alt text](image-24.png)
+![alt text](Images/java-2/image-24.png)
 
 - The **interface** called Deque is present in `java.util` package. It is the subtype of the interface queue. The Deque supports the addition as well as the removal of elements from both ends of the data structure. Therefore, a deque can be used as a `Stack` or a `Queue`. We know that the stack supports the Last In First Out (LIFO) operation, and the operation First In First Out is supported by a queue. As a deque supports both, either of the mentioned operations can be performed on it
 
 >[!NOTE]
 > - `LinkedList` implements **`Deque` (`Queue` interface)** to give doubly linked list collection which allows insertion and deletion of elements from both ends (head and tail) of the linked list.
 
-![alt text](image-25.png)
+![alt text](Images/java-2/image-25.png)
 
 ##### ArrayDeque
 
@@ -1749,7 +1749,7 @@ head
 
 - A `BlockingQueue` in Java is a type of queue that supports thread-safe operations and provides blocking operations for adding and retrieving elements. It is an interface which extends `Queue` interface.
 
-![alt text](image-28.png)
+![alt text](Images/java-2/image-28.png)
 
 - Lets take a simple analogy of `BlockingQueue`.
 - Imagine a mailbox where:
@@ -1768,7 +1768,7 @@ head
     - **Preventing overflow**: If the producer is too fast, it waits for the consumer to catch up.
     - **Preventing unnecessary CPU usage**: Instead of constantly checking, threads block until they can act (e.g., waiting to put or take an item).
 
-![alt text](image-27.png)
+![alt text](Images/java-2/image-27.png)
 
 - In multi-threaded programs, threads need to safely communicate and coordinate when sharing data, like tasks or messages.  `BlockingQueue` ensures that multiple threads can safely add and remove elements without corrupting the data structure.
 - It provides mechanisms to block the producer thread if the queue is full or the consumer thread if the queue is empty, which prevents busy waiting (where threads keep checking the queue in a loop, consuming CPU unnecessarily).
@@ -1793,11 +1793,11 @@ head
 
 1. `put(E e)`: This method is used to insert elements to the queue. If the queue is full, it waits for the space to be available.
 
-![alt text](image-29.png)
+![alt text](Images/java-2/image-29.png)
 
 2. `E take()`: This method retrieves and remove the element from the head of the queue. If queue is empty it waits for the element to be available.
 
-![alt text](image-30.png)
+![alt text](Images/java-2/image-30.png)
 
 ##### ArrayBlockingQueue
 
@@ -1905,9 +1905,9 @@ Queue after adding more elements: [X, Y]
     - `putIndex`: This pointer points to the next position where an element can be inserted into the queue.
 - During `put()` and `take()` operations in `ArrayBlockingQueue`, locks are applied to ensure thread safety. Internally, the queue uses a single **ReentrantLock** to control access to the circular buffer. When adding (`put()`) or removing (`take()`) elements, irrespective of queue is completely filled or not, the lock ensures that only one thread can modify the queue at a time, preventing concurrent access issues.
 
-![alt text](image-31.png)
+![alt text](Images/java-2/image-31.png)
 
-![alt text](image-32.png)
+![alt text](Images/java-2/image-32.png)
 
 - Lets see an example how does it works internally. Lets consider a a `ArrayBlockingQueue` of size 8 , initially it is empty. So **`putIndex`** = 0 and **`takeIndex`** = 0.
 
@@ -2058,7 +2058,7 @@ Queue size after draining: 0
 > - If you need an unbounded queue that can grow to accommodate any number of elements, `LinkedBlockingQueue` can be used.
 > - When fetching or removing an element, the queue always traverses from the head of the queue. There's no random access to elements. To fetch or remove an element, it starts at the head and follows the pointers to the next nodes.
 >
-> ![alt text](image-33.png)
+> ![alt text](Images/java-2/image-33.png)
 
 ###### Internal Working of LinkedBlockingQueue
 
@@ -2115,7 +2115,7 @@ Head -> | 1 | -> | 2 | -> | 3 | -> | 4 | -> Tail (End of List)
     - **BlockingQueue**: Use when you have producer-consumer threads where one or more threads produce tasks (like file processing) and others consume tasks (process them). The thread-safe nature avoids race conditions. Example like Multi-user Gaming Server , the server processes gamer actions in the order they are received. If the action queue is full (too many simultaneous actions), new actions from players will block until space is available, maintaining game integrity.
 
 
-![alt text](image-26.png)
+![alt text](Images/java-2/image-26.png)
 
 ### Map
 
@@ -2128,7 +2128,7 @@ Head -> | 1 | -> | 2 | -> | 3 | -> | 4 | -> Tail (End of List)
 - A key is an object that you use to access the value later, it is associated with a single value. A map is used when you need to search, edit, or remove elements based on a key.
 - Now `Map` is an interface, we cannot work with interface we require classes to work with. Lets see the implementation of map.
 
-![alt text](image-47.png)
+![alt text](Images/java-2/image-47.png)
 
 >[!NOTE]
 > - We will not explore all its implementation, we will only explore the widely used implementation of map.
@@ -2265,7 +2265,7 @@ Output:
     - "Grapes", 3
 
 
-![alt text](image-48.png)
+![alt text](Images/java-2/image-48.png)
 
 
 - When we create a `HashMap`, the default initial capacity of a `HashMap` is 16. So an bucket array of 16 size is created.
@@ -2311,7 +2311,7 @@ Bucket Array          |("Apple",1) -> ("Orange",4)|("Banana",2)|("Grapes",3)|   
 
 ##### Memory Management
 
-![alt text](image-48.png)
+![alt text](Images/java-2/image-48.png)
 
 - The default capacity of `HashMap` is 16. So it creates a bucket array of 16 size. Each `HashMap` has a load factor which is **0.75 or 75%**. 
 - The load factor determines when the `HashMap` will grow to avoid too many collisions. The default load factor is **0.75**, which means the `HashMap` will resize itself when the number of elements exceeds **75%** of the total capacity. In a default `HashMap` with 16 buckets, 0.75 * 16 = 12. So, when the 13th element is added, the `HashMap` will automatically resize (double its capacity).
@@ -2366,7 +2366,7 @@ public class HashMapExample {
 #### LinkedHashMap
 
 
-![alt text](image-49.png)
+![alt text](Images/java-2/image-49.png)
 
 - As the name suggested it uses the implementation of `HashMap`. Then whats the difference? `LinkedHashMap` is a subclass of `HashMap` in Java, but with an important difference—it maintains the insertion order of elements. This means that when you iterate over a `LinkedHashMap`, the elements are returned in the order they were inserted, unlike `HashMap`, which does not guarantee any specific order.
 - Lets see an example.
@@ -2469,7 +2469,7 @@ After Clearing LinkedHashMap: {}
 - The doubly linked list in `LinkedHashMap` stores both the key-value pairs (entries). Each node in the doubly linked list has pointers to the next and previous entries, which allows for maintaining the order of elements.
 
 
-![alt text](image-56.gif)
+![alt text](Images/java-2/image-56.gif)
 
 - Both Data Structures (`HashMap` and doubly linked list) Work Together:
     - The bucket array handles the normal HashMap functionality (finding, inserting, and removing key-value pairs based on the hash).
@@ -2834,11 +2834,11 @@ After inserting [50]:
 
 - Set is a collection of elements (Or objects) that contains no duplicate elements. Java Set is an **interface** that extends **Collection interface**. Unlike List, Java Set is NOT an ordered collection, it’s elements does NOT have a particular order.
 
-![alt text](image-34.png)
+![alt text](Images/java-2/image-34.png)
 
 - Now Set is an interface, we cannot work with interface we require classes to work with. Lets see the implementation of set.
 
-![alt text](image-35.png)
+![alt text](Images/java-2/image-35.png)
 
 >[!NOTE]
 > - We will not explore all its implementation, we will only explore the widely used implementation of set.
@@ -2931,24 +2931,24 @@ HashSet after clearing: []
 
 - `HashSet` in Java internally uses a `HashMap` to store its elements.
 
-![alt text](image-37.png)
+![alt text](Images/java-2/image-37.png)
 
 - Whenever you create a `HashSet` object, one `HashMap` object associated with it is also created. This `HashMap` object is used to store the elements you enter in the `HashSet`.
 - When you add an element to a HashSet, it first computes a hash code (a unique integer) using the element’s `hashCode()` method.
 - The elements you add into `HashSet` are stored as keys of this `HashMap` object. The value associated with those keys will be a constant object called `PRESENT` (since a `HashSet` doesn't need values). This is why `HashSet` provides fast lookups, additions, and deletions—because it’s leveraging `HashMap`.
 
-![alt text](image-38.png)
+![alt text](Images/java-2/image-38.png)
 
-![alt text](image-39.png)
+![alt text](Images/java-2/image-39.png)
 
 - Consider the below image, which shows how `HashSet` internally uses `HashMap`.
 
-![alt text](image-40.png)
+![alt text](Images/java-2/image-40.png)
 
 - In `HashMap`, which backs the `HashSet`, a bucket or array concept is used. The number of buckets (the size of the array) is determined by the capacity of the `HashMap`. `HashMap` (and therefore `HashSet`) starts with **16** buckets. This initial capacity is the default, but it can increase dynamically as more elements are added (this process is called **rehashing**).
 - The capacity of the bucket array is always a power of two (16, 32, 64, etc.) for efficient indexing and memory management.
 
-![alt text](image-41.png)
+![alt text](Images/java-2/image-41.png)
 
 - These buckets are basically array based, so it will have indexes starting from 0-15 initially, so how does the elements of set is placed inside these buckets? this is by using a simple mathematical hashing algorithm (`hashCode()`% capacity (16)). Every object in Java inherits the `hashCode()` method from the `Object` class. Once the `hashCode()` is generated, `HashMap` further processes it using a hashing function to distribute the hash values evenly across the buckets. The typical operation involves **bit manipulation** to ensure a more uniform distribution across buckets.
 - Lets see an example. Suppose you need to add 3 elements in your `HashSet`.
@@ -3022,7 +3022,7 @@ New array (size 32):
 
 - `LinkedHashSet` is a subclass of `HashSet` in Java that maintains a linked list of the entries in the set. This means it preserves the insertion order of the elements, unlike `HashSet`, which does not guarantee any order.
 
-![alt text](image-42.png)
+![alt text](Images/java-2/image-42.png)
 
 - In short:
     - `HashSet` is unordered.
@@ -3095,12 +3095,12 @@ After clearing: []
 
 - `LinkedHashSet` combines the features of a `HashSet` and a **doubly linked list** to maintain both uniqueness and insertion order. `LinkedHashSet` is backed by a HashMap where the elements are stored as keys. Each key maps to a constant dummy value (`true`).
 
-![alt text](image-43.png)
+![alt text](Images/java-2/image-43.png)
 
 - In addition to the hash table structure, `LinkedHashSet` maintains a doubly linked list that keeps track of the insertion order of the elements. Each node in the doubly linked list contains a reference to the next and previous nodes, allowing efficient iteration in the order of insertion.
 
 
-![alt text](image-56.gif)
+![alt text](Images/java-2/image-56.gif)
 
 
 
@@ -3153,7 +3153,7 @@ If the element is unique, it is added to the hash table (as a key in the `HashMa
 
 - `SortedSet` is an interface in the Java Collections Framework that extends the `Set` interface and ensures that the elements are stored in a sorted order. It guarantees that the elements in the set are arranged either in their natural ordering or by a custom comparator (if provided).
 
-![alt text](image-44.png)
+![alt text](Images/java-2/image-44.png)
 
 ##### TreeSet
 
@@ -3386,7 +3386,7 @@ TreeSet with Comparator: [Cat, Dog, Elephant]
 
 - The `TreeSet` is much similar to the `HashSet` class. The major difference between both classes is used data structure between them. The `HashSet` uses a Hashtable, and the `TreeSet` uses a self-balancing tree.
 
-![alt text](image-45.png)
+![alt text](Images/java-2/image-45.png)
 
 - The `TreeSet` in Java is implemented internally using a `TreeMap`, which is a **Red-Black Tree**. A **Red-Black Tree** is a type of **self-balancing binary search tree**, ensuring that all basic operations like insertion, deletion, and search take **O(log n)** time. The key feature of a `TreeSet` is that it automatically sorts the elements in natural order or based on a custom comparator.
 - Imagine each element as a node in a binary tree, where smaller elements go to the left, and larger elements go to the right. Here's how a `TreeSet` might look internally when elements are added. For example, adding the elements 50, 30, 70, 20, 40, 60, and 80 to a `TreeSet`.
@@ -3409,7 +3409,7 @@ TreeSet with Comparator: [Cat, Dog, Elephant]
 
 - But where are the corresponding values of the keys are maintained? , itself in the node of the red-black tree.
 
-![alt text](image-46.png)
+![alt text](Images/java-2/image-46.png)
 
 - Lets say you are inserting fruit names like "apple", "mango", and "date" into a `TreeSet`.
     - The keys are the strings: "apple", "mango", "date".
@@ -3485,12 +3485,12 @@ Item: -20
 ### Collection Framework Class Hierarchy
  
 
-![alt text](image-22.png)
+![alt text](Images/java-2/image-22.png)
 
 
 #### Iterable Interface
 
-![alt text](image-50.png)
+![alt text](Images/java-2/image-50.png)
 
 - If you see `Collection` interface **extends Iterable** interface. What is it ? and why does the `Collection` interface extends `Iterable` interface? , if you remember about the enhanced for loop we learned
 
@@ -3510,7 +3510,7 @@ Output:
 
 - The enhanced for-loop (also known as the "for-each" loop) is part of the `Iterable` interface.
 
-![alt text](image-51.png)
+![alt text](Images/java-2/image-51.png)
 
 
 - You won't be able to see the enhanced for-loop directly in the interface, because the enhanced for-loop (`for (ElementType element : collection)`) is a syntactic construct introduced in Java 5 to simplify iteration over collections or arrays. It doesn't directly correspond to any method in the `Iterable` interface, but it implicitly uses the `iterator()` method to perform the iteration.
@@ -3521,11 +3521,11 @@ Output:
 
 - Lets see the `forEach()` method.
 
-![alt text](image-52.png)
+![alt text](Images/java-2/image-52.png)
 
 - The `forEach()` method requires input as `Consumer`. What is it? lets open `Consumer`.
 
-![alt text](image-53.png)
+![alt text](Images/java-2/image-53.png)
 
 - It a generic interface, which requires a type parameter (`T`). So lets implement this interface and use `forEach()` for iteration.
 
@@ -3698,7 +3698,7 @@ City Name: London
 
 - The lambda expression works with functional interface, so **Consumer** is a functional interface. But if you notice there is one default method with name `andThen()`.
 
-![alt text](image-53.png)
+![alt text](Images/java-2/image-53.png)
 
 - A functional interface in Java is an interface that contains **exactly one abstract method**. **The presence of default and static methods does not change the fact that an interface is a functional interface**. As long as the interface has exactly one abstract method, it qualifies as a functional interface.
 - What the purpose of `andThen()` method?
@@ -3961,13 +3961,13 @@ Go
 
 - We have saw about **Collection interface**, now there is a class with name **Collections**.
 
-![alt text](image-56.png)
+![alt text](Images/java-2/image-56.png)
 
 - If we explore methods inside the **Collections** class. We could all the methods are **static**.
 
-![alt text](image-57.png)
+![alt text](Images/java-2/image-57.png)
 
-![alt text](image-58.png)
+![alt text](Images/java-2/image-58.png)
 
 - What is this **Collections** class? , Before understanding it lets consider a example where we wanted to sort elements in an array. You can use a bubble sort algorithm and write down the code from scratch for it.
 
@@ -4363,14 +4363,14 @@ Two: 2
 - Comparable is for when you have a default, natural ordering for an object (e.g., sorting books by title). Comparator is for when you need flexibility, so you can sort the same object in different ways (e.g., by author, by page number, etc.), without changing the original sorting rule.
 - Lets open up `Comparable` and `Comparator` interface.
 
-![alt text](image-59.png)
+![alt text](Images/java-2/image-59.png)
 
-![alt text](image-60.png)
+![alt text](Images/java-2/image-60.png)
 
 - Both interfaces are **Functional Interface**. But if you see only `Comparator` interface is annotated with **`@FunctionalInterface`**? why so, `Comparable` was **introduced in Java 1.2**, long before the `@FunctionalInterface` **annotation was added in Java 8**. At that time, the concept of a functional interface didn’t exist in the language. Even though `Comparable` is not annotated with `@FunctionalInterface`, it is still a valid functional interface because, it has only one abstract method `compareTo()`.
 - Under `Comparator` interface there are bunch of default and static methods. A functional interface in Java is an interface that contains exactly one abstract method. **It can have any number of default or static methods or object methods**, but only one method needs to be implemented by any implementing class or lambda expression.
 
-![alt text](image-61.png)
+![alt text](Images/java-2/image-61.png)
 
 - If you see, along with `compare()` method there is an `equals()` method. The `equals()` method is from `Object` class. This means that `equals()` does not count as an abstract method in the `Comparator` interface, and only `compare()` is considered.
 - Comparable and Comparator both are part of **Collection Framework**.
@@ -4403,7 +4403,7 @@ Sorted Strings: [apple, banana, orange]
 
 - The `Collections.sort()` leverages `Comparable` interface.
 
-![alt text](image-62.png)
+![alt text](Images/java-2/image-62.png)
 
 - Lets define a `Student` class.
 
@@ -4772,7 +4772,7 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
     - **Tight Coupling:** You are okay with embedding the sorting logic inside the class, meaning the class itself knows how to compare its instances.
 - Implementing `Comparable` like `Comparator` will throw you error
 
-![alt text](image-63.png)
+![alt text](Images/java-2/image-63.png)
 - When we use `Comparator`
     - **Multiple Sorting Criteria:** You need to compare objects in different ways depending on the situation. For example, sometimes you might want to sort by name, other times by roll number, or even by both.
     - **External Sorting Logic:** The sorting logic doesn’t belong inside the class. This way, you can keep the class simple and flexible, allowing different ways to sort the same objects.
@@ -4798,7 +4798,7 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
 
 - If you see `Map` is not a part of **Collection**. If we open `Map` interface it does not extends **Collection** interface whereas `List`, `Set` and `Queue` extends **Collection**.
 
-![alt text](image-54.png)
+![alt text](Images/java-2/image-54.png)
 
 - **Collection (Interface)**
     - It is a root interface in the Collections Framework that represents a group of objects known as elements. Various data structures like `List`, `Set`, and `Queue` extend this interface. It is part of `java.util` package.
@@ -4819,7 +4819,7 @@ Sorted Students by Name: [Alice (Roll No: 2), John (Roll No: 5), Ali (Roll No: 8
     - **Collection API** is the set of interfaces, classes, and methods provided by the Java Collections Framework to enable developers to work with collections of data efficiently. It covers a wide range of data structures and operations, making it one of the most powerful parts of Java's standard library.
 
 
-![alt text](image-55.png)
+![alt text](Images/java-2/image-55.png)
 
 ### Fail-Fast vs Fail-Safe
 
@@ -4959,7 +4959,7 @@ Output:
     - Better performance and scalability in high-concurrency scenarios.
     - Safe for concurrent modification without additional synchronization.
 
-![alt text](image-79.png)
+![alt text](Images/java-2/image-79.png)
 
 ### Miscellaneous
 
@@ -5080,7 +5080,7 @@ Output:
 - So lets use the in-built `equals()` method provided by `Object` class. 
 - The method definition for equals looks like as mentioned below. The default implementation of the `equals()` method checks for **referential equality or simply checks if two objects’ references point to the same memory address**. Again it performs shallow comparison.
 
-![alt text](image-80.png)
+![alt text](Images/java-2/image-80.png)
 
 - Ideally, `e1` and `e2` should be same as they have same attributes values (`ABC,1000`), so here we need to override the `equals()` method.
 
@@ -5211,7 +5211,7 @@ true
 
 - A hash code is an integer value of an object. This hash code is unique to an object and generated using a hashing function.
 
-![alt text](image-81.png)
+![alt text](Images/java-2/image-81.png)
 
 - By overriding `equals()` method we make objects equals, but the hashCode yield by the object having same attributes must also be same right? so we need to also override `hashCode()`.
 
@@ -5377,12 +5377,12 @@ World
 
 - Lambda expression allows you to reduce code compared to an anonymous class to pass behaviors to methods, method reference goes one step further. It reduces code written in a lambda expression to make it even more readable and concise.
 
-![alt text](image-64.png)
+![alt text](Images/java-2/image-64.png)
 
 - General syntax of method reference is `object::methodName`
 - Now lets say you wanna perform multiple operation on your `ArrayList` like to make your `String` elements into upper case and then you wanted to print it out. In such scenario **you cannot use method reference**. So if the action involves multiple steps for only one method it is better to use lambda expression.
 
-![alt text](image-65.png)
+![alt text](Images/java-2/image-65.png)
 
 - **Method references are just syntactic sugar for lambda expressions**. Wherever a lambda expression is used, if that lambda matches a method's signature, you can replace the lambda with a method reference.
 
@@ -5421,7 +5421,7 @@ System.out.println(result);  // Output: 20
 
 - **BiFunction is a functional interface**.
 
-![alt text](image-66.png)
+![alt text](Images/java-2/image-66.png)
 
 - It is a part of the `java.util.function` package which has been introduced since Java 8, to implement functional programming in Java. It takes two arguments and produces a result.
 
@@ -5535,7 +5535,7 @@ Function<String, Integer> lengthFunction = String::length;
 
 - **Function Interface is a Functional Interface similarly like BiFunctional interface**.
 
-![alt text](image-67.png)
+![alt text](Images/java-2/image-67.png)
 
 - In `BiFunction` there we two input arguments passed to `apply` method whereas in `Function` only one input argument is passed. 
 
@@ -5695,7 +5695,7 @@ word is null
 
 - In Java, `Optional<T>` is a container object that represents the presence or absence of a value of type `T`. When we open `Optional` class we get several methods.
 
-![alt text](image-76.png)
+![alt text](Images/java-2/image-76.png)
 
 - By using `Optional`, you make it clear to other developers that a method might return a value or nothing at all, improving readability and understanding of the code.
 - **Optional Encourages Functional Programming**.
@@ -6028,15 +6028,15 @@ System.out.print(strList.stream().collect(Collectors.joining(""))); //Joining El
 
 - Lets open the `stream()` method, we see **`stream()` method is part of Collection Interface**.
 
-![alt text](image-68.png)
+![alt text](Images/java-2/image-68.png)
 
 - When we click on `Stream<E>`, we can see it an interface.
 
-![alt text](image-69.png)
+![alt text](Images/java-2/image-69.png)
 
 - There are several methods provided in the `Stream` interface. The `Stream` interface extends `BaseStream<T, Stream<T>>` interface.
 
-![alt text](image-70.png)
+![alt text](Images/java-2/image-70.png)
 
 - The `BaseStream` interface is the super interface for all types of streams in Java, including:
     - `Stream<T>` (for regular object streams)
@@ -6058,7 +6058,7 @@ System.out.print(strList.stream().collect(Collectors.joining(""))); //Joining El
     - **Collect**: This is the stage where all the packed fish are loaded onto a truck for further transportation. In the Stream API, this is the final `collect()` operation, which gathers all the results into a final data structure.
 
 
-![alt text](image-71.png)
+![alt text](Images/java-2/image-71.png)
 
 - Thus, the Stream API creates a “flow” where each element passes through specific stages, much like on a conveyor belt, making the process efficient and consistent.
 
@@ -6066,7 +6066,7 @@ System.out.print(strList.stream().collect(Collectors.joining(""))); //Joining El
 
 - The main components of the Stream API work together to organize an efficient and declarative data processing workflow.
 
-![alt text](image-72.png)
+![alt text](Images/java-2/image-72.png)
 
 1. **Source**: This is the starting point from which data is fed into the processing stream. A source can be a collection, array, string, file, generator, or another data source.
 2. **Stream**: A sequence of elements to be processed. The stream can be processed either in a **single-threaded or multi-threaded manner**.
@@ -6107,7 +6107,7 @@ java.util.stream.ReferencePipeline$Head@1e4a7dd4
 
 ##### Analogy
 
-![alt text](image-73.png)
+![alt text](Images/java-2/image-73.png)
 
 - Think of a stream like a pipeline that allows objects to flow through it. Intermediate operations are like valves or filters that can be used to modify the objects in
  the pipeline. You can use these operations to perform transformations on the objects, such as mapping them to a new value or filtering out certain objects based on some condition.
@@ -6165,7 +6165,7 @@ filter: three
 - Even though the terminal operation (`forEach()`) triggers the execution, each element flows through the entire sequence of intermediate operations (`map()` -> `filter()`) in the order they are defined. Intermediate operations are evaluated sequentially for each element, one after the other. The terminal operation (`forEach()`, `collect()`, etc.) simply signals when to start processing and defines what to do with the final result.
 
 
-![alt text](image-74.png)
+![alt text](Images/java-2/image-74.png)
 
 
 >[!NOTE]
@@ -6402,7 +6402,7 @@ public class AboutStreamApi{
 
 - When we run the code multiple times we see that we order of names which are getting printed keeps varying.
 
-![alt text](image-75.png)
+![alt text](Images/java-2/image-75.png)
 
 - `parallelStream()` splits the list of names and processes them in parallel across multiple threads. Each element is handled by a different thread (e.g., `ForkJoinPool.commonPool-worker-1`, `worker-2`, etc.). The result is that elements are processed in parallel, not in the order they appear in the list.
 
@@ -7016,9 +7016,9 @@ public class LongStreamExample {
 - As far we know, `java.lang.Object` is the parent class, but you know, there is a class which name is `Class` (`java.lang.Class`) and there is another class name `Method` (`java.lang.reflect.Method`)?
 
 
-![alt text](image-77.png)
+![alt text](Images/java-2/image-77.png)
 
-![alt text](image-78.png)
+![alt text](Images/java-2/image-78.png)
 
 - Based on this, lets try to mimic any IDE. Suppose a user is creating a class `UserDefinedClass`.
 
@@ -7074,7 +7074,7 @@ class UserDefinedClass
 
 - Okay, so it seems the user has written a class and not any interface. The `Class.forName` check whether the class is of type `Class` and if not then it throws a checked exception `ClassNotFoundException`.
 
-![alt text](image-82.png)
+![alt text](Images/java-2/image-82.png)
 
 - Now using the `Class checkClass` we can see all its internal implementation written. Now to see the written implementation reflection api provides built-in methods, lets say now as an IDE we need to get all the constructor from the `UserDefinedClass`. 
 
@@ -7480,7 +7480,7 @@ Person object serialized to person.ser file.
 
 - To make a class serializable, it needs to implement the **Serializable** interface. **This is a marker interface, meaning it doesn’t have any methods to implement—it simply indicates that the class can be serialized.**. If you see there is one `person.ser` file generated. This is a binary file.
 
-![alt text](image-83.png)
+![alt text](Images/java-2/image-83.png)
 
 - Now lets try to deserialize the file `person.ser`. 
 
@@ -7622,7 +7622,7 @@ INFO: This is an INFO message
         - `SimpleFormatter`: Formats log messages in a simple text format.
         - `XMLFormatter`: Outputs log messages in XML format
 
-![alt text](image-5.png)
+![alt text](Images/java-2/image-5.png)
 
 - Events are created by calling methods like `info()`, `warning()`, `severe()`, etc., on a Logger instance. These methods generate log records that are processed by Handlers.
 - When an application makes a logging call, the Logger component records the event in a LogRecord and forwards it to the appropriate Appender. Then it formatted the record using the Layout according to the required format. Apart from this, you can also use more than one Filters to specify which Appenders should be used for events.
@@ -7864,3 +7864,628 @@ FINEST: This is a finest message
     3. Audit: To maintain records of specific actions or events (e.g., logins, transactions).
 
     4. Troubleshooting: To analyze issues after they occur in production.
+
+
+## Volatile 
+
+- n Java, the `volatile` keyword is used to make sure that changes to a variable are always visible to other threads. When a variable is declared as volatile, it tells the JVM that the variable's value will be directly read from and written to the main memory (instead of each thread keeping a copy of it in their own CPU cache).
+- **This ensures that if one thread changes the value of a volatile variable, other threads immediately see the updated value**.
+
+### Without Volatile
+
+- Lets understand an example consider a scenario without volatile. Suppose you have a background thread that performs some work, and you want to be able to stop it gracefully from another thread (like the main thread). You could use a boolean flag to control when the background thread should stop. Without `volatile`, the background thread may not see updates to this flag immediately, which could cause it to continue running even after you intend for it to stop.
+
+```
+class Worker implements Runnable {
+    private boolean running = true;
+
+    public void run() {
+        while (running) {
+            // Simulate doing some work
+            System.out.println("Working...");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        System.out.println("Worker stopped.");
+    }
+
+    public void stop() {
+        running = false;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Worker worker = new Worker();
+        Thread thread = new Thread(worker);
+        thread.start();
+
+        // Let the worker thread run for a while
+        Thread.sleep(500);
+
+        // Stop the worker thread
+        worker.stop();
+        System.out.println("Request sent to stop the worker.");
+
+        thread.join();
+        System.out.println("Main thread finished.");
+    }
+}
+
+Output:
+(Worst Scenario, where the variable value is picked up from the cache)
+Working...
+Working...
+Working...
+Working...
+Working...
+Request sent to stop the worker.
+Worker stopped.
+Main thread finished.
+Working...
+Working...
+Working...
+Working...
+... (continues for some time, and then eventually stops)
+```
+
+- Without `volatile`, the background Worker thread could continue to loop even after the main thread has set running to false. This happens because the Worker thread may keep reading a cached version of running, not realizing that the main thread has updated it.
+- This happens because the `Worker` thread's local CPU cache might keep the running flag's value as `true` for a while. This means that the thread may keep reading an old value of running (in its cache) and may not see the update made by the `stop()` method in the main thread. As a result, the Worker thread may not stop immediately and could even keep running indefinitely. 
+- Eventually, due to the CPU's memory consistency mechanisms or other system events, the cached value might be refreshed, and the `Worker` thread will finally see running as `false`, allowing it to stop. However, this can take an unpredictable amount of time, leading to unreliable behavior.
+
+### With Volatile
+
+- For the same code when we write the flag with `volatile` keyword
+
+```
+class Worker implements Runnable {
+    private volatile boolean running = true;
+
+    public void run() {
+        while (running) {
+            // Simulate doing some work
+            System.out.println("Working...");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        System.out.println("Worker stopped.");
+    }
+
+    public void stop() {
+        running = false;
+    }
+}
+
+
+
+public class AboutVolatile{
+    public static void main(String[] args) throws InterruptedException {
+        Worker worker = new Worker();
+        Thread thread = new Thread(worker);
+        thread.start();
+
+        // Let the worker thread run for a while
+        Thread.sleep(500);
+
+        // Stop the worker thread
+        worker.stop();
+        System.out.println("Request sent to stop the worker.");
+
+        thread.join();
+        System.out.println("Main thread finished.");
+    }
+}
+
+Output: (Fix)
+Working...
+Working...
+Working...
+Working...
+Working...
+Request sent to stop the worker.
+Worker stopped.
+Main thread finished.
+```
+
+- In this version, running is marked as `volatile`, so changes to it will always be visible across all threads. When the main thread calls `stop()` and sets running to `false`, the `Worker` thread will immediately see the updated value and stop running.
+- When running is declared as `volatile`, every read and write goes to main memory. This means that as soon as `stop()` sets running to `false`, the `Worker` thread will immediately read the updated value from main memory instead of relying on a potentially stale value from its cache.
+- Using `volatile` here ensures the `Worker` thread sees the latest running flag state right away, preventing it from unintentionally continuing after the stop request.
+- **Volatile does not guarantee atomicity**. What does it means? For example, incrementing a volatile variable involves three steps: read, modify, and write back. If multiple threads attempt to increment the variable at the same time, they might read the same value, increment it, and write it back, resulting in only one increment being recorded instead of two.
+- Consider below code
+
+```
+class Counter {
+    private volatile int count = 0;
+    
+    public void increment() {
+        count++;
+    }
+    
+    public int getCount() {
+        return count;
+    }
+}
+
+public class TestCounter {
+    public static void main(String[] args) {
+        Counter counter = new Counter();
+        
+        // Creating two threads that increment the count
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        });
+
+        t1.start();
+        t2.start();
+        
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("Final count: " + counter.getCount());
+    }
+}
+
+Output:
+(Will vary on each execution)
+```
+
+- However, just using `volatile` does not make the increment method thread-safe. This is because `count++` is not atomic. An atomic operation is an operation that happens in one step, and `count++` actually consists of three steps internally:
+    - Reading count.
+    - Incrementing the value.
+    - Writing the incremented value back.
+- Since these steps are not atomic, if two threads try to execute `count++` at the same time, they might read the same initial value and end up overwriting each other's updates.
+- Thats why **volatile does not guarantee atomicity**. You need `synchronized` or other concurrency mechanisms for that.
+
+## Record Classes (Introduced in Java 14, finalized in Java 16)
+
+- Java Record Classes significantly reduce boilerplate code for simple data carrier classes by automatically providing constructors, accessors, equals, hashCode, and toString methods. They encourage immutability, enriching the Java language by making code more concise and readable.
+- Consider example without record class.
+
+```
+import java.util.Objects;
+
+public class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, age);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person person = (Person) obj;
+        return age == person.age && Objects.equals(name, person.name);
+    }
+}
+```
+
+- Now with record class.
+
+```
+public record Person(String name, int age) {
+    // No need to explicitly declare constructors, getters, toString, hashCode, or equals.
+}
+```
+
+- **A record is an immutable transparent carrier for a fixed set of values known as the record components. Each component gives rise to a final field that holds the provided value and an accessor method to retrieve the value**. Consider below code.
+
+```
+record Person(int age,String name){
+
+}
+
+public class AboutRecordClass {
+    public static void main(String[] args) {
+        
+        Person p = new Person(20, "ABC");
+        System.out.println("Name: "+p.name());
+
+    }
+}
+
+Output:
+Name: ABC
+```
+
+- Once the object is created we cannot change the field value thats why record is an immutable component.
+- It shows suggestion for all the final fields created.
+
+![alt text](Images/java-2/image-84.png)
+
+- The compiler has automatically generated all the necessary methods like `hashcode`, `equals` and others. You also might notice that class `Person` extends a `java.lang.Record` class. This class ‘Record’ is applied only by the compiler, the developers can not directly extend it into a Java class as the compiler does not allow it and will fail the compilation.
+
+```
+record Person(int age,String name){ }
+```
+
+- From this one line of code, the compiler generates the following:
+    - final fields with a `String name` and `int age`
+    - A constructor which sets both the fields with the value (‘canonical constructor)
+    - the accessor methods `name()` and `age()`
+    - an `equals()` method that evaluates if two instances are the same if `name` and `age` values are the same for both instances
+    - a `hashcode()` method returns the same `hashcode` for two same instances
+    - a `toString()` method
+- We learned about **equals and hashed contract** where we implemented by using our custom logic. Even those are automatically handled by record classes.
+
+```
+record Person(int age,String name){
+
+}
+
+public class AboutRecordClass {
+    public static void main(String[] args) {
+        
+        Person p = new Person(20, "ABC");
+        System.out.println("Name: "+p.name());
+        Person p1=new Person(20,"ABC");
+
+        // Equals Contract
+        if(p.equals(p1)) {
+            System.out.println("Objects are equal");
+        }
+
+        // Hashed Contract
+        System.out.println(p.hashCode());
+        System.out.println(p1.hashCode());
+    }
+}
+
+
+Output:
+Name: ABC
+Objects are equal
+65198
+65198
+```
+
+- We cannot perform direct assignment in record classes
+
+```
+record Person(int age,String name){
+    Person() {
+        // Direct assignments like this are not allowed.
+        age = 20;
+        name = "Doe";
+    }
+}
+```
+
+- To assign default values you can do it like below
+
+```
+record Person(int age,String name){
+    Person() {
+        this(2,"ABC");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        
+        Person p = new Person();
+        System.out.println(p.toString());
+        
+        Person p1= new Person(20,"CYZ"); // If values provided then it will be override with default values
+        System.out.println(p1.toString());
+
+        
+    }
+}
+
+Output:
+Person[age=2, name=ABC]
+Person[age=20, name=CYZ]
+```
+
+- In Record classes we can define static and non-static methods/fields.
+
+```
+record Person(int age,String name){
+    Person() {
+        this(2,"ABC");
+    }
+
+    static int count=0;
+
+    public void display(){
+        System.out.println(count);
+    }
+}
+```
+
+- Records can implement interfaces but cannot extend classes
+
+```
+/** Implementing an interface */
+public interface Base {
+  int age();
+}
+public record Person(String name, int age) implements Base {
+}
+```
+
+### When should we use Records or JavaBeans?
+
+- Records can not necessarily replace existing JavaBeans code, since JavaBeans are mutable but records are immutable, as well as the conventions for their accessors are different, JavaBeans accessors are known as Getters/Setters with prefixes get or set but in Java Records, accessors do not follow the same convention and are as same name as fields.
+
+## Sealed Classes and Interfaces (Introduced in Java 15, finalized in Java 17)
+
+- Sealed classes in Java allow you to restrict which classes can extend or implement them. This gives you more control over the inheritance hierarchy and can make your code more secure and maintainable.
+
+```
+public sealed class Shape permits Circle, Rectangle, Square {
+    // ...
+}
+```
+
+- The `sealed` keyword indicates that only the specified subclasses can extend this class. The `permits` clause lists the allowed subclasses. These permitted subclasses must be located in the same module or package as the sealed class.
+- Example
+
+```
+sealed class Shape permits Circle, Rectangle {
+    public double getArea() {
+        return 0; // Default implementation, subclasses must override.
+    }
+}
+
+final class Circle extends Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double getArea() {
+        return 3.14 * radius * radius;
+    }
+}
+
+final class Rectangle extends Shape {
+    private double width;
+    private double length;
+
+    public Rectangle(double width, double length) {
+        this.width = width;
+        this.length = length;
+    }
+
+    @Override
+    public double getArea() {
+        return width * length;
+    }
+}
+
+public class AboutSealedClass {
+    public static void main(String[] args) {
+        Shape s1 = new Circle(10);
+        System.out.println("Area of Circle: " + s1.getArea());
+
+        Shape s2 = new Rectangle(5, 7);
+        System.out.println("Area of Rectangle: " + s2.getArea());
+    }
+}
+
+Output:
+Area of Circle: 314.0
+Area of Rectangle: 35.0
+```
+
+- Direct subclasses of a sealed class must be one of the following:
+    - `final`: No further subclasses are allowed.
+    - `sealed`: Further restrictions are applied to its subclasses. Controls which specific classes can extend a base class. Enforces strict design and helps model clear hierarchies.
+    - `non-sealed`: Allows unrestricted inheritance. Removes restrictions on inheritance, allowing any class to extend it.
+
+```
+sealed class Shape permits Circle, Rectangle, Triangle {
+    public double getArea() {
+        return 0; // Default implementation
+    }
+}
+
+// `final` subclass: No further subclasses allowed
+final class Circle extends Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double getArea() {
+        return 3.14 * radius * radius;
+    }
+}
+
+// `sealed` subclass: Restricts further subclassing
+sealed class Rectangle extends Shape permits Square {
+    private double width;
+    private double length;
+
+    public Rectangle(double width, double length) {
+        this.width = width;
+        this.length = length;
+    }
+
+    @Override
+    public double getArea() {
+        return width * length;
+    }
+}
+
+// Subclass of `Rectangle`: Allowed because Rectangle is sealed
+final class Square extends Rectangle {
+    public Square(double side) {
+        super(side, side); // A square is a rectangle with equal sides
+    }
+}
+
+// `non-sealed` subclass: Allows unrestricted inheritance
+non-sealed class Triangle extends Shape {
+    private double base;
+    private double height;
+
+    public Triangle(double base, double height) {
+        this.base = base;
+        this.height = height;
+    }
+
+    @Override
+    public double getArea() {
+        return 0.5 * base * height;
+    }
+}
+
+// Subclass of `non-sealed` Triangle: Allowed because Triangle is non-sealed
+class RightAngledTriangle extends Triangle {
+    public RightAngledTriangle(double base, double height) {
+        super(base, height);
+    }
+}
+
+
+public class AboutSealedClass {
+    public static void main(String[] args) {
+        Shape circle = new Circle(10);
+        System.out.println("Area of Circle: " + circle.getArea());
+
+        Shape rectangle = new Rectangle(5, 7);
+        System.out.println("Area of Rectangle: " + rectangle.getArea());
+
+        Shape square = new Square(4);
+        System.out.println("Area of Square: " + square.getArea());
+
+        Shape triangle = new Triangle(6, 8);
+        System.out.println("Area of Triangle: " + triangle.getArea());
+
+        Shape rightTriangle = new RightAngledTriangle(6, 8);
+        System.out.println("Area of Right-Angled Triangle: " + rightTriangle.getArea());
+    }
+}
+
+
+Output:
+Area of Circle: 314.0
+Area of Rectangle: 35.0
+Area of Square: 16.0
+Area of Triangle: 24.0
+Area of Right-Angled Triangle: 24.0
+```
+
+- **Whats the difference between final class, sealed class and non-sealed class?**
+    - Final: A subclass that is final cannot be extended any further. This ensures that the sealed class will not have any additional subclasses.
+    - Sealed: A subclass that is sealed can define its own sealed subclasses.
+    - Non-sealed: A subclass that is non-sealed can be extended by other classes.
+
+![alt text](Images/java-2/image-86.png)
+
+![alt text](Images/java-2/image-85.png)
+
+- Similarly the concept of classes are also applicable for interfaces.
+
+## Pattern Matching for `instanceof` (ntroduced in Java 16)
+
+- Pattern matching simplifies the use of `instanceof`. You no longer need to cast the variable after checking its type.
+- Before pattern matching
+
+```
+Object obj = "Hello, Java!";
+if (obj instanceof String) {
+    String str = (String) obj;
+    System.out.println(str.toUpperCase());
+}
+```
+
+- After pattern matching
+
+```
+Object obj = "Hello, Java!";
+if (obj instanceof String str) {
+    System.out.println(str.toUpperCase());
+}
+```
+
+- Removes redundant type casting. Cleaner and more readable code.
+
+## Text Blocks (Introduced in Java 13, finalized in Java 15)
+
+- Text blocks simplify working with multi-line strings by allowing you to use triple double-quotes (`"""`). They preserve the formatting of the string.
+- Before text blocks
+
+```
+String json = "{\n" +
+              "  \"name\": \"John\",\n" +
+              "  \"age\": 30\n" +
+              "}";
+```
+
+- After text blocks
+
+```
+String json = """
+    {
+      "name": "John",
+      "age": 30
+    }
+    """;
+```
+
+- Easier to write and read multi-line strings. Automatically formats the text for you.
+
+## Local Variable Type Inference (`var`) (Introduced in Java 10)
+
+- With `var`, you can declare variables without explicitly specifying their type. The compiler infers the type from the assigned value.
+- Before `var`
+
+```
+String message = "Hello, Java!";
+```
+
+- With `var`
+
+```
+var message = "Hello, Java!";
+```
