@@ -7520,6 +7520,9 @@ WaitThread: I got the notification, time to proceed!
 > - `StringUtils` is specifically designed to handle multiple replacements efficiently, which can be faster than using multiple calls to the standard `String.replace` method. 
 > - Apache Commons often includes additional logic to handle edge cases like null values or empty strings more robustly, which can improve code reliability
 
+### ThreadLocal
+https://medium.com/@muradhajiyev/threadlocal-in-java-16770c72792e
+https://chatgpt.com/c/674b1f7f-f230-8009-898c-1c21fc24d5a2
 
 ## Finalize
 

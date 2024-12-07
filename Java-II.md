@@ -8489,3 +8489,179 @@ String message = "Hello, Java!";
 ```
 var message = "Hello, Java!";
 ```
+
+## Asynchronous Programming 
+
+- Synchronous and asynchronous, also known as sync and async, are two types of programming models. At an abstract level, programming models define how software is designed and executed.
+- The basic programming models are synchronous, but asynchronous models are critical for performance reasons and to more efficiently use computing resources.
+
+![alt text](Images/java-2/image-87.png)
+
+- Synchronous programming, also known as blocking or sequential programming, executes the tasks in a predetermined order, where each operation waits for the previous one to complete before proceeding. This approach ensures deterministic behaviour and provides simplicity in code execution, making it suitable for scenarios where tasks have dependencies or require sequential processing. However, synchronous programming may lead to reduced responsiveness and performance in applications with time-consuming operations.
+- Asynchronous programming is a programming model that allows multiple operations to run simultaneously, without waiting for other tasks to finish. It's also known as nonblocking code. Asynchronous programming allows multiple related operations to run concurrently. Unlike synchronous programming, where each task waits for the previous one to complete, asynchronous tasks can run concurrently, utilizing resources more efficiently and enhancing responsiveness in applications.
+
+### CompletableFuture (Java 8)
+
+- `CompletableFuture` is a class introduced in Java 8 that allows us to write asynchronous, non-blocking code. It is a powerful tool that can help us write code that is more efficient and responsive. Instead of waiting for a task to finish (blocking), `CompletableFuture` lets your program continue doing other things and provides tools to process the result when the task is done.
+- Lets see an example
+
+```
+import java.util.concurrent.CompletableFuture;
+
+public class Main {
+
+    public static void main(String[] args) {
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+            System.out.println("Asynchronous task running...");
+            // Perform a time-consuming task
+            try {
+                Thread.sleep(5000);
+                System.out.println("Asynchronous task Completed, returning result");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "Result from asynchronous task";
+        });
+
+        future.thenAccept(result -> {
+            System.out.println("Result: " + result);
+        });
+
+        System.out.println("Main thread continuing...");
+    }
+}
+
+Output:
+Asynchronous task running...
+Main thread continuing...
+Asynchronous task Completed, returning result
+Result: Result from asynchronous task
+```
+
+- In the example above, we’re creating a `CompletableFuture` that will supply a result in the `future`. We're passing a lambda expression that simulates a long-running operation by sleeping for 5 seconds. After the operation is complete, it will return the string `"Result from asynchronous task"`.
+- We’re then calling the `thenAccept()` method on the `CompletableFuture` object (`future`) to specify what to do when the operation is complete. In this case, we're passing a lambda expression that simply prints the result to the console.
+- When we run this code, it will print `Result from asynchronous task` to the console after a delay of 5 seconds.
+- `supplyAsync` runs a task asynchronously and returns a result. `thenAccept` consumes the result (does something with it but doesn’t return anything).
+- There are other methods also provided `CompletableFuture`
+- `thenApply`: Transforms the result of a task.
+
+```
+CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "Hello")
+        .thenApply(result -> result + ", World!");
+future.thenAccept(System.out::println); // Prints: Hello, World!
+```
+
+- `thenRun`: Runs a task after another, but doesn’t care about the result of the first.
+
+```
+CompletableFuture.supplyAsync(() -> "Hello")
+        .thenRun(() -> System.out.println("Task finished!"));
+// Prints: Task finished!
+```
+
+- `thenCombine`: Combines the results of two tasks.
+
+```
+CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> "Hello");
+CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> "World");
+
+future1.thenCombine(future2, (result1, result2) -> result1 + " " + result2)
+        .thenAccept(System.out::println); // Prints: Hello World
+```
+
+- `exceptionally`:Handles errors in tasks.
+
+```
+CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+    throw new RuntimeException("Oops!");
+}).exceptionally(ex -> "Error: " + ex.getMessage());
+
+future.thenAccept(System.out::println); // Prints: Error: Oops!
+```
+
+- `allOf`: Waits for all tasks to complete.
+
+```
+CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> "Task 1");
+CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> "Task 2");
+
+CompletableFuture<Void> allTasks = CompletableFuture.allOf(future1, future2);
+
+allTasks.thenRun(() -> System.out.println("All tasks completed!")); 
+// Prints: All tasks completed!
+```
+
+- `anyOf`: Returns as soon as any task completes.
+
+```
+CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> {
+    try { Thread.sleep(1000); } catch (InterruptedException e) { }
+    return "Task 1 finished";
+});
+
+CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> "Task 2 finished");
+
+CompletableFuture<Object> anyTask = CompletableFuture.anyOf(future1, future2);
+
+anyTask.thenAccept(System.out::println); // Prints: Task 2 finished
+```
+
+- Lets way you wanna `join` all your future task and wait for all the task to be completed.
+
+```
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+public class Main {
+
+    public static void main(String[] args) {
+        // Define two asynchronous tasks
+        CompletableFuture<String> task1 = CompletableFuture.supplyAsync(() -> {
+            simulateDelay(2000);
+            return "Result from Task 1";
+        });
+
+        CompletableFuture<String> task2 = CompletableFuture.supplyAsync(() -> {
+            simulateDelay(5000);
+            return "Result from Task 2";
+        });
+
+        // Wait for both tasks to complete using allOf
+        CompletableFuture<Void> allTasks = CompletableFuture.allOf(task1, task2);
+
+        // Block until all tasks complete
+        allTasks.join(); // Ensures main thread waits for task completion
+
+        // Retrieve results of individual tasks
+        try {
+            String result1 = task1.get(); // Get result from Task 1
+            String result2 = task2.get(); // Get result from Task 2
+
+            // Use results in separate variables
+            System.out.println("Task 1 Result: " + result1);
+            System.out.println("Task 2 Result: " + result2);
+
+            // Further processing
+            String combinedResult = result1 + " & " + result2;
+            System.out.println("Combined Result: " + combinedResult);
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Simulate a delay for task
+    private static void simulateDelay(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+
+Output:
+Task 1 Result: Result from Task 1
+Task 2 Result: Result from Task 2
+Combined Result: Result from Task 1 & Result from Task 2
+```
