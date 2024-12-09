@@ -1267,6 +1267,7 @@ Addition of 5.5 and 4.5 is 10.0
 
 >[!NOTE]
 > - Overloading property is only associated with method and not with variables and classes
+> - **In method overloading, the return type does not have to be the same. What matters for method overloading is that the methods have different parameter lists. This means either the number of parameters is different, The type of parameters is different, and the order of parameters is different.**
 
 ## Constructors
 
@@ -2781,7 +2782,7 @@ Output:
 In A 1
 ```
 
-- When a subclass constructor is invoked, it implicitly calls the no-argument constructor of the parent class (`super()`), unless another `super(...)` constructor is explicitly specified.
+- **When a subclass constructor is invoked, it implicitly calls the no-argument constructor of the parent class (`super()`)**, unless another `super(...)` constructor is explicitly specified.
 - If the parent class does not define a no-argument constructor, and the subclass does not explicitly call a parameterized constructor of the parent class using `super(...)`, the compiler throws an error.
 
 ```
@@ -6009,6 +6010,31 @@ Always gets executed
 > Output: (Nothing)
 > ```
 
+- Now consider below code
+
+```
+class Main {
+    public static void main(String[] args) {
+        System.out.println("ABC");
+        
+        try{
+            System.out.println(1/0);
+        }finally{
+            System.out.println("Finally Block Always Gets Executed");
+        }
+    }
+}
+
+Output:
+ABC
+Finally Block Always Gets Executed
+ERROR!
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+	at Main.main(Main.java:9)
+```
+
+- Here, even we had not handle exception inside `catch` we got an error, but still the `finally` block got executed.
+
 ## I/O Streams
 
 - Have you ever wondered how java accepts input and gives output? it is using **Streams** which is part of package `java.io`.
@@ -6433,7 +6459,7 @@ double value = scanner.nextDouble();  // Automatically reads and converts to a d
 
 ![alt text](Images/java-1/image-54.png)
 
-- Scanner cannot directly use a **Reader** (like `FileReader` or `InputStreamReader`) because Scanner operates on input sources that are either InputStream, File, or String. Scanner works with byte-oriented streams (like `InputStream`) and not directly with character-oriented streams (like `Reader` and `Writer`). However, you can convert character-oriented streams to byte-oriented streams (e.g., `InputStream`) and use them with Scanner.  Scanner is not compatible with `BufferedReader` because `BufferedReader` works with character streams, not byte streams.
+- Scanner cannot directly use a **Reader** (like `FileReader` or `InputStreamReader`) because Scanner operates on input sources that are either `InputStream`, `File`, or `String`. Scanner works with byte-oriented streams (like `InputStream`) and not directly with character-oriented streams (like `Reader` and `Writer`). However, you can convert character-oriented streams to byte-oriented streams (e.g., `InputStream`) and use them with Scanner.  Scanner is not compatible with `BufferedReader` because `BufferedReader` works with character streams, not byte streams.
 - **You cannot print data using Scanner. The Scanner class is designed for reading and parsing input, not for output or printing data.**
 - **Scanner is primarly designed to parse primitive types and strings from text-based input.**
 - Scanner supports reading from files using the File or FileInputStream classes. However, it is limited to text files. If you need to read binary data (like images or PDFs), Scanner is not suitable. While Scanner can read from an `InputStream`, including those coming from network sockets, it is primarily meant for textual data. If you are reading data from a network stream (like a socket) that includes non-textual data (binary data, compressed data, etc.), you should use more specialized classes like `BufferedInputStream` or `DataInputStream`.
@@ -6746,6 +6772,8 @@ Thread has finished execution (TERMINATED state).
 ```
 
 - If you see `start()` method is not present in the class **ThreadLifecycleDemo**, behind the scene it calls the `run()` method and these threads are managed using **Thread Schedular**.
+- **When you call `start()`, it initiates the creation of a new thread of execution. This new thread runs independently of the thread that called `start()`. After creating the new thread, the `start()` method internally calls the `run()` method on that thread**.
+
 
 ![alt text](Images/java-1/image-71.png)
 
@@ -8006,6 +8034,7 @@ Main String method
 - The purpose of `final` keyword on a method it to prevent overridden of method in subclasses. Since the `main` method is static, it cannot be overridden anyway (static methods belong to the class, not instances). Therefore, adding `final` to the main method is redundant.
 - While it's technically allowed, using final in the main method doesn't provide any meaningful benefits. It's best to keep the main method signature simple and follow the standard conventions.
 - Different ways to write the main method.
+
 1. Changing Order of Modifiers
 
 ```
@@ -8409,8 +8438,6 @@ public class AboutRestrictVisibilityDerivedMethods {
 ```
 
 - Scope of visibility: **Public (Higher Scope)**> **Protected**> **Default**> **Private (Lower Scope)**.
-
-- Learn more about [java concepts](Java-II.md)
 
 ## Working with Date
 

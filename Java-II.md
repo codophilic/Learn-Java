@@ -800,7 +800,7 @@ Output:
 - It can hold duplicate elements.
 - Lets explore the **List.class** in java.
 
-<video controls src="20240922-1502-58.5039501.mp4" title="Title"></video>
+<video controls src="Images/java-2/20240922-1502-58.5039501.mp4" title="Title"></video>
 
 - **List is an interface** which extends **SequencedCollection** , **SequencedCollection** extends **Collection** interface. If we checkout methods inside the list interface, it consist of method of SequencedCollection and Collection interface along with additional methods.
 - SequencedCollection interface methods
@@ -3133,20 +3133,23 @@ If the element is unique, it is added to the hash table (as a key in the `HashMa
 - The memory management of a `LinkedHashSet` is closely tied to its underlying data structure, which consists of a HashMap for storing elements and a doubly linked list for maintaining the order of insertion.
 
 **1. Initial Capacity and Load Factor**
-    - Initial Capacity: When you create a `LinkedHashSet`, it has a default initial capacity of **16**. This is the number of buckets in the underlying HashMap.
-    - Load Factor: The default load factor is **0.75**, which means that when **75%** of the current capacity is filled (in this case, after 12 elements), the `LinkedHashSet` will resize itself.
+
+- Initial Capacity: When you create a `LinkedHashSet`, it has a default initial capacity of **16**. This is the number of buckets in the underlying HashMap.
+- Load Factor: The default load factor is **0.75**, which means that when **75%** of the current capacity is filled (in this case, after 12 elements), the `LinkedHashSet` will resize itself.
 
 
 **2. Growth Mechanism**
-    - Rehashing: When the number of elements in the LinkedHashSet exceeds the threshold (calculated as capacity * load factor), a rehash occurs:
-        - A new internal array of buckets is created with double the size of the original.
-        - All existing elements from the old buckets are rehashed and placed into the new buckets based on the new size.
-        - The doubly linked list structure remains unchanged, preserving the insertion order.
+
+- Rehashing: When the number of elements in the LinkedHashSet exceeds the threshold (calculated as capacity * load factor), a rehash occurs:
+- A new internal array of buckets is created with double the size of the original.
+- All existing elements from the old buckets are rehashed and placed into the new buckets based on the new size.
+- The doubly linked list structure remains unchanged, preserving the insertion order.
 
 
 **3. Shrinking Mechanism**
-    - `LinkedHashSet` does not automatically shrink its size when elements are removed. This means that once the capacity has increased due to rehashing, it stays at the larger size even if many elements are removed.
-    - When an element is removed from the `LinkedHashSet`, the corresponding node in the doubly linked list is removed. The links (pointers) of the neighboring nodes are updated to maintain the list’s integrity. The memory occupied by the removed node is released. The memory that was being used by the removed node is freed, so it is no longer occupying space.
+
+- `LinkedHashSet` does not automatically shrink its size when elements are removed. This means that once the capacity has increased due to rehashing, it stays at the larger size even if many elements are removed.
+- When an element is removed from the `LinkedHashSet`, the corresponding node in the doubly linked list is removed. The links (pointers) of the neighboring nodes are updated to maintain the list’s integrity. The memory occupied by the removed node is released. The memory that was being used by the removed node is freed, so it is no longer occupying space.
 
 
 #### Sorted Set
