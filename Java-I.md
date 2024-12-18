@@ -5709,6 +5709,9 @@ Arithmetic Exception occurred
 
 
 
+>[!NOTE]
+> - `Exception`, `Error` and `Throwable` all these 3 are **classes**
+
 ### Types of Exceptions
 
 - Lets day you have a string , you wanted to convert that into a date format.
@@ -5748,7 +5751,8 @@ public class AboutExceptions{
 ```
 
 - Such exceptions are called as **checked exceptions**. The **ArrayIndexOutOfBoundsException** or **ArithmeticException** these types of exceptions are called as **Unchecked exceptions**.
-- Checked exceptions are checked by compiler at compile-time. Checked exceptions, such as `IOException` or `SQLException`, are exceptions that a method must declare in its throws clause or handle using a try-catch block. These exceptions are typically external to the program and demand the developer's attention to ensure it is handle.
+- Checked exceptions are checked by compiler at compile-time. Checked exceptions, such as `IOException` or `SQLException`, are exceptions that a method must declare in its **`throws`** clause or handle using a `try-catch` block. These exceptions are typically external to the program and demand the developer's attention to ensure it is handle.
+- A method which **`throws`** exception are **checked exception**.
 - Unchecked exceptions, like `NullPointerException` or `ArrayIndexOutOfBoundsException`, which means they don't require explicit declaration or handling. Unchecked exceptions often signal programming errors, such as accessing an array index out of bounds, prompting developers to rectify their code.
 
 

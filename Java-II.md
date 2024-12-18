@@ -7431,7 +7431,7 @@ Dog barks!
 - **Deserialization:** Java Deserialization is a mechanism by which byte stream (0's and 1's) fetched over the network, memory or file can be converted back again to its original java objects.
 - Serialization and deserialization in Java are processes that allow objects to be converted to a format that can be easily stored or transmitted, and then reconstructed back into objects. This is particularly useful for saving objects to files, sending them over a network, or caching data.
 
-![alt text](image.png)
+![alt text](Images/java-2/image.png)
 
 - In java if a class implements **java.io.Serializable**, then those classes object can serialize and deserialize. Lets see an example.
 
