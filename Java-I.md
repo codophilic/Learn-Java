@@ -6038,6 +6038,88 @@ Exception in thread "main" java.lang.ArithmeticException: / by zero
 ```
 
 - Here, even we had not handle exception inside `catch` we got an error, but still the `finally` block got executed.
+- Now consider below code
+
+```
+
+class Main {
+    public static void main(String[] args) {
+        try{
+            try{
+                System.out.println(1/0);
+            }catch(Exception e){
+                System.out.println("Inner Catch Block");
+                System.out.println(e.getMessage());
+            }
+            finally{
+                // Statements
+            }
+        }catch(Exception e){
+            System.out.println("Outer Catch Block");
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+Output:
+Inner Catch Block
+/ by zero
+```
+
+- Now consider below code
+
+```
+
+class Main {
+    public static void main(String[] args) {
+        try{
+            try{
+                System.out.println(1/0);
+            }
+            finally{
+                // Statements
+            }
+        }catch(Exception e){
+            System.out.println("Outer Catch Block");
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+Output:
+Outer Catch Block
+/ by zero
+```
+
+- **If an exception is thrown within the `try` block of the inner `try...catch` statement, the inner `catch` block will handle the exception. If the inner `catch` block does not exist or does not catch the exception, java will go the outer `catch` block and handle it**.
+- The inner `catch` block has priority over the outer `catch` block when handling exceptions. 
+- Now consider below code
+
+```
+
+class Main {
+    public static void main(String[] args) throws RuntimeException {
+        try{
+            try{
+                throw new RuntimeException("New runtime exception");
+            }
+            finally{
+                // Statements
+            }
+        }catch(Exception e){
+            System.out.println("Outer Catch Block");
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+Output:
+Outer Catch Block
+New runtime exception
+```
+
+- If a `catch` block is present to handle a specific type of exception, then any exception of that type `thrown` within the corresponding try block will be caught and processed by that catch block; meaning, whatever you throw within the try block that matches the catch block's exception type will be handled by it.
+
 
 ## I/O Streams
 
