@@ -2899,9 +2899,9 @@ public class Main {
 
 ### Types of Polymorphism
 
-1. **Compile-time Polymorphism (Static Polymorphism/Static Dispatch)**: This is also known as method overloading. It occurs when multiple methods have the same name with different parameters (different type or number of parameters) within the same class.
+1. **Compile-time Polymorphism (Static Polymorphism/Static Dispatch/Early Binding)**: This is also known as method overloading. It occurs when multiple methods have the same name with different parameters (different type or number of parameters) within the same class.
 
-2. **Runtime Polymorphism (Dynamic Polymorphism/Dynamic Dispatch)**: This is achieved through method overriding, where a subclass provides a specific implementation of a method that is already defined in its superclass. The method to be executed is determined at runtime based on the object's type.
+2. **Runtime Polymorphism (Dynamic Polymorphism/Dynamic Dispatch/Late Binding)**: This is achieved through method overriding, where a subclass provides a specific implementation of a method that is already defined in its superclass. The method to be executed is determined at runtime based on the object's type.
 
 ### Why Polymorphism required?
 
