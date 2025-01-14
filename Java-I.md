@@ -2215,6 +2215,7 @@ public class AboutInheritence{
 
 >[!NOTE]
 > - Multiple inheritance is not directly support in java but indirectly supported via interfaces which we will see about it later.
+> - Multiple inheritance can lead to the "diamond problem" where a class inherits from two classes that have a common ancestor. This can create ambiguity if the same method or variable is defined in both parent classes, leaving the compiler unsure which one to use.
 
 ## Association
 
