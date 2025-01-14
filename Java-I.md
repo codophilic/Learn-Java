@@ -3190,6 +3190,12 @@ public class AboutFinal {
 
 - When a method is declared as final, it cannot be overridden by subclasses. This is useful when you want to prevent a method from being modified or altered in any subclass.
 
+>[!NOTE]
+> - If `final` is applied on a reference type, the reference itself cannot be changed, but the object it points to can still be modified.
+>   ```
+>   final string a = "ABC";
+>   ```
+
 ### Why final is required?
 
 - Lets say you are making a community based program for which you don't want anyone to modified your variables, method or class implementations, you can use the **final** keyword.
