@@ -5927,7 +5927,11 @@ try{
 ```
 
 - We get a compilation error `Unreachable catch block for NumberFormatException. It is already handled by the catch block for Exception`. We get this error because the parent exception `Exception` is defined before it. So all error including `NumberFormatException` will automatically get handled at `Exception` thus making the second `catch` block unreachable.
-- A catch block for `NumberFormatException` is considered unreachable if you have a preceding catch block for a more general `Exception` because any `NumberFormatException` will always be caught by the broader `Exception` catch block, making the specific `NumberFormatException` handler unnecessary and therefore unreachable. 
+- A catch block for `NumberFormatException` is considered unreachable if you have a preceding catch block for a more general `Exception` because any `NumberFormatException` will always be caught by the broader `Exception` catch block, making the specific `NumberFormatException` handler unnecessary and therefore unreachable.
+
+>[!NOTE]
+> - All exceptions names ends with **Exception** word in their suffix of their name like `ArrayIndexOutOfBoundsException`, `ArithmeticException` etc.
+> - Similarly all error name ends with **Error** word in their suffix of their name `OutOfMemoryError`, `StackOverflowError`,`DereferencedError` etc.
 
 ## Finally
 
