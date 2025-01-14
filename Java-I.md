@@ -1514,6 +1514,22 @@ Default Constructor
 - Instance Block and Constructor for Each Instance:
     - When `new Ordering()` is called to create `o1`, the instance block runs first, followed by the constructor.
     - When `new Ordering()` is called again to create `o2`, the instance block and constructor run again in the same sequence.
+ 
+>[!IMPORTANT]
+> **Whats the difference between instance block and constructor if they both run during object creation?**
+> - **Instance Block**:
+>	- Used for common initialization of instance variables, shared across all constructors.
+>	- Helps avoid repetitive code when multiple constructors exist in the class.
+>	- Executes before the constructor. Runs every time an object is created, regardless of which constructor is called.
+>	- Since its a block it cannot take arguments.
+>	- Limited to initializing instance variables or performing tasks that apply universally to all constructors.
+>
+> - **Constructor**:
+>	- Special method used to initialize object-specific state.
+>	- Often used to set up instance variables with custom values or perform specific logic based on arguments.
+>	- Executes after the instance block. Runs only once per object creation, specific to the constructor invoked.
+>	- Since its a method it can take arguments.
+>	- Supports overloading, enabling the creation of objects with different initialization requirements.
 
 ## Anonymous Object
 
