@@ -2052,7 +2052,8 @@ Reset value to 1
 
 ### Method Overriding
 
-- Method overloading is a technique, multiple methods in the same class can have the same name but different parameters.
+- Method overriding in Java is a feature that allows a subclass to provide a specific implementation of a method that is already provided by its superclass.
+- The method in the subclass must have the same name, return type (or a covariant return type), and parameters (number and type) as the method in the superclass.
 - Method overriding is a technique, a subclass provides its own implementation of a method that is already defined in its superclasses. This happens when the method signature (name and parameters) are the same in both the superclass and the child class.
 
 ```
