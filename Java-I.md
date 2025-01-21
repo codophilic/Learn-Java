@@ -4663,6 +4663,7 @@ In ImplMethod1
 ```
 
 - Since both interfaces declare the same method signature, the `acommonmethod()` in `ImplMethod1` satisfies the requirements for both interfaces, so there's no conflict or ambiguity. In this case, the situation of having the same method name in both interfaces can be seen as redundant. You could simplify your design by having only one interface declare the method, or you could avoid duplicating method declarations unless both interfaces represent distinct conceptual roles in your design.
+- The above example is what we saw when we faced diamond problem. **The diamond problem in object-oriented programming is solved by using interfaces because interfaces only define contracts (method signatures) without providing implementations, which eliminates ambiguity when a class inherits from multiple interfaces that share a common method. The implementing class must explicitly define the method behavior, resolving the ambiguity.**
 
 >[!IMPORTANT]
 > - Whenever a class is extending any parent class and implementing any interface, first the class must have the extending class name and then all the interfaces implementation. So the ordering should be extending the parent class followed by implementation of all the interfaces.
