@@ -8323,7 +8323,7 @@ class ACovirant{
     }
 }
 
-class BCovirant{
+class BCovirant extends ACovirant{
     public Object display(){
         return "B";
     }
