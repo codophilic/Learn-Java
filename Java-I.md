@@ -1302,7 +1302,116 @@ Addition of 5.5 and 4.5 is 10.0
 
 >[!NOTE]
 > - Overloading property is only associated with method and not with variables and classes
-> - **In method overloading, the return type does not have to be the same. What matters for method overloading is that the methods have different parameter lists. This means either the number of parameters is different, The type of parameters is different, and the order of parameters is different.**
+> - **In method overloading, the return type does not have to be the same. What matters for method overloading is that the methods have different parameter lists. This means either the number of parameters is different, the type of parameters is different, and the order of parameters is different.**
+
+- Now consider below code.
+
+```
+import java.util.*;
+
+
+
+
+public class Main {
+    
+    public static void main(String[] args) {
+        
+        Calculator twoNums=new Calculator();
+        /**
+         * Passing 4 and 5 required arguments for method "add"
+         */
+        System.out.println("Addition of 5 and 4 is "+twoNums.add(4, 5));
+        System.out.println("Addition of 5 and 4 is "+twoNums.add(5, 4));
+
+    }
+}
+
+class Calculator{
+    
+    /**
+     * Method Overloading by changing ordering of parameters
+     */
+    public String add(int a2, int a1){
+        return "1";
+    }
+
+    public int add(int n1,int n2){
+
+        /**
+         * Method add returns the sum of n1+n2
+         */
+        return n1+n2;
+    }
+
+
+
+}
+
+
+Output:
+Main.java:29: error: method add(int,int) is already defined in class Calculator
+    public int add(int n1,int n2){
+               ^
+1 error
+error: compilation failed
+```
+
+- Why so? here we even though the variable names (`a2`, `a1` vs. `n1`, `n2`) are different, Java only considers the method signature, which consists of:
+    - Method name: `add`
+    - Parameter types: (`int`, `int`)
+- Since both methods have the same signature (`add(int, int)`), this is not valid overloading, and Java treats them as duplicate methods, leading to a compilation error.
+- **This can be fix using:**
+
+1. Changing parameter types
+
+```
+class Calculator {
+    public String add(double a2, int a1) { // Different parameter types
+        return "1";
+    }
+    
+    public int add(int n1, int n2) {
+        return n1 + n2;
+    }
+}
+```
+
+
+2. Changing the number of parameters
+
+```
+class Calculator {
+    public String add(int a2, int a1, int extra) { // Different number of parameters
+        return "1";
+    }
+    
+    public int add(int n1, int n2) {
+        return n1 + n2;
+    }
+}
+```
+
+3. Changing the order with different types
+
+```
+class Calculator {
+    public String add(int a1, double a2) { // Different order AND type
+        return "1";
+    }
+    
+    public int add(double n1, int n2) { // Different order AND type
+        return (int) n1 + n2;
+    }
+}
+```
+
+- Method names must be the same.
+- Overloaded methods must have different parameter lists:
+    - Different number of parameters.
+    - Different parameter types.
+    - Different order only if the types differ.
+- Parameter names do NOT matter—only their types and order.
+
 
 ## Constructors
 
