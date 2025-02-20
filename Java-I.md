@@ -444,6 +444,41 @@ System.out.println(sb.toString()); // Output: Hello World
 >[!NOTE]
 > - In-built methods which are applicable for string are also applicable for String builder as well as String buffer.
 
+### Difference between `equals` and `==`
+
+- Now consider the below code
+
+```
+String str1 = new String("hello");
+String str2 = new String("hello");
+
+System.out.println(str1 == str2); // Output: false (different objects in memory)
+System.out.println(str1.equals(str2)); // Output: true (same content)
+
+int num1 = 5;
+int num2 = 5;
+
+System.out.println(num1 == num2); // Output: true (same value)
+//System.out.println(num1.equals(num2)); //This would result in compile-time error
+```
+
+- When we use `==` we get `false` as output but when we use `equals` we get `true` why so? . The `==` (Equality Operator) **compares the references (memory addresses) of two objects** whereas `.equals()` (Method) **compares the content or state of objects**.
+
+1. `==` (Equality Operator):
+    - Compares the references (memory addresses) of two objects.
+    - For primitive types (e.g., `int`, `char`, `float`), it compares the actual values.
+    - Returns `true` if the references point to the same object in memory or if the primitive values are equal.
+    - Cannot be overridden.
+
+2. `.equals()` (Method):
+    - Compares the content or state of objects.
+    - Defined in the Object class and can be overridden in subclasses to provide custom comparison logic.
+    - The default implementation in Object compares references, similar to `==`.
+    - Returns `true` if the content of the objects is considered equal based on the overridden implementation.
+    - Cannot be used with primitives.
+
+- Use `==` to compare primitive values or to check if two references point to the exact same object in memory. Use `.equals()` to compare the content of objects, especially when you need to define
+
 ## Packages
 
 - As a developer when you work on a large project , you will be writing many codes. You might ended up multiple files. Now it is a good practice to organize you files into a different folder , thus providing a readability.
