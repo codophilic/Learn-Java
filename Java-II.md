@@ -5324,6 +5324,281 @@ true
     - Overriding the `equals()` method alone would fail with hashing data structures like `Map`, `Set`, etc.
     - Overriding the `hashCode()` method alone would not help in comparing objects.
 
+## How does `hashCode()` works internally?
+
+- The `hashCode()` method is defined in the `Object` class, and its default implementation returns an integer that is usually derived from the object's memory address. The `hashCode()` method is implemented differently for different types in Java.
+- Lets consider below code example
+
+```
+package test;
+
+class Custom{
+	String name;
+	int id;
+	Custom(String name,int id){
+		this.name=name;
+		this.id=id;
+	}
+}
+
+public class Test {
+	public static void main(String args[]) {
+		
+		//Integers
+		Integer a = 12;
+		System.out.println(a.hashCode());
+		
+		a=13;
+		System.out.println(a.hashCode());
+		
+		a=1030;
+		System.out.println(a.hashCode());
+		
+		a=1030000;
+		System.out.println(a.hashCode());
+		
+		//String
+		String b = "abc";
+		System.out.println(b.hashCode());
+		
+		//Boolean
+		Boolean c=true;
+		System.out.println(c.hashCode());
+		
+		//Boolean
+		Boolean d=false;
+		System.out.println(d.hashCode());
+		
+		//Boolean
+		Boolean e=true;
+		System.out.println(e.hashCode());
+		
+		//Double
+		Double f=1234.89;
+		System.out.println(f.hashCode());
+		
+		//Custom Class
+		Custom ct1= new Custom("Harsh", 123);
+		System.out.println(ct1.hashCode());
+		
+	}
+
+}
+
+Output:
+12
+13
+1030
+1030000
+96354
+1231
+1237
+1231
+482065996
+1225358173
+```
+
+### Integer Hash Code
+
+
+```
+Integer a = 12;
+System.out.println(a.hashCode()); // Output: 12
+
+a = 13;
+System.out.println(a.hashCode()); // Output: 13
+
+a = 1030;
+System.out.println(a.hashCode()); // Output: 1030
+
+a = 1030000;
+System.out.println(a.hashCode()); // Output: 1030000
+```
+
+- For above code, `Integer`, the `hashCode()` implementation simply returns the integer value itself.
+
+
+![alt text](image.png)
+
+
+### String Hash Code
+
+
+```
+String b = "abc";
+System.out.println(b.hashCode()); // Output: 96354
+```
+
+- The `String` class computes the hash code using a **polynomial rolling hash function**. This ensures a well-distributed hash for different strings.
+
+```
+int hash = 0;
+for (int i = 0; i < length; i++) {
+    hash = 31 * hash + value[i];
+}
+
+Example for 'abc'
+h = 31 * 0 + 'a' (ascii -> 97) = 97
+h = 31 * 97 + 'b' (ascii -> 98) = 3105
+h = 31 * 3105 + 'c' (ascii -> 99)= 96354
+```
+
+### Boolean Hash Code
+
+
+```
+Boolean c = true;
+System.out.println(c.hashCode()); // Output: 1231
+
+Boolean d = false;
+System.out.println(d.hashCode()); // Output: 1237
+
+Boolean e = true;
+System.out.println(e.hashCode()); // Output: 1231
+```
+
+- The `Boolean` class overrides `hashCode()` as
+
+![alt text](image-1.png)
+
+- `true.hashCode()` → Returns 1231
+- `false.hashCode()` → Returns 1237
+- These values are arbitrary but chosen to ensure good hashing behavior.
+
+### Double Hash Code
+
+```
+Double f = 1234.89;
+System.out.println(f.hashCode()); // Output: 482065996
+```
+
+- The `Double` class computes its hash using bit manipulation
+
+![alt text](image-2.png)
+
+- Internally
+
+```
+public int hashCode() {
+    long bits = Double.doubleToLongBits(value);
+    return (int) (bits ^ (bits >>> 32));
+}
+```
+
+- `doubleToLongBits(1234.89)` gives a long integer, and bitwise XOR creates a well-distributed hash.
+- Similarly for all other wrapper classes in Java (`Byte`, `Character`, `Long`, `Float`, `Short`) provide their own optimized `hashCode()` implementations.
+
+### Byte Hash Code
+
+```
+Byte b = 10;
+System.out.println(b.hashCode());  // Output: 10
+```
+
+- Returns the same value as the byte itself, converted to an `int`.
+
+![alt text](image-3.png)
+
+### Character Hash Code
+
+```
+Character ch = 'A';
+System.out.println(ch.hashCode());  // Output: 65
+```
+
+- The `hashCode()` method returns the Unicode value of the character. 'A' has a Unicode value of 65, so its hash code is 65.
+
+![alt text](image-4.png)
+
+### Short Hash Code
+
+```
+Short s = 100;
+System.out.println(s.hashCode());  // Output: 100
+```
+
+- Similar to `Byte`, it returns the short value itself as an `int`.
+
+![alt text](image-5.png)
+
+### Long Hash Code
+
+```
+Long l = 100000L;
+System.out.println(l.hashCode());  // Output: 100000
+```
+
+- long is 64-bit, but `hashCode()` needs a 32-bit integer. Bitwise XOR (`^`) with right shift (`>>> 32`) ensures a well-distributed hash.
+
+![alt text](image-6.png)
+
+### Float Hash Code
+
+```
+Float f = 12.34f;
+System.out.println(f.hashCode());  // Output: 1095069860
+```
+
+- Uses `Float.floatToIntBits(value)`, which converts the float to its IEEE 754 bit representation. Ensures better hash distribution
+
+![alt text](image-7.png)
+
+### Custom Class Hash Code
+
+```
+Custom ct1 = new Custom("Harsh", 123);
+System.out.println(ct1.hashCode()); // Output: 1225358173
+```
+
+- Since `Custom` does not override `hashCode()`, it uses the default `Object.hashCode()` method.
+
+![alt text](image-8.png)
+
+- This is typically based on the memory address and is JVM-dependent. The keyword `native` means that the method is implemented in platform-specific native code (like C or C++) rather than Java. The method is not implemented in Java source code, but instead in the JVM's internal C/C++ code. `native` methods interact with the operating system and hardware.
+- Since `hashCode()` is a native method, its actual implementation is hidden in the JVM source code.  It typically does one of the following:
+    - Uses the object's memory address.
+    - Generates a unique identifier for the object.
+    - Returns a cached hash value to improve performance.
+
+## Difference between `Object` vs `Objects` class
+
+- Java provides two different classes, `Object` and `Objects`. Although their names are similar, they serve entirely different purposes.
+- `Object` is the root class of all Java classes. Every Java class implicitly extends `Object` (except `Object` itself). It provides basic methods like, `hashCode()`, `equals(Object obj)`, `toString()` etc.
+- `Objects` is a utility class introduced in Java 7 (`java.util.Objects`). It provides static helper methods for working with objects. Used to avoid null pointer exceptions and simplify equals(), hashCode(), etc.
+- Example
+
+```
+import java.util.Objects;
+
+public class Test {
+    public static void main(String[] args) {
+        String s1 = "Hello";
+        String s2 = null;
+        
+        // Safe equals check
+        System.out.println(Objects.equals(s1, s2));  // false
+        
+        // Null-safe toString
+        System.out.println(Objects.toString(s2, "Default"));  // Output: Default
+        
+        // Validate non-null object
+        Objects.requireNonNull(s1, "Value cannot be null");  // No exception
+        // Objects.requireNonNull(s2, "Value cannot be null"); // Throws NullPointerException
+    }
+}
+```
+
+- Use `Object` when working with inheritance or overriding fundamental methods (`equals`, `hashCode`). Use `Objects` for null-safe operations, utility methods, and reducing boilerplate code.
+
+| **Scenario**                                   | **Use Object** | **Use Objects**                  |
+|-----------------------------------------------|----------------|----------------------------------|
+| **Need a base class for inheritance**         | ✅ Yes          | ❌ No                             |
+| **Override equals(), hashCode(), toString()** | ✅ Yes          | ❌ No                             |
+| **Null-safe comparisons**                     | ❌ No           | ✅ Yes (Objects.equals())         |
+| **Generate hash codes for multiple fields**   | ❌ No           | ✅ Yes (Objects.hash())           |
+| **Validate non-null arguments**               | ❌ No           | ✅ Yes (Objects.requireNonNull()) |
+
+
 ## Method Reference
 
 - Method references provide a shorthand notation for lambda expressions that only call a single method. Method references can be used to simplify the code and make it more readable.
