@@ -7809,9 +7809,201 @@ WaitThread: I got the notification, time to proceed!
 
 ### ThreadLocal
 
+- In Java, `ThreadLocal` is a way to create variables that are local to a thread. Each thread that accesses a `ThreadLocal` variable has its own, independent copy of the variable. This ensures that the variable is thread-safe without needing explicit `synchronization`.
+- Lets see an example
 
-https://medium.com/@muradhajiyev/threadlocal-in-java-16770c72792e
-https://chatgpt.com/c/674b1f7f-f230-8009-898c-1c21fc24d5a2
+```
+public class ThreadLocal {
+    private static ThreadLocal<Integer> threadLocalValue = ThreadLocal.withInitial(() -> 0);
+
+    public static void main(String[] args) {
+        Runnable task = () -> {
+            int value = threadLocalValue.get(); // Get the initial value (0)
+            threadLocalValue.set(value + 1);    // Modify the thread-local value
+            System.out.println(Thread.currentThread().getName() + ": " + threadLocalValue.get());
+        };
+
+        Thread thread1 = new Thread(task, "Thread-1");
+        Thread thread2 = new Thread(task, "Thread-2");
+
+        thread1.start();
+        thread2.start();
+    }
+}
+
+Output:
+Thread-1: 1
+Thread-2: 1
+```
+
+- When a thread accesses a `ThreadLocal` variable for the first time, it gets its own isolated copy of the variable. The value set by one thread is invisible to other threads. Each thread has its own private storage for the variable.
+- The ThreadLocal class provides methods like `get()` to retrieve the value and `set(value)` to set the value.
+- Here, each thread has its own copy of `threadLocalValue`, so changes made by one thread do not affect the others.
+- In a multi-threaded environment, static variables are shared among all threads. This can cause issues like data corruption or unexpected behavior if multiple threads try to modify them simultaneously. Normally, you’d need to synchronize access to avoid these issues. However, synchronization can be complex and might impact performance.
+- `ThreadLocal` solves this by providing each thread with its own independent instance of the variable. This is particularly useful in the following scenarios:
+
+1. Thread-Specific Data:
+
+    - For example, storing user session information in a web application where each thread handles a different user.
+
+2. Avoiding Synchronization:
+
+    - No need for locks or synchronization because each thread has its own copy of the variable.
+
+3. Static Variables in Threaded Contexts:
+
+    - A static ThreadLocal can be used to safely store thread-specific data for a static method.
+
+- ThreadLocal is useful when:
+    - Each thread needs its own separate instance of a variable
+    - The variable must not be shared across threads
+    - The values should be independent for each thread
+- Lets take another example
+
+```
+
+class Main {
+    public static void main(String[] args) {
+        Runnable task = () -> {
+            for (int i = 0; i < 3; i++) {
+                ThreadLocalStaticExample.incrementCounter();
+                System.out.println(Thread.currentThread().getName() + " Counter: " + ThreadLocalStaticExample.getCounter());
+            }
+            // Clear the ThreadLocal value to prevent memory leaks
+            ThreadLocalStaticExample.clearCounter();
+        };
+
+        Thread thread1 = new Thread(task, "Thread-1");
+        Thread thread2 = new Thread(task, "Thread-2");
+
+        thread1.start();
+        thread2.start();
+    }
+}
+
+class ThreadLocalStaticExample {
+    // A static ThreadLocal variable to hold thread-specific data
+    private static ThreadLocal<Integer> threadLocalCounter = ThreadLocal.withInitial(() -> 0);
+
+    // Static method to get the thread-local value
+    public static int getCounter() {
+        return threadLocalCounter.get();
+    }
+
+    // Static method to increment the thread-local value
+    public static void incrementCounter() {
+        threadLocalCounter.set(threadLocalCounter.get() + 1);
+    }
+
+    // Static method to clear the thread-local value (cleanup)
+    public static void clearCounter() {
+        threadLocalCounter.remove();
+    }
+}
+
+
+Output:
+Thread-2 Counter: 1
+Thread-2 Counter: 2
+Thread-1 Counter: 1
+Thread-1 Counter: 2
+Thread-1 Counter: 3
+Thread-2 Counter: 3
+```
+
+- Lets say if you have a custom class with you and you wanted to apply `ThreadLocal` on it.
+
+```
+class Main {
+    public static void main(String[] args) {
+        Runnable task = () -> {
+            // Get the thread-local instance
+            CustomClass custom = CustomClassThreadLocal.getInstance();
+
+            // Modify the instance
+            custom.setName(Thread.currentThread().getName());
+            custom.incrementCounter();
+            custom.incrementCounter();
+
+            System.out.println(Thread.currentThread().getName() + ": " + custom);
+
+            // Clear the ThreadLocal instance to prevent memory leaks
+            CustomClassThreadLocal.clearInstance();
+        };
+
+        Thread thread1 = new Thread(task, "Thread-1");
+        Thread thread2 = new Thread(task, "Thread-2");
+
+        thread1.start();
+        thread2.start();
+    }
+}
+
+
+class CustomClass {
+    private String name; // Custom variable
+    private int counter; // Another variable
+
+    // Constructor
+    public CustomClass(String name) {
+        this.name = name;
+        this.counter = 0;
+    }
+
+    // Custom methods
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void incrementCounter() {
+        this.counter++;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomClass{name='" + name + "', counter=" + counter + "}";
+    }
+}
+
+class CustomClassThreadLocal {
+    // Static ThreadLocal to hold thread-specific instances of CustomClass
+    private static ThreadLocal<CustomClass> threadLocalInstance =
+            ThreadLocal.withInitial(() -> new CustomClass("Default"));
+
+    // Static method to get the thread-local instance
+    public static CustomClass getInstance() {
+        return threadLocalInstance.get();
+    }
+
+    // Static method to set a new instance
+    public static void setInstance(CustomClass customClass) {
+        threadLocalInstance.set(customClass);
+    }
+
+    // Static method to clear the ThreadLocal instance (cleanup)
+    public static void clearInstance() {
+        threadLocalInstance.remove();
+    }
+}
+
+
+Output:
+Thread-2: CustomClass{name='Thread-2', counter=2}
+Thread-1: CustomClass{name='Thread-1', counter=2}
+```
+
+- When Not to Use `ThreadLocal`?
+    - If data needs to be shared between threads, `ThreadLocal` is not the right choice.
+    - If the object is already stateless, there's no need for `ThreadLocal`.
+    - If not managed properly, it can lead to memory leaks, especially in web applications.
 
 ## Finalize
 
