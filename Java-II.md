@@ -5418,7 +5418,7 @@ System.out.println(a.hashCode()); // Output: 1030000
 - For above code, `Integer`, the `hashCode()` implementation simply returns the integer value itself.
 
 
-![alt text](image.png)
+![alt text](Images/java-2/newtopics/image.png)
 
 
 ### String Hash Code
@@ -5459,7 +5459,7 @@ System.out.println(e.hashCode()); // Output: 1231
 
 - The `Boolean` class overrides `hashCode()` as
 
-![alt text](image-1.png)
+![alt text](Images/java-2/newtopics/image-1.png)
 
 - `true.hashCode()` → Returns 1231
 - `false.hashCode()` → Returns 1237
@@ -5474,7 +5474,7 @@ System.out.println(f.hashCode()); // Output: 482065996
 
 - The `Double` class computes its hash using bit manipulation
 
-![alt text](image-2.png)
+![alt text](Images/java-2/newtopics/image-2.png)
 
 - Internally
 
@@ -5497,7 +5497,7 @@ System.out.println(b.hashCode());  // Output: 10
 
 - Returns the same value as the byte itself, converted to an `int`.
 
-![alt text](image-3.png)
+![alt text](Images/java-2/newtopics/image-3.png)
 
 ### Character Hash Code
 
@@ -5508,7 +5508,7 @@ System.out.println(ch.hashCode());  // Output: 65
 
 - The `hashCode()` method returns the Unicode value of the character. 'A' has a Unicode value of 65, so its hash code is 65.
 
-![alt text](image-4.png)
+![alt text](Images/java-2/newtopics/image-4.png)
 
 ### Short Hash Code
 
@@ -5519,7 +5519,7 @@ System.out.println(s.hashCode());  // Output: 100
 
 - Similar to `Byte`, it returns the short value itself as an `int`.
 
-![alt text](image-5.png)
+![alt text](Images/java-2/newtopics/image-5.png)
 
 ### Long Hash Code
 
@@ -5530,7 +5530,7 @@ System.out.println(l.hashCode());  // Output: 100000
 
 - long is 64-bit, but `hashCode()` needs a 32-bit integer. Bitwise XOR (`^`) with right shift (`>>> 32`) ensures a well-distributed hash.
 
-![alt text](image-6.png)
+![alt text](Images/java-2/newtopics/image-6.png)
 
 ### Float Hash Code
 
@@ -5541,7 +5541,7 @@ System.out.println(f.hashCode());  // Output: 1095069860
 
 - Uses `Float.floatToIntBits(value)`, which converts the float to its IEEE 754 bit representation. Ensures better hash distribution
 
-![alt text](image-7.png)
+![alt text](Images/java-2/newtopics/image-7.png)
 
 ### Custom Class Hash Code
 
@@ -5552,7 +5552,7 @@ System.out.println(ct1.hashCode()); // Output: 1225358173
 
 - Since `Custom` does not override `hashCode()`, it uses the default `Object.hashCode()` method.
 
-![alt text](image-8.png)
+![alt text](Images/java-2/newtopics/image-8.png)
 
 - This is typically based on the memory address and is JVM-dependent. The keyword `native` means that the method is implemented in platform-specific native code (like C or C++) rather than Java. The method is not implemented in Java source code, but instead in the JVM's internal C/C++ code. `native` methods interact with the operating system and hardware.
 - Since `hashCode()` is a native method, its actual implementation is hidden in the JVM source code.  It typically does one of the following:
