@@ -908,6 +908,15 @@ Serving sushi...
 - Factory Pattern focuses on creation of a single type of object, encapsulating the object creation logic in a dedicated factory class.
 - Abstract Factory Pattern focuses on creation families of related or dependent objects, providing an interface for creating those objects without specifying their concrete classes.
 
+
+| **Factory Pattern**                   | **Abstract Factory Pattern**                  |
+|---------------------------------------|-----------------------------------------------|
+| Good for creating one type of object  | Best for creating families of related objects |
+| Client depends on a concrete factory  | Client depends only on an abstract factory    |
+| Tightly coupled to specific factories | Loosely coupled, easy to switch factories     |
+| Simpler to implement                  | More complex but more scalable                |
+
+
 #### Real-World Use Cases
 
 - **GUI Toolkit**: Consider a scenario where you are developing a graphical user interface (GUI) toolkit that needs to support multiple platforms, such as Windows, macOS, and Linux. You can use the Abstract Factory pattern to define an abstract GUI factory interface, with methods like `createButton()`, `createTextBox()`, and `createCheckbox()`. Each platform-specific implementation of the GUI factory (e.g., `WindowsGUIFactory`, `MacOSGUIFactory`, `LinuxGUIFactory`) would provide concrete implementations of these methods to create platform-specific GUI components. This allows your client code to create GUI components without being tightly coupled to a specific platform.
@@ -915,3 +924,245 @@ Serving sushi...
 - **Database Abstraction**: Suppose you have an application that needs to support multiple database systems, such as MySQL, PostgreSQL, and Oracle. By applying the Abstract Factory pattern, you can define an abstract database factory interface, with methods like `createConnection()`, `createQuery()`, and `createRecord()`. Each concrete factory implementation (e.g., `MySQLFactory`, `PostgreSQLFactory`, `OracleFactory`) would provide the specific implementation of these methods to create the corresponding database objects. This allows your client code to work with databases without having to directly deal with the specific database system.
 
 - Logging Framework: In a logging framework, you may have different logging backends, such as file-based logging, database logging, or console logging. The Abstract Factory pattern can be used to define an abstract logger factory interface with methods like `createLogger()`, `createLoggerConfigurator()`, etc. Each concrete factory implementation (e.g., `FileLoggerFactory`, `DatabaseLoggerFactory`, `ConsoleLoggerFactory`) would provide the necessary implementation to create the specific logger and its related components. This allows the client code to log messages without being tied to a particular logging backend.
+
+
+### 4. Builder Design Pattern
+
+- While the Factory pattern excels at creating instances of different classes based on input, it becomes cumbersome when an object has numerous attributes, especially many optional ones. 
+- In factory pattern, when we create instance or object, and if the objects requires attributes, then we need to create different method for the same object (varying arguments depending upon product type). Similarly, in abstract factory, we create object based on constructor and if the constructor has parameters (optional/required) then create instances based on abstract factory design will be difficult as we need to pass these parameters from method to method which may vary from product to product.
+- In Factory Pattern, we need to create multiple factory methods to support different variations of object creation (due to required and optional parameters).
+- In Abstract Factory, the factory creates product families, but if each product has different constructor arguments, then passing these arguments through multiple factory methods becomes complex
+- These issue is resolved in Builder Design. The Builder Design Pattern is used to construct complex objects step by step. It provides better readability and flexibility than the Factory Pattern, especially when an object has many optional parameters.
+- Lets see an example how to implement Builder Factory Pattern
+
+```
+
+class Computer {
+	
+	//required parameters
+	private String HDD;
+	private String RAM;
+	
+	//optional parameters
+	private boolean isGraphicsCardEnabled;
+	private boolean isBluetoothEnabled;
+	
+
+	public String getHDD() {
+		return HDD;
+	}
+
+	public String getRAM() {
+		return RAM;
+	}
+
+	public boolean isGraphicsCardEnabled() {
+		return isGraphicsCardEnabled;
+	}
+
+	public boolean isBluetoothEnabled() {
+		return isBluetoothEnabled;
+	}
+	
+	private Computer(ComputerBuilder builder) {
+		this.HDD=builder.HDD;
+		this.RAM=builder.RAM;
+		this.isGraphicsCardEnabled=builder.isGraphicsCardEnabled;
+		this.isBluetoothEnabled=builder.isBluetoothEnabled;
+	}
+	
+@Override
+public String toString(){
+    return "Computer Specification: RAM : "+getRAM()+", HDD: "+getHDD()+", Graphic Card: "+this.isGraphicsCardEnabled+", Bluetooth: "+this.isBluetoothEnabled;
+}
+
+	//Builder Class
+	public static class ComputerBuilder{
+
+		// required parameters
+		private String HDD;
+		private String RAM;
+
+		// optional parameters
+		private boolean isGraphicsCardEnabled;
+		private boolean isBluetoothEnabled;
+		
+		public ComputerBuilder(String hdd, String ram){
+			this.HDD=hdd;
+			this.RAM=ram;
+		}
+
+		public ComputerBuilder setGraphicsCardEnabled(boolean isGraphicsCardEnabled) {
+			this.isGraphicsCardEnabled = isGraphicsCardEnabled;
+			return this;
+		}
+
+		public ComputerBuilder setBluetoothEnabled(boolean isBluetoothEnabled) {
+			this.isBluetoothEnabled = isBluetoothEnabled;
+			return this;
+		}
+		
+		public Computer build(){
+			return new Computer(this);
+		}
+
+	}
+
+}
+
+
+public class AboutBuilderFactoryDesign {
+
+	public static void main(String[] args) {
+		//Using builder to get the object in a single line of code and 
+                //without any inconsistent state or arguments management issues		
+                Computer comp = new Computer.ComputerBuilder(
+                    "500 GB", "2 GB").setBluetoothEnabled(true)
+                    .setGraphicsCardEnabled(true).build();
+            System.out.println(comp.toString());
+            
+            Computer comp1 = new Computer.ComputerBuilder(
+                    "1000 GB", "16 GB").build();
+            System.out.println(comp1.toString());
+	}
+
+}
+
+Output:
+Computer Specification: RAM : 2 GB, HDD: 500 GB, Graphic Card: true, Bluetooth: true
+Computer Specification: RAM : 16 GB, HDD: 1000 GB, Graphic Card: false, Bluetooth: false
+```
+
+- First of all you need to create a static nested class and then copy all the arguments from the outer class to the Builder class. We should follow the naming convention and if the class name is `Computer` then builder class should be named as `ComputerBuilder`.
+- Java Builder class should have a public constructor with all the required attributes as parameters.
+- Java Builder class should have methods to set the optional parameters and it should return the same Builder object after setting the optional attribute.
+- The final step is to provide a `build()` method in the builder class that will return the Object needed by client program. For this we need to have a private constructor in the Class with Builder class as argument.
+
+#### Advantages of Builder Pattern
+
+- ✅ Improves Code Readability – Each step of object creation is clear.
+- ✅ Encapsulates Construction Logic – Object creation logic is separated from business logic.
+- ✅ Supports Immutable Objects – Since fields are private and set only once, it ensures immutability.
+- ✅ Easy to Extend – Adding a new attribute does not require modifying constructor logic.
+- ✅ No need for multiple constructors or multiple factory methods!
+- ✅ Flexible object creation!
+- ✅ Handles optional parameters elegantly!
+
+#### Disadvantages of Builder Pattern
+- ❌ More Code Overhead – Requires additional Builder class and methods.
+- ❌ Not Suitable for Simple Objects – If an object has only 1-2 parameters, a Factory Pattern is better.
+
+- Factory Pattern centralizes the creation of objects by providing a single point of entry to create different types of objects based on input parameters, effectively hiding the specific implementation details from the client code.
+- Builder Pattern allows for constructing complex objects step-by-step, enabling the creation of different variations of the object with specific configurations by setting individual properties independently.
+- Combining both gives us a flexible and maintainable approach. Lets see an example
+
+```
+// Computer Class (Same as before)
+class Computer {
+	
+	// Required parameters
+	private String HDD;
+	private String RAM;
+	
+	// Optional parameters
+	private boolean isGraphicsCardEnabled;
+	private boolean isBluetoothEnabled;
+
+	public String getHDD() { return HDD; }
+	public String getRAM() { return RAM; }
+	public boolean isGraphicsCardEnabled() { return isGraphicsCardEnabled; }
+	public boolean isBluetoothEnabled() { return isBluetoothEnabled; }
+	
+	// Private constructor - Only accessible through Builder
+	private Computer(ComputerBuilder builder) {
+		this.HDD = builder.HDD;
+		this.RAM = builder.RAM;
+		this.isGraphicsCardEnabled = builder.isGraphicsCardEnabled;
+		this.isBluetoothEnabled = builder.isBluetoothEnabled;
+	}
+	
+	@Override
+	public String toString() {
+	    return "Computer Specification: RAM: " + getRAM() + 
+	           ", HDD: " + getHDD() + 
+	           ", Graphic Card: " + this.isGraphicsCardEnabled + 
+	           ", Bluetooth: " + this.isBluetoothEnabled;
+	}
+
+	// Builder Class
+	public static class ComputerBuilder {
+
+		// Required parameters
+		private String HDD;
+		private String RAM;
+
+		// Optional parameters
+		private boolean isGraphicsCardEnabled = false;  // Default false
+		private boolean isBluetoothEnabled = false;     // Default false
+		
+		public ComputerBuilder(String hdd, String ram) {
+			this.HDD = hdd;
+			this.RAM = ram;
+		}
+
+		public ComputerBuilder setGraphicsCardEnabled(boolean isGraphicsCardEnabled) {
+			this.isGraphicsCardEnabled = isGraphicsCardEnabled;
+			return this;
+		}
+
+		public ComputerBuilder setBluetoothEnabled(boolean isBluetoothEnabled) {
+			this.isBluetoothEnabled = isBluetoothEnabled;
+			return this;
+		}
+		
+		public Computer build() {
+			return new Computer(this);
+		}
+	}
+}
+
+// Factory Class using Builder
+class ComputerFactory {
+
+    // Factory method: Only requires HDD & RAM (Mandatory parameters)
+    public static Computer getComputer(String hdd, String ram, boolean... options) {
+        Computer.ComputerBuilder builder = new Computer.ComputerBuilder(hdd, ram);
+
+        // If options are provided, apply them
+        if (options.length > 0 && options[0]) {
+            builder.setGraphicsCardEnabled(true);
+        }
+        if (options.length > 1 && options[1]) {
+            builder.setBluetoothEnabled(true);
+        }
+
+        return builder.build();
+    }
+}
+
+public class CombineFactoryAndBuilderPattern {
+    public static void main(String[] args) {
+        // Creating a Gaming PC (Graphics Card & Bluetooth enabled)
+        Computer gamingPC = ComputerFactory.getComputer("1 TB", "16 GB", true, true);
+
+        // Creating an Office PC (No optional features)
+        Computer officePC = ComputerFactory.getComputer("500 GB", "8 GB");
+
+        // Creating a Media PC (Only Bluetooth enabled)
+        Computer mediaPC = ComputerFactory.getComputer("750 GB", "12 GB", false, true);
+
+        // Displaying computer details
+        System.out.println(gamingPC);
+        System.out.println(officePC);
+        System.out.println(mediaPC);
+    }
+}
+
+
+Output:
+Computer Specification: RAM: 16 GB, HDD: 1 TB, Graphic Card: true, Bluetooth: true
+Computer Specification: RAM: 8 GB, HDD: 500 GB, Graphic Card: false, Bluetooth: false
+Computer Specification: RAM: 12 GB, HDD: 750 GB, Graphic Card: false, Bluetooth: true
+```
+
+ 
