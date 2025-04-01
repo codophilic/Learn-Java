@@ -152,7 +152,7 @@ File Log: This is a file log
 
 
 
-![alt text](image.png)
+![alt text](Images/designpattern/image.png)
 
 
 ## Creational Design Pattern
@@ -1539,3 +1539,131 @@ Charging Phone....
 | May affect performance   | If the adapter has to translate a lot of calls, it can slow down execution.           |
 | Not a long-term solution | If used excessively, it can lead to a messy codebase instead of refactoring properly. |
 |                          |                                                                                       |
+
+## Behavioral Design Pattern
+
+### 1. Observer Design Pattern
+
+- The Observer Pattern is used when one object (Subject) needs to notify multiple objects (Observers) about changes in its state. A simple analogy will be like, think of YouTube Subscriptions. You (Observer) subscribe to a YouTube Channel (Subject). Whenever the channel uploads a new video, you automatically receive a notification. You don’t need to constantly check for updates—the channel notifies you when something changes.
+- Similarly, in software, a Subject (Publisher) maintains a list of Observers (Subscribers). When the subject changes, it automatically notifies all observers.
+
+```
+import java.util.ArrayList;
+import java.util.List;
+
+// Observer Interface
+interface Observer {
+    void update(String message);
+}
+
+// Concrete Observer (Subscriber)
+class User implements Observer {
+    private String name;
+    
+    public User(String name) {
+        this.name = name;
+    }
+    
+    @Override
+    public void update(String message) {
+        System.out.println(name + " received notification: " + message);
+    }
+}
+
+// Subject (Publisher)
+interface Publisher{
+    void subscribe(Observer observer);
+    void unsubscribe(Observer observer);
+    void notifySubscribers(String videoTitle);
+}
+
+
+class YouTubeChannel implements Publisher{
+    private List<Observer> subscribers = new ArrayList<>();
+    
+    @Override
+    public void subscribe(Observer observer) {
+        subscribers.add(observer);
+    }
+    
+    @Override
+    public void unsubscribe(Observer observer) {
+        subscribers.remove(observer);
+    }
+    
+    public void uploadNewVideo(String videoTitle) {
+        System.out.println("New Video Uploaded: " + videoTitle);
+        notifySubscribers(videoTitle);
+    }
+    
+    @Override
+    public void notifySubscribers(String videoTitle) {
+        for (Observer subscriber : subscribers) {
+            subscriber.update("New video available: " + videoTitle);
+        }
+    }
+}
+
+// Main Class
+public class AboutObserverDesignPattern {
+    public static void main(String[] args) {
+        YouTubeChannel channel = new YouTubeChannel();
+        
+        Observer user1 = new User("Alice");
+        Observer user2 = new User("Bob");
+        
+        channel.subscribe(user1);
+        channel.subscribe(user2);
+        
+        channel.uploadNewVideo("Observer Design Pattern Explained!");
+        
+        channel.unsubscribe(user1);
+        
+        channel.uploadNewVideo("Adapter Pattern in Java!");
+    }
+}
+
+
+Output:
+New Video Uploaded: Observer Design Pattern Explained!
+Alice received notification: New video available: Observer Design Pattern Explained!
+Bob received notification: New video available: Observer Design Pattern Explained!
+New Video Uploaded: Adapter Pattern in Java!
+Bob received notification: New video available: Adapter Pattern in Java!
+```
+
+- Purpose of Observer Pattern is used for event-driven programming where multiple components need to react to a change in real-time. Helps in decoupling the subject and observers, making the system more flexible.
+- Use Observer Pattern
+    - ✔When multiple objects need to react to state changes in another object.
+    - ✔ When you don’t want objects to be tightly coupled to one another.
+    - ✔ When you need real-time event handling, like user interface events, notifications, or stock market updates.
+
+#### ✅ Advantages of Observer Pattern
+
+| **Advantage**                  | **Explanation**                                                                                           |
+|--------------------------------|-----------------------------------------------------------------------------------------------------------|
+| Decouples Subject & Observers  | The Subject and Observers are loosely coupled, meaning they don’t depend on each other directly.          |
+| Automatic Updates              | When the Subject changes, all Observers get notified automatically—no need to manually check for updates. |
+| Supports Open/Closed Principle | New Observers can be added without modifying the Subject.                                                 |
+
+#### ❌ Disadvantages of Observer Pattern
+
+| **Disadvantage**              | **Explanation**                                                                                   |
+|-------------------------------|---------------------------------------------------------------------------------------------------|
+| Can lead to memory leaks      | If Observers are not properly removed from the Subject, they may stay in memory and cause issues. |
+| Notification Overhead         | If there are too many observers, frequent updates can lead to performance issues.                 |
+| Complexity in Synchronization | If multiple observers modify shared data, handling race conditions can be tricky.                 |
+
+#### Real-World Use Cases
+
+-  Event Listeners in UI Frameworks
+    - Example: In JavaScript, when you add an event listener to a button, it acts as an Observer. When the button is clicked, the function (Observer) gets triggered.
+
+```
+document.getElementById("btn").addEventListener("click", function() {
+    alert("Button Clicked!");
+});
+```
+
+- Notification Systems
+    - Example: In an e-commerce website, customers subscribe to product availability notifications. When the product is back in stock, all subscribers are notified via email/SMS.
