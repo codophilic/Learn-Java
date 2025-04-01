@@ -1421,3 +1421,121 @@ Employee{name='Bob', department='IT', lives in New York;}
     - The Prototype Pattern is most suitable when the cost of creating objects from scratch is high. In cases where object creation is relatively simple and inexpensive, using the pattern may introduce unnecessary complexity.
 4. Increased Maintenance Effort
     - Every time a class is modified (e.g., adding a new field), the `clone()` method must also be updated. If you forget to clone a new field, it may introduce hard-to-debug issues
+
+## Structural Design Pattern
+
+### 1. Adapter Design Pattern
+
+- Adapter design pattern is one of the structural design pattern and it is used so that two unrelated interfaces can work together. It is often used to make existing classes work with others without modifying their source code. The pattern involves creating an adapter class that bridges the gap between the interfaces, allowing them to communicate effectively.
+- Consider an analogy, suppose you are having an IPhone6s and your friend is having an IPhone4s now you went to your friend’s house but you forgot to carry your charger with you and you need to charge your phone and the charger you need is not available . Now what will you do‍🤷‍♀️? So here in this situation an adapter is going to help us . You will use an adapter to charge your IPhone6s from IPhone4s charger . So here you have not changed the IPhone4s charger to IPhone6s charger you just adapted the situation and have your work done .
+- Imagine you have a mobile charger that works with 220V power supply, but you're in a country where only 110V is available. You can’t directly charge your phone, right? What’s the solution? **A power adapter!**. The adapter takes in 110V and converts it to 220V so that your charger works.
+- Imagine you have an Apple Product like Iphone 13 and it can be charged using Apple Charger. But suppose you don't have apple charger with you, your friend has an android charger (like USB-C). Now to support this android charger into Iphone, you need a adapter which can convert the charging compatibility between two different products.
+- Lets understand some components used in Adapter Design pattern
+
+    - Client: The class that needs to use an interface.
+    - Target: The interface that the client expects.
+    - Adaptee: The class with the incompatible interface.
+    - Adapter: The class that converts the interface of the adaptee to the target interface.
+- Lets implement it
+```
+
+// Target
+interface AppleCharger{
+    void appleProductCharge();
+}
+
+
+// Client - The client that needs charging but expects an AppleCharger.
+class Iphone{
+    
+    private AppleCharger applecharger;
+
+    Iphone(AppleCharger appleCharger){
+        this.applecharger=appleCharger;
+    }
+
+    public void iphonecharge() {
+        applecharger.appleProductCharge();
+    };
+}
+
+interface AndroidCharger{
+    void androidProductCharge();
+}
+
+
+//Adaptee - The existing incompatible class (Android charger) that we want to use.
+class USBC implements AndroidCharger{
+
+    @Override
+    public void androidProductCharge() {
+        System.out.println("Charging Phone....");
+    };    
+}
+
+//Adapter - The bridge that allows AndroidCharger to work as an AppleCharger.
+class Adapter implements AppleCharger{
+
+    AndroidCharger androidCharger;
+
+    Adapter(AndroidCharger androidCharger){
+        this.androidCharger=androidCharger;
+    }
+
+    @Override
+    public  void appleProductCharge(){
+        System.out.println("Charging via Adapter");
+        androidCharger.androidProductCharge();
+    }
+
+}
+
+public class AboutAdapterDesignPattern {
+    public static void main(String[] args) {
+        
+        AppleCharger applecharger = new Adapter(new USBC());
+        Iphone iphone = new Iphone(applecharger);
+        iphone.iphonecharge();
+
+    }
+}
+
+
+Output:
+Charging via Adapter
+Charging Phone....
+```
+
+
+- The Adapter Pattern It acts as a bridge between two incompatible interfaces. It allows one class to work with another class that it normally wouldn’t be compatible with.
+
+
+#### Real-World Use Cases
+
+- Database Driver Wrappers
+    - You migrate from MySQL to PostgreSQL, but your application is written for MySQL.
+    - Instead of rewriting database queries everywhere, you create an adapter that translates MySQL queries into PostgreSQL syntax.
+- External API Integration
+    - Adapting Google Maps API to work with another mapping service like OpenStreetMap.
+- Adapting Different File Formats
+    - Your application supports JSON, but a new data source provides XML.
+    - Instead of rewriting your app to handle XML, you create an adapter that converts XML to JSON on the fly.
+
+#### ✅ Advantages of Adapter Pattern
+
+| **Advantage**                                   | **Explanation**                                                               |
+|-------------------------------------------------|-------------------------------------------------------------------------------|
+| Allows incompatible interfaces to work together | Enables systems that wouldn’t normally interact to communicate.               |
+| Reusability                                     | You can reuse existing classes without modifying them.                        |
+| Flexibility                                     | Can replace or modify specific components without affecting the whole system. |
+| Supports Open/Closed Principle                  | You can extend functionality without modifying existing code.                 |
+
+
+#### ❌ Disadvantages of Adapter Pattern
+
+| **Disadvantage**         | **Explanation**                                                                       |
+|--------------------------|---------------------------------------------------------------------------------------|
+| Increases complexity     | Adds an extra layer between classes, which can make debugging harder.                 |
+| May affect performance   | If the adapter has to translate a lot of calls, it can slow down execution.           |
+| Not a long-term solution | If used excessively, it can lead to a messy codebase instead of refactoring properly. |
+|                          |                                                                                       |
