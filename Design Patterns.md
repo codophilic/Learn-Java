@@ -1052,6 +1052,8 @@ Computer Specification: RAM : 16 GB, HDD: 1000 GB, Graphic Card: false, Bluetoot
 - ❌ More Code Overhead – Requires additional Builder class and methods.
 - ❌ Not Suitable for Simple Objects – If an object has only 1-2 parameters, a Factory Pattern is better.
 
+### Combine Factory and Builder Pattern
+
 - Factory Pattern centralizes the creation of objects by providing a single point of entry to create different types of objects based on input parameters, effectively hiding the specific implementation details from the client code.
 - Builder Pattern allows for constructing complex objects step-by-step, enabling the creation of different variations of the object with specific configurations by setting individual properties independently.
 - Combining both gives us a flexible and maintainable approach. Lets see an example
@@ -1165,4 +1167,257 @@ Computer Specification: RAM: 8 GB, HDD: 500 GB, Graphic Card: false, Bluetooth: 
 Computer Specification: RAM: 12 GB, HDD: 750 GB, Graphic Card: false, Bluetooth: true
 ```
 
+### 5. Prototype Design Pattern
+
+- Factory and Builder Patterns create new objects every time. Object creation can be expensive. Object creation is considered expensive when it requires significant resources like time, memory, or processing power. Some common cases include:
+    - Database Calls – Fetching data from a database for each new object can be slow.
+    - Complex Computations – Performing heavy calculations before setting object properties.
+    - Large Object Initialization – Creating objects with large data structures (e.g., deep object hierarchies).
+    - External API Calls – Retrieving data from APIs before constructing an object.
+    - I/O Operations – Reading files, network requests, or other costly I/O tasks.
+- Prototype Pattern is used when we need to create multiple objects with the same structure but different data. Instead of creating new objects from scratch, we clone an existing object, which improves performance. Using Prototype design, it saves time by cloning an existing object instead of creating a new one.
+- Lets see an example of prototype design pattern
+
+```
+class Employee implements Cloneable{
+    private String name;
+    private String department;
+
+    public Employee(String name, String department) {
+        this.name = name;
+        this.department = department;
+        System.out.println("Expensive object creation process...perform API calls, network calls and DB calls");
+    }
+
+    public void setName(String name) { this.name = name; }
+
+    @Override
+    public String toString() {
+        return "Employee{name='" + name + "', department='" + department + "'}";
+    }
+
+    // Clone method to duplicate object without calling constructor
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
+    }
+    
+}
+
+public class AboutProtoTypeDesign {
+    public static void main(String[] args) throws Exception {
+        Employee emp1 = new Employee("Alice", "IT");
+
+        // Cloning emp1 instead of creating a new object
+        Employee emp2 = (Employee) emp1.clone();
+        emp2.setName("Bob"); // Change only the name
+
+        System.out.println(emp1);
+        System.out.println(emp2);
+    }
+}
+
+
+Output:
+Expensive object creation process...perform API calls, network calls and DB calls
+Employee{name='Alice', department='IT'}
+Employee{name='Bob', department='IT'}
+```
+
+- If we don't clone the object every time we create an object, the constructor runs again, which slow down the object creation. So use prototype design pattern when object creation is costly and you want to avoid repeated constructor calls. When you need many similar objects with minor modifications.
+
+#### Advantages of Prototype
+
+- ✔️ Avoids expensive object creation by cloning an existing object.
+- ✔️ Faster than Factory/Builder, since it doesn’t call the constructor.
+- ✔️ Useful when object initialization is complex (e.g., fetching from a database).
+- ✔️ Instead of passing a large number of parameters to a constructor, the prototype pattern lets you clone a pre-configured object.
+
+#### Shallow Copy vs Deep Copy
+
+- When cloning an object in Java, it's important to understand Shallow Copy and Deep Copy, especially when the object contains nested objects (references to other objects).
+
+##### Shallow Copy (Default Cloning)
+
+- A shallow copy means that the cloned object gets a new reference, but its nested objects (sub-objects) still point to the same memory location as the original object.
+- Consider below code of shallow copy
+
+```
+class Address {
+    String city;
+    Address(String city) {
+        this.city = city;
+    }
+}
+
+class Employee implements Cloneable{
+    private String name;
+    private String department;
+    Address address;  // Nested object
+
+    public Employee(String name, String department, Address address) {
+        this.name = name;
+        this.department = department;
+        this.address=address;
+        System.out.println("Expensive object creation process...perform API calls, network calls and DB calls");
+    }
+
+    public void setName(String name) { this.name = name; }
+
+    @Override
+    public String toString() {
+        return "Employee{name='" + name + "', department='" + department + "', lives in " + address.city+";}";
+    }
+
+    // Clone method to duplicate object without calling constructor
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
+    }
+    
+}
+
+public class AboutProtoTypeDesign {
+    public static void main(String[] args) throws Exception {
+        Address address = new Address("New York");
+        Employee emp1 = new Employee("Alice", "IT",address);
+
+        // Cloning emp1 instead of creating a new object
+        Employee emp2 = (Employee) emp1.clone(); //Shallow Copy
+        emp2.setName("Bob"); // Change only the name
+
+
+        // Two Different Objects of Employee
+        System.out.println(emp1);
+        System.out.println(emp2);
+        System.out.println(emp1.hashCode());
+        System.out.println(emp2.hashCode());
+        // Two Different Object of Employee pointing to same object memory address for Address Class
+        System.out.println(emp1.address.hashCode());
+        System.out.println(emp2.address.hashCode());
+
+        // Changing in One will affect other employee objects
+        emp1.address.city="Mumbai";
+        System.out.println(emp1);
+        System.out.println(emp2);
+    }
+}
+
+Output:
+Expensive object creation process...perform API calls, network calls and DB calls
+Employee{name='Alice', department='IT', lives in New York;}
+Employee{name='Bob', department='IT', lives in New York;}
+1984990929
+1105423942
+365181913
+365181913
+Employee{name='Alice', department='IT', lives in Mumbai;}
+Employee{name='Bob', department='IT', lives in Mumbai;}
+```
+
+- Even though we cloned `emp1`, modifying `emp1.address.city` also changed `emp2.address.city`. This happens because both objects share the same nested `Address` object.
+
+##### Deep Copy
+
+- A deep copy ensures that all objects, including nested objects, get fully duplicated. This prevents changes in the cloned object from affecting the original.
+- Lets see an example
+
+```
+class Address implements Cloneable{
+    String city;
+    Address(String city) {
+        this.city = city;
+    }
+
+    // Clone method to duplicate object without calling constructor
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
+    }
+}
+
+class Employee implements Cloneable{
+    private String name;
+    private String department;
+    Address address;  // Nested object
+
+    public Employee(String name, String department, Address address) {
+        this.name = name;
+        this.department = department;
+        this.address=address;
+        System.out.println("Expensive object creation process...perform API calls, network calls and DB calls");
+    }
+
+    public void setName(String name) { this.name = name; }
+
+    @Override
+    public String toString() {
+        return "Employee{name='" + name + "', department='" + department + "', lives in " + address.city+";}";
+    }
+
+    // Clone method to duplicate object without calling constructor
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Employee cloned = (Employee) super.clone();
+        cloned.address = (Address) this.address.clone(); // Deep copy of nested object
+        return cloned;
+    }
+    
+}
+
+public class AboutProtoTypeDesign {
+    public static void main(String[] args) throws Exception {
+        Address address = new Address("New York");
+        Employee emp1 = new Employee("Alice", "IT",address);
+
+        // Cloning emp1 instead of creating a new object
+        Employee emp2 = (Employee) emp1.clone(); //Deep Copy
+        emp2.setName("Bob"); // Change only the name
+
+
+        // Two Different Objects of Employee
+        System.out.println(emp1);
+        System.out.println(emp2);
+        System.out.println(emp1.hashCode());
+        System.out.println(emp2.hashCode());
+        // Two Different Object of Employee pointing to same object memory address for Address Class
+        System.out.println(emp1.address.hashCode());
+        System.out.println(emp2.address.hashCode());
+
+        // Changing in One will affect other employee objects
+        emp1.address.city="Mumbai";
+        System.out.println(emp1);
+        System.out.println(emp2);
+    }
+}
+
+
+Output:
+Expensive object creation process...perform API calls, network calls and DB calls
+Employee{name='Alice', department='IT', lives in New York;}
+Employee{name='Bob', department='IT', lives in New York;}
+1912962767
+452805835
+1769190683
+447981768
+Employee{name='Alice', department='IT', lives in Mumbai;}
+Employee{name='Bob', department='IT', lives in New York;}
+```
+
+- 🏆 When to Use Deep Copy?
+    - ✔️ When objects have nested references that should not be shared between original and cloned objects.
+    - ✔️ When you want to completely isolate the original and cloned object instances.
+    - ✔️ When working with complex object graphs (e.g., multi-level data structures).
+
+
  
+#### 🚨 Disadvantages of Prototype Design Pattern
+
+1. Complex Cloning for Deep Copies
+    - If an object contains nested objects (references to other objects), default cloning (`super.clone()`) only performs a shallow copy. You must implement a deep copy manually, which can be complex.
+2. Hard to Manage Cloning in Large Object Graphs
+    - If an object has many references (e.g., multiple levels of nested objects), managing cloning can be error-prone and time-consuming. You need to ensure that all objects implement `Cloneable` interface and override `clone()`.
+3. Limited Applicability
+    - The Prototype Pattern is most suitable when the cost of creating objects from scratch is high. In cases where object creation is relatively simple and inexpensive, using the pattern may introduce unnecessary complexity.
+4. Increased Maintenance Effort
+    - Every time a class is modified (e.g., adding a new field), the `clone()` method must also be updated. If you forget to clone a new field, it may introduce hard-to-debug issues
