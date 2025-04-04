@@ -8965,3 +8965,5 @@ Task 1 Result: Result from Task 1
 Task 2 Result: Result from Task 2
 Combined Result: Result from Task 1 & Result from Task 2
 ```
+
+- Learn about [Design Pattern](Design%20Patterns.md)
