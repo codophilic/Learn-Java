@@ -9,7 +9,7 @@
 
 <br>
 
-- Learn about [Java Programming](About%20Java.md).
+- Learn about [Java](About%20Java.md).
 
 <br>
 <br>
