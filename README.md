@@ -1,15 +1,22 @@
-# LearnJava
+# Learn-Java
 
 
-Learn about [Java Programming](About%20Java.md).
+> [!IMPORTANT]
+> 📌 **Clone this repository and use [Visual Studio Code](https://code.visualstudio.com/download) to preview all the Markdown files during your learning process.**
+>
+> 📹 **Some videos may be lengthy and might not be supported in the GitHub web version.**
 
 
->[!IMPORTANT]
-> - Make the clone of repository and use visual studio code to preview all the markdown files during the process of learning.
-> - Some videos are length which may not be supported on GitHub Web browser markdown preview.
+<br>
+
+- Learn about [Java Programming](About%20Java.md).
+
+<br>
+<br>
+
+<p align="center">
+  <img src="Images/image.png" width="70%" height="60%" />
+</p>
 
 
-
-
-<img align="center" alt="image"  src="Images/image.png" />
 
